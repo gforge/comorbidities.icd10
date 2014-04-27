@@ -1,10 +1,49 @@
-#############################
-##Original elixhauser index##
-#############################
-
-# elixhauser() takes a 5 digit ICD-9-CM code and produces a list of 2 items:
-#1. the total count of elixhauser comorbidities 
-#2. a binary data frame of which comorbidites patients have - 1 for having it and 0 if not
+#' Produces an Elixhauser comorbidity count
+#' 
+#' This function take as input a data frame structured such that each row
+#' contains a list of ICD-9-CM codes attributed to a single patient. The
+#' function goes from row to row comparing the ICD-9-CM codes a patient has
+#' with the Elixhauser comorbidity index diagnosis codes.  If a patient has a
+#' diagnosis (as indicated by ICD-9-CM code) that belongs to one of the
+#' Elixhauser diagnoses, then the patient is considered to have this diagnosis.
+#' Regardless of how many different ICD-9-CM codes a patient has corresponding
+#' to a particular comorbidity category, a comorbidity is only counted once.
+#' 
+#' The value returned consists of a vector and a data frames. The vector is the
+#' total comorbidity count.  In the data frame returned each row in the data
+#' frame is devoted to a particular patient, and each column is a diagnosis.
+#' The data frame codes a 0 if the patient does not have that diagnosis and 1
+#' if the patient does have that diagnosis.
+#' 
+#' The ICD-9-CM codes must be 5 characters long and have no decimal poinst.If
+#' any codes are less than 5 digits, then they must be led by zeroes or
+#' followed by the letter "X" to create a 5 character code.  No more than 2 "X"
+#' ' s can be used at the tail end, or a meaningful ICD-9-CM code cannot be
+#' derived.  If your ICD-9-CM codes contain decimals or some other filler
+#' character, then they must be converted to the format above for this function
+#' to work properly.
+#' 
+#' @param input.frame This is a data frame with 5 character ICD-9-CM codes
+#' without decimal points
+#' @return A list of one vector and one data frames \item{COMORBIDITY.CT}{A
+#' vector containing the number of comorbidtities for each patient}
+#' \item{COMORBIDITIES}{A data frame denoting which diagnoses each patient has
+#' with a 1}
+#' @author Paul Gerrard, Max Gordon
+#' @references Elixhauser A, Steiner C, Harris DR, Coffey RM. (1998)
+#' Comorbidity measures for use with administrative data.  Med Care. 36:8-27.
+#' @keywords package
+#' @export
+#' @examples
+#' 
+#' x <- matrix(0, nrow = 3, ncol = 2)
+#' x[1,1] <- "41000"
+#' x[1,2] <- "42800"
+#' x[2,1] <- "57220"
+#' x[2,2] <- "1961X"
+#' x[3,1] <- "042XX"
+#' x <- as.data.frame(x)
+#' elixhauser(x)
 elixhauser <- function(input.frame) {
   # Convert icd9 codes to numeric values and convert v codes
   interim.frame.1 <- prElixhauser.apply.icd9(input.frame)
@@ -17,55 +56,84 @@ elixhauser <- function(input.frame) {
 }
 
 prElixhauser.apply.icd9 <- function(input.frame) { 
-  ICD9.5digit.elixhauser <- function(icd.code){ 
-    process.v.codes <- function(v.code) {
-      icd9.2.5 <- as.numeric(substr(v.code, 2, 5))
-      if (icd9.2.5 == 4500) {v.code <- 42610}
-      if (icd9.2.5 == 5330) {v.code <- 42610}
-      if (icd9.2.5 == 4220) {v.code <- 09320}
-      if (icd9.2.5 == 4330) {v.code <- 09320}
-      if (icd9.2.5 == 4340) {v.code <- 44000}
-      if (icd9.2.5 == 4200) {v.code <- 40311}
-      if (icd9.2.5 == 4510) {v.code <- 40311}
-      if (icd9.2.5 == 5600) {v.code <- 40311}
-      if (icd9.2.5 == 5680) {v.code <- 40311}
-      if (icd9.2.5 == 4270) {v.code <- 07032}
-      if (icd9.2.5 == 1271) {v.code <- 53170}
-      if ((icd9.2.5 >= 1000) & (icd9.2.5 <= 1090)) {v.code <- 14000}
-      if (icd9.2.5 == 1071) {v.code <- 20000}
-      if (icd9.2.5 == 1072) {v.code <- 20000}
-      if (icd9.2.5 == 1079) {v.code <- 20000}
-      if (icd9.2.5 == 1130) {v.code <- 29110}
-      
-      return (v.code)
-    }
-    
-    if (is.na(icd.code)) {icd.code <- "00000"}
-    icd9.1 <- substr(icd.code, 1, 1)
-    icd9.3 <- substr(icd.code, 1, 3)
-    icd9.4 <- substr(icd.code, 4, 4)
-    icd9.5 <- substr(icd.code, 5, 5)
-    if (icd9.4 == "X") {icd9.4 <- 0}
-    if (icd9.5 == "X") {icd9.5 <- 0}
-    icd9.result <- paste(icd9.3, icd9.4, icd9.5, sep = "")
-    if (icd9.1 == "V") {icd9.result <- process.v.codes(icd9.result)}
-    
-    return(as.numeric(icd9.result)/100)
-  }
-  
   n.rows <- length(input.frame[,1])
   n.cols <- length(input.frame[1,])
   output.frame <- matrix(0, nrow=n.rows, ncol=n.cols)
   for (i in 1:n.rows){
     for (j in 1:n.cols) {
-      output.frame[i,j] <- ICD9.5digit.elixhauser(input.frame[i,j])
+      output.frame[i,j] <- prElixhauser.ICD9.5digit(input.frame[i,j])
     }
   }
   return(output.frame)
 }
 
-# The following function develops a matrix with rows devoted to respondents and each 
-# column a comorbidity.
+#' Convert to 5 digit ICD-code
+#' 
+#' @param icd.code \code{string} indicating the code 
+#' @return \code{float} Returns a float value XXX.XX
+#' @seealso \code{\link{elixhauser}
+prElixhauser.ICD9.5digit <- function(icd.code){ 
+  # NA is converted to 0
+  if (is.na(icd.code)) {
+    return(0)
+  }
+  
+  if (is.numeric(icd.code)){
+    if (icd.code > 10^4)
+      return(icd.code/100)
+    return(icd.code)
+  }
+  
+  icd9.1 <- substr(icd.code, 1, 1)
+  icd9.3 <- substr(icd.code, 1, 3)
+  icd9.4 <- substr(icd.code, 4, 4)
+  icd9.5 <- substr(icd.code, 5, 5)
+  if (icd9.4 == "X") {icd9.4 <- 0}
+  if (icd9.5 == "X") {icd9.5 <- 0}
+  icd9.result <- paste(icd9.3, icd9.4, icd9.5, sep = "")
+  if (icd9.1 == "V") {icd9.result <- prElixhauser.process.v.codes(icd9.result)}
+  
+  return(as.numeric(icd9.result)/100)
+}
+
+#' Converts icd9 codes with V at the first letter into numeric format
+#'  
+#' @param icd.code A string numeric icd-code that starts with a V
+#' @return \code{int} Returns an int with 5 digits
+#' @seealso \code{\link{elixhauser}}
+prElixhauser.process.v.codes <- function(v.code) {
+  icd9.2.5 <- as.numeric(substr(v.code, 2, 5))
+  if (icd9.2.5 == 4500) {v.code <- 42610}
+  if (icd9.2.5 == 5330) {v.code <- 42610}
+  if (icd9.2.5 == 4220) {v.code <- 09320}
+  if (icd9.2.5 == 4330) {v.code <- 09320}
+  if (icd9.2.5 == 4340) {v.code <- 44000}
+  if (icd9.2.5 == 4200) {v.code <- 40311}
+  if (icd9.2.5 == 4510) {v.code <- 40311}
+  if (icd9.2.5 == 5600) {v.code <- 40311}
+  if (icd9.2.5 == 5680) {v.code <- 40311}
+  if (icd9.2.5 == 4270) {v.code <- 07032}
+  if (icd9.2.5 == 1271) {v.code <- 53170}
+  if ((icd9.2.5 >= 1000) & (icd9.2.5 <= 1090)) {v.code <- 14000}
+  if (icd9.2.5 == 1071) {v.code <- 20000}
+  if (icd9.2.5 == 1072) {v.code <- 20000}
+  if (icd9.2.5 == 1079) {v.code <- 20000}
+  if (icd9.2.5 == 1130) {v.code <- 29110}
+  
+  return (v.code)
+}
+
+#' Score points for Elixhauser's comorbidity count
+#' 
+#' The following function develops a matrix with 
+#' rows devoted to respondents and each column a comorbidity.
+#'  
+#' @param input.frame This is a data frame with 5 digit ICD-9-CM codes as XXX.XX
+#'  This can also be provided as a vector or matrix.
+#' @return \code{matrix} Returns a matrix with the one column per 
+#'  comorbidity. No comorbidity is indicated by 0 while 1 indicates 
+#'  existing comorbidity.
+#' @seealso \code{\link{elixhauser}}
 points.elixhauser.30 <- function(input.frame) {
   #create lists of comorbidities
   chf <- c(398.91,402.11,402.91,404.11,404.13,404.91,404.93,
