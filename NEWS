@@ -1,0 +1,8 @@
+NEWS for the Gmisc package
+
+Changes for 0.1
+-------------------
+* Refactored the code for the comorbidities package to better suit a package-environment
+* Instead of looping through the values in each code-list the %in% is now used
+* The output.frame is now based on the actual names of the groups, should limit the risk of misclassifying diseases.
+* The hierarchy check is now vectorized and also applies to the deyo calculation for diabetes and malignancies
