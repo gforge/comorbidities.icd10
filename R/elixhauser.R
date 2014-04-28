@@ -71,7 +71,7 @@ prElixhauser.apply.icd9 <- function(input.frame) {
 #' 
 #' @param icd.code \code{string} indicating the code 
 #' @return \code{float} Returns a float value XXX.XX
-#' @seealso \code{\link{elixhauser}
+#' @seealso \code{\link{elixhauser}}
 prElixhauser.ICD9.5digit <- function(icd.code){ 
   # NA is converted to 0
   if (is.na(icd.code)) {
@@ -79,10 +79,20 @@ prElixhauser.ICD9.5digit <- function(icd.code){
   }
   
   if (is.numeric(icd.code)){
-    if (icd.code > 10^4)
-      return(icd.code/100)
+    if (icd.code != ceil(icd.code))
+      stop("The software wants icd.codes provided in numeric format without",
+           " decimals if ICD-9 is provided in numeric format, otherwise it does",
+           " no know how to deal with the code. The code should be in the format ",
+           " 58510 and not 585.1 or anything similar. You have provided the code: ", icd.code)
     return(icd.code)
   }
+  
+  if (class(icd.code) == "factor")
+    icd.code <- as.character(icd.code)
+  
+  if (nchar(icd.code) < 5)
+    icd.code <- paste0(icd.code, paste0(rep("0", length.out=5-nchar(icd.code)),
+                                        collapse=""))
   
   icd9.1 <- substr(icd.code, 1, 1)
   icd9.3 <- substr(icd.code, 1, 3)
@@ -93,7 +103,7 @@ prElixhauser.ICD9.5digit <- function(icd.code){
   icd9.result <- paste(icd9.3, icd9.4, icd9.5, sep = "")
   if (icd9.1 == "V") {icd9.result <- prElixhauser.process.v.codes(icd9.result)}
   
-  return(as.numeric(icd9.result)/100)
+  return(as.integer(icd9.result))
 }
 
 #' Converts icd9 codes with V at the first letter into numeric format
@@ -103,22 +113,22 @@ prElixhauser.ICD9.5digit <- function(icd.code){
 #' @seealso \code{\link{elixhauser}}
 prElixhauser.process.v.codes <- function(v.code) {
   icd9.2.5 <- as.numeric(substr(v.code, 2, 5))
-  if (icd9.2.5 == 4500) {v.code <- 42610}
-  if (icd9.2.5 == 5330) {v.code <- 42610}
-  if (icd9.2.5 == 4220) {v.code <- 09320}
-  if (icd9.2.5 == 4330) {v.code <- 09320}
-  if (icd9.2.5 == 4340) {v.code <- 44000}
-  if (icd9.2.5 == 4200) {v.code <- 40311}
-  if (icd9.2.5 == 4510) {v.code <- 40311}
-  if (icd9.2.5 == 5600) {v.code <- 40311}
-  if (icd9.2.5 == 5680) {v.code <- 40311}
-  if (icd9.2.5 == 4270) {v.code <- 07032}
-  if (icd9.2.5 == 1271) {v.code <- 53170}
-  if ((icd9.2.5 >= 1000) & (icd9.2.5 <= 1090)) {v.code <- 14000}
-  if (icd9.2.5 == 1071) {v.code <- 20000}
-  if (icd9.2.5 == 1072) {v.code <- 20000}
-  if (icd9.2.5 == 1079) {v.code <- 20000}
-  if (icd9.2.5 == 1130) {v.code <- 29110}
+  if (icd9.2.5 == 4500L) {v.code <- 42610L}
+  if (icd9.2.5 == 5330L) {v.code <- 42610L}
+  if (icd9.2.5 == 4220L) {v.code <- 09320L}
+  if (icd9.2.5 == 4330L) {v.code <- 09320L}
+  if (icd9.2.5 == 4340L) {v.code <- 44000L}
+  if (icd9.2.5 == 4200L) {v.code <- 40311L}
+  if (icd9.2.5 == 4510L) {v.code <- 40311L}
+  if (icd9.2.5 == 5600L) {v.code <- 40311L}
+  if (icd9.2.5 == 5680L) {v.code <- 40311L}
+  if (icd9.2.5 == 4270L) {v.code <- 07032L}
+  if (icd9.2.5 == 1271L) {v.code <- 53170L}
+  if ((icd9.2.5 >= 1000L) & (icd9.2.5 <= 1090L)) {v.code <- 14000L}
+  if (icd9.2.5 == 1071L) {v.code <- 20000L}
+  if (icd9.2.5 == 1072L) {v.code <- 20000L}
+  if (icd9.2.5 == 1079L) {v.code <- 20000L}
+  if (icd9.2.5 == 1130L) {v.code <- 29110L}
   
   return (v.code)
 }
@@ -136,80 +146,84 @@ prElixhauser.process.v.codes <- function(v.code) {
 #' @seealso \code{\link{elixhauser}}
 points.elixhauser.30 <- function(input.frame) {
   #create lists of comorbidities
-  chf <- c(398.91,402.11,402.91,404.11,404.13,404.91,404.93,
-           seq(from=428, to=428.9, by=0.01))
-  arrhythmia <- c(426.1,426.11,426.13,
-                  seq(from=426.2, to=426.53, by=0.01),
-                  seq(from=426.6, to=426.89, by=0.01),
-                  427,427.2,427.31,427.6,427.9,785)
-  valve <- c(seq(from=93.2, to=93.24, by=0.01),
-             seq(from=394, to=397.1, by=0.01),
-             seq(from=424, to=424.91, by=0.01),
-             seq(from=746.3, to=746.6, by=0.01)) 
-  pulm.circ <- c(seq(from=416, to=416.9, by=0.01), 417.9) 
-  pvd <- c(seq(from=440, to=440.9, by=0.01),
-           441.2,441.4,441.7,441.9,
-           seq(from=443.1, to=443.9, by=0.01),
-           447.1,557.1,557.9)
-  htn <- c(401.1,401.9,402.1,402.9,404.1,404.9,405.11,405.19,405.91,405.99) 
-  paralysis <- c(seq(from =342, to=342.12, by=0.01),
-                 seq(from=342.9, to=344.9, by=0.01)) 
-  neuro.other <- c(331.9,332,333.4,333.5,
-                   seq(from=334, to=335.9, by=0.01),
-                   340,
-                   seq(from=341.1, to=341.9, by=0.01),
-                   seq(from=345, to=345.11, by=0.01),
-                   seq(from=345.4, to=345.51, by=0.01),
-                   seq(from=345.8, to=345.91, by=0.01),
-                   348.1,348.3,780.3,784.3)
-  chronic.pulm <- c(seq(from=490, to=492.8, by=0.01),
-                    seq(from=493, to=493.91, by=0.01),
-                    494,
-                    seq(from=495, to=505, by=0.01),
-                    506.4)
-  dm.uncomp <- c(seq(from=250,to=250.33,by=0.01))
-  dm.comp <- c(seq(from=250.4, to=250.73, by=0.01),
-               seq(from=250.9, to=250.93, by=0.01))
-  hypothyroid <- c(seq(from=243, to=244.2, by=0.01),
-                   244.8,244.9)
-  renal <- c(403.11,403.91,404.12,404.92,585,586)
-  liver <- c(70.32,70.33,70.54,456,456.1,456.2,456.21,571,571.2,571.3,
-             seq(from=571.4, to=571.49, by=0.01),571.5,571.6,571.8,571.9,572.3,572.8)
-  pud <- c(531.7,531.9,532.7,532.9,533.7,533.9,534.7,534.9) 
-  hiv <- c(seq(from=42, to=44.9, by=0.01)) 
-  lymphoma <- c(seq(from=200,to=202.38, by=0.01),
-                seq(from=202.5,to=203.01, by=0.01),
-                seq(from=203.8,to=203.81, by=0.01),
-                238.6,273.3)
-  mets <- c(seq(from=196,to=199.1, by=0.01))
-  solid.tumor <- c(seq(from=140,to=172.9, by=0.01),
-                   seq(from=174,to=175.9, by=0.01),
-                   seq(from=179,to=195.8, by=0.01))
-  rheum <- c(701,
-             seq(from=710,to=710.9, by=0.01),
-             seq(from=714,to=714.9, by=0.01),
-             seq(from=720,to=720.9, by=0.01),
-             725)
-  coag <- c(seq(from=286.0,to=286.9, by=0.01),
-            287.1,
-            seq(from=287.3,to=287.5, by=0.01))
-  obesity <- c(278)
-  wt.loss <- c(seq(from=260,to=263.9, by=0.01))
-  lytes <- c(seq(from=276,to=276.9, by=0.01))
-  anemia.loss <- c(280)
-  anemia.def <- c(seq(from=280.1,to=281.9, by=0.01),
-                  285.9)
-  etoh <- c(291.1,291.2,291.5,291.8,291.9,
-            seq(from=303.9,to=303.93, by=0.01),
-            seq(from=305,to=305.03, by=0.01))
-  drugs <- c(292,
-             seq(from=292.82,to=292.89, by=0.01),
-             292.9,
-             seq(from=304,to=304.93, by=0.01),
-             seq(from=305.2,to=305.93, by=0.01))
-  psychoses <- c(seq(from=295,to=298.9, by=0.01),
-                 seq(from=299.1,to=299.11, by=0.01))
-  depression <- c(300.4,301.12,309,309.1,311)
+  chf <- c(39891L,40211L,40291L,40411L,40413L,40491L,40493L,
+           seq(from=42800L, to=42899L, by=1L))
+  arrhythmia <- c(42610L,42611L,42613L,
+                  seq(from=42620L, to=42653L, by=1L),
+                  seq(from=42660L, to=42689L, by=1L),
+                  42700L,42720L,42731L,42760L,42790L,78500L)
+  valve <- c(seq(from=9329L, to=9324L, by=1L),
+             seq(from=39400L, to=39719L by=1L),
+             seq(from=42400L, to=42491L, by=1L),
+             seq(from=74630L, to=74669L, by=1L)) 
+  pulm.circ <- c(seq(from=41600L, to=41690L, by=1L), 
+                 41790L) 
+  pvd <- c(seq(from=44000L, to=44099L, by=1L),
+           44120L,44140L,44170L,44190L,
+           seq(from=44310L, to=44399L, by=1L),
+           44710L,55710L,55790L)
+  htn <- c(40110L,40190L,40210L,40290L,
+           40410L,40490L,40511L,40519L,40591L,40599L) 
+  paralysis <- c(seq(from =34200L, to=34212L, by=1L),
+                 seq(from=34290L, to=34499L, by=1L)) 
+  neuro.other <- c(33190L,33200L,33340L,33350L,
+                   seq(from=33400L, to=33599L, by=1L),
+                   34000L,
+                   seq(from=34110L, to=34199L, by=1L),
+                   seq(from=34500L, to=34511L, by=1L),
+                   seq(from=34540L, to=34551L, by=1L),
+                   seq(from=34580L, to=34591L, by=1L),
+                   34810L,34830L,78030L,78430L)
+  chronic.pulm <- c(seq(from=49000L, to=49289L, by=1L),
+                    seq(from=49300L, to=49391L, by=1L),
+                    49400L,
+                    seq(from=49500L, to=50599L, by=1L),
+                    50640L)
+  dm.uncomp <- c(seq(from=25000L,to=25033L,by=1L))
+  dm.comp <- c(seq(from=25040L, to=25073L, by=1L),
+               seq(from=25090L, to=25093L, by=1L))
+  hypothyroid <- c(seq(from=24300L, to=24429L, by=1L),
+                   24480L,24490L)
+  renal <- c(40311L,40391L,40412L,40492L,58500L,58600L)
+  liver <- c(7032L,7033L,7054L,45600L,45610L,
+             45620L,45621L,57100L,57120L,57130L,
+             seq(from=57140L, to=57149L, by=1L),
+             57150L,57160L,57180L,57190L,57230L,57280L)
+  pud <- c(53170L,53190L,53270L,53290L,53370L,53390L,53470L,53490L) 
+  hiv <- c(seq(from=42, to=4499L, by=1L)) 
+  lymphoma <- c(seq(from=20000L,to=20238L, by=1L),
+                seq(from=20250L,to=20301L, by=1L),
+                seq(from=20380L,to=20381L, by=1L),
+                23860L,27330L)
+  mets <- c(seq(from=19600L,to=19919L, by=1L))
+  solid.tumor <- c(seq(from=14000L,to=17299L, by=1L),
+                   seq(from=17400L,to=17599L, by=1L),
+                   seq(from=17900L,to=19589L, by=1L))
+  rheum <- c(70100L,
+             seq(from=71000L,to=71099L, by=1L),
+             seq(from=71400L,to=71499L, by=1L),
+             seq(from=72000L,to=72099L, by=1L),
+             72500L)
+  coag <- c(seq(from=28600L,to=28699L, by=1L),
+            28710L,
+            seq(from=28730L,to=28759L, by=1L))
+  obesity <- c(27800L)
+  wt.loss <- c(seq(from=26000L,to=26399L, by=1L))
+  lytes <- c(seq(from=27600L,to=27699L, by=1L))
+  anemia.loss <- c(28000L)
+  anemia.def <- c(seq(from=28010L,to=28199L, by=1L),
+                  28590L)
+  etoh <- c(29110L,29120L,29150L,29180L,29190L,
+            seq(from=30390L,to=30393L, by=1L),
+            seq(from=30500L,to=30503L, by=1L))
+  drugs <- c(29200L,
+             seq(from=29282L,to=29289L, by=1L),
+             29290L,
+             seq(from=30400L,to=30493L, by=1L),
+             seq(from=30520L,to=30593L, by=1L))
+  psychoses <- c(seq(from=29500L,to=29899L, by=1L),
+                 seq(from=29910L,to=29911L, by=1L))
+  depression <- c(30040L,30112L,30900L,30910L,31100L)
   
   # 30 different groups - each line contains 3 groups
   elixhauser.list <- list(chf = chf, arrhythmia = arrhythmia, valve = valve, # 3

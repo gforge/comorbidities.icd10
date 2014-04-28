@@ -1,5 +1,20 @@
 NEWS for the Gmisc package
 
+Changes for 0.2
+---------------
+* Started implementing testthat tests
+* Bug found in weights for Charlson's Deyo index the weights are set to 6 are wrong
+- note the code below:
+-  output.frame[, 16] <- output.frame[, 17] * 6
+-  output.frame[, 16] <- output.frame[, 17] * 6
+- both update the 16 column and not their own column
+* Bug found in Deyo aortic aneurysm group:
+-  441, 441.9 does not include all 441 codes that correspond to the code according to CMS.goc ICD-9
+* Bug found in Deyo severe liver group:
+-  572.3 and 572.4 cause a floating point mismatch -> Switched everyting to integers for Deyo and Elixhausers
+* Bug found - frequent use of seq(xxx.0 to xxx.9, by=0.01) will not include xxx.91 or above
+* Bug found in Deyo renal group: 585 is a group and not just 585.00
+
 Changes for 0.1
 -------------------
 * Refactored the code for the comorbidities package to better suit a package-environment

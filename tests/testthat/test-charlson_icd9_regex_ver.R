@@ -51,15 +51,3 @@ charlsons_icd9_codes_2_test[['METASTASIS']] = c('196','197','198','199')
 # AIDS/HIV
 charlsons_icd9_codes_2_test[['HIV']] = c('042','043','044')
 
-test_that("Check Charlson matches",{
-  
-})
-for (n in names(charlsons_icd9_codes_2_test)){
-  test_df <- data.frame(Codes=charlsons_icd9_codes_2_test[[n]])
-  out <- deyo(test_df)
-  found_codes <- out$COMORBIDITIES[,n] == 1
-  expect_true(all(found_codes), info=sprintf("The script fails to properly identify fro '%s' the codes '%s'",
-                                             n,
-                                             paste(charlsons_icd9_codes_2_test[[n]][!found_codes],
-                                                   collapse="', '")))
-}

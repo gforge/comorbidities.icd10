@@ -14,6 +14,6 @@ prDeyo.ICD9.5digit(icd.code)
 Convert to 5 digit ICD-code
 }
 \seealso{
-\code{\link{deyo}
+\code{\link{deyo}}
 }
 

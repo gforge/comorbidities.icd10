@@ -84,7 +84,7 @@ prDeyo.apply.icd9 <- function(input.frame) {
 #' 
 #' @param icd.code \code{string} indicating the code 
 #' @return \code{float} Returns a float value XXX.XX
-#' @seealso \code{\link{deyo} 
+#' @seealso \code{\link{deyo}}
 prDeyo.ICD9.5digit <- function(icd.code){
   # NA is converted to 0
   if (is.na(icd.code)) {
@@ -92,10 +92,20 @@ prDeyo.ICD9.5digit <- function(icd.code){
   }
   
   if (is.numeric(icd.code)){
-    if (icd.code > 10^4)
-      return(icd.code/100)
+    if (icd.code != ceil(icd.code))
+      stop("The software wants icd.codes provided in numeric format without",
+           " decimals if ICD-9 is provided in numeric format, otherwise it does",
+           " no know how to deal with the code. The code should be in the format ",
+           " 58510 and not 585.1 or anything similar. You have provided the code: ", icd.code)
     return(icd.code)
   }
+  
+  if (class(icd.code) == "factor")
+    icd.code <- as.character(icd.code)
+  
+  if (nchar(icd.code) < 5)
+    icd.code <- paste0(icd.code, paste0(rep("0", length.out=5-nchar(icd.code)),
+                                        collapse=""))
   
   icd9.3 <- substr(icd.code, 1, 3)
   icd9.4 <- substr(icd.code, 4, 4)
@@ -104,7 +114,7 @@ prDeyo.ICD9.5digit <- function(icd.code){
   if (icd9.5 == "X") {icd9.5 <- 0}
   icd9.result <- paste(icd9.3, icd9.4, icd9.5, sep = "")
   if (icd9.result == "V4340") {icd9.result <- 44390}
-  return(as.numeric(icd9.result)/100)
+  return(as.integer(icd9.result))
 }
 
 #' Score points for Deyo Charlson's index
@@ -121,36 +131,41 @@ prDeyo.ICD9.5digit <- function(icd.code){
 #' @seealso \code{\link{deyo}}
 prDeyo.comorbidities <- function(input.frame) {
   #create lists of comorbidities
-  mi <- c(seq(from=410, to=410.9, by=0.01),
-          412)
-  chf <- c(seq(from=428, to=428.9, by=0.01))
-  pvd <- c(443.9, 441, 441.9, 785.4) #v code v43.4 not included in this list
-  cvd <- c(seq(from=430, to=438, by=0.01))
-  dementia <- c(seq(from=290, to=290.9, by=0.01))
-  copd <- c(seq(from=490, to=496, by=0.01), 
-            seq(from=500, to=505, by=0.01), 506.4)
-  rheum <- c(710, 710.1, 710.4, 
-             seq(from =714, to=714.2, by=0.01),
-             714.81, 725)
-  pud <- c(seq(from=531, to=534.9, by=0.01))
-  mild.liver <- c(571.2, 571.5, 571.6, 
-                  seq(from=571.4, to=571.49, by=0.01))
-  dm <- c(seq(from=250,to=250.3,by=0.01),
-          250.7)
-  dm.comp <- c(seq(from=250.4, to=250.6, by=0.01)) #2 point items start here
-  plegia <- c(344.1, 
-              seq(from=342, to=342.9, by=0.01))
-  renal <- c(seq(from=582, to=582.9, by=0.01), 
-             seq(from=583, to=583.7, by=0.01),
-             585, 586,
-             seq(from=588, to=588.9, by=0.01))
-  malignancy <- c(seq(from=140, to=172.9, by=0.01), 
-                  seq(from=174, to=195.8, by=0.01), 
-                  seq(from=200, to=208.9, by=0.01))
-  severe.liver <- c(seq(from=572.2, to=572.8, by=0.01),
-                    seq(from=456, to=456.21, by=0.01)) # 3 point item
-  mets <- c(seq(from=196, to=199.1, by=0.01)) # 6 point items
-  hiv <- c(seq(from=42, to=44.93, by=0.01))
+  mi <- c(seq(from=41000L, to=41099L, by=1L),
+          41200L)
+  chf <- c(seq(from=42800L, to=42899L, by=1L))
+  pvd <- c(seq(44100L, 44199L, by=1L), # This should include everything under 441
+           seq(44390L, 44399L, by=1L), 
+           78540L) #v code v43.4 not included in this list
+  cvd <- c(seq(from=43000L, to=43799L, by=1L),
+           43813L, 43814L) # Note table cross saying that only late effects were included from the 438 group
+  dementia <- c(seq(from=29000L, to=29099L, by=1L))
+  copd <- c(seq(from=49000L, to=49699L, by=1L), 
+            seq(from=50000L, to=50599L, by=1L), 
+            50640L)
+  rheum <- c(71000L, 71010L, 71040L, 
+             seq(from=71400L, to=71429L, by=1L),
+             71481L, 72500L)
+  pud <- c(seq(from=53100L, to=53499L, by=1L))
+  mild.liver <- c(57120L, 57150L, 57160L, 
+                  seq(from=57140L, to=57149L, by=1L))
+  dm <- c(seq(from=25000L,to=25039L,by=1L),
+          25070L)
+  dm.comp <- c(seq(from=25040L, to=25069L, by=1L)) #2 point items start here
+  plegia <- c(34410L, 
+              seq(from=34200L, to=34299L, by=1L))
+  renal <- c(seq(from=58200L, to=58299L, by=1L), 
+             seq(from=58300L, to=58379L, by=1L),
+             seq(from=58500L, to=58599L, by=1L), # Multiple in group
+             58600L, # Only one in this group
+             seq(from=58800L, to=58899L, by=1L))
+  malignancy <- c(seq(from=14000L, to=17299L, by=1L), 
+                  seq(from=17400L, to=19589L, by=1L), 
+                  seq(from=20000L, to=20899L, by=1L))
+  severe.liver <- c(seq(from=57220L, to=57289L, by=1L),
+                    seq(from=45600L, to=45621L, by=1L)) # 3 point item
+  mets <- c(seq(from=19600L, to=19919L, by=1L)) # 6 point items
+  hiv <- c(seq(from=4200L, to=4493L, by=1L))
   
   deyo.list <- list(mi = mi, chf = chf, pvd = pvd, # 3
                     cvd = cvd, dementia = dementia, copd = copd, # 6
@@ -163,7 +178,7 @@ prDeyo.comorbidities <- function(input.frame) {
   n.cols <- length(input.frame[1,])
   output.frame <- matrix(0, nrow=n.rows, ncol=17)
   # Using the names for columns limits the risk of missing 
-  colnames(output.frame) <- names(elixhauser.list)
+  colnames(output.frame) <- names(deyo.list)
   
   for (i in 1:n.rows){
     for (j in 1:n.cols) {
@@ -204,12 +219,18 @@ prDeyo.convert.to.points <- function(input.frame) {
   n.rows <- length(input.frame[,1])
   n.cols <- length(input.frame[1,])
   output.frame <- input.frame
-  output.frame[,11] <- output.frame[,11] *2
-  output.frame[,12] <- output.frame[,12] *2
-  output.frame[,13] <- output.frame[,13] *2
-  output.frame[,14] <- output.frame[,14] *2
-  output.frame[,15] <- output.frame[,15] *3
-  output.frame[,16] <- output.frame[,17] *6
-  output.frame[,16] <- output.frame[,17] *6
+  # Set all columns that have 2 points
+  for (var in c("PLEGIA", "DM.COMP",
+                "MALIGNANCY", "RENAL"))
+    output.frame[,var] <- output.frame[,var] *2
+  
+  # Set all columns that have 3 points
+  for (var in c("SEVERE.LIVER"))
+    output.frame[,var] <- output.frame[,var] *3
+  
+  # Set all columns that have 6 points
+  for (var in c("METS", "HIV"))
+    output.frame[,var] <- output.frame[,var] *6
+  
   return(output.frame)
 }
