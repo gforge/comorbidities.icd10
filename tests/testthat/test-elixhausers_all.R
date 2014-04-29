@@ -77,8 +77,10 @@ elixhausers_codes_2_check[['HTN']] = list(
   icd10 = c('I104'))
 
 # Hypertension, complicated
-elixhausers_codes_2_check[['HTN.COMPL']] = list(
-  icd9_basic = c('4022', '4034', '404', '4058'),
+elixhausers_codes_2_check[['HTN.COMP']] = list(
+  icd9_basic = c('40210', '40290', 
+                 '40410', '40490', 
+                 '40591','40599'),
   
   icd9 = c('4022', '4034', '404', '4058'),
   
@@ -86,8 +88,9 @@ elixhausers_codes_2_check[['HTN.COMPL']] = list(
 
 # Paralysis
 elixhausers_codes_2_check[['PARALYSIS']] = list(
-  icd9_basic = c('3341', '3423', '3435',
-                 '3440', '3441', '3442', '3443', '3444', '3445', '3446', '3449'),
+  icd9_basic = c('3420', '34212', '3435',
+                 '3440', '3441', '3442', 
+                 '3443', '3444', '3445', '3446', '3449'),
   
   icd9 = c('3341', '3423', '3435',
            '3440', '3441', '3442', '3443', '3444', '3445', '3446', '3449'),
@@ -99,9 +102,9 @@ elixhausers_codes_2_check[['PARALYSIS']] = list(
 # Other neurological disorders
 # NEUR => OthND
 elixhausers_codes_2_check[['NEURO.OTHER']] = list(
-  icd9_basic = c('3319', '3320', '3321', '3334',
+  icd9_basic = c('3319', '3320', '3334',
                  '3335', '334', '3343', '3353',
-                 '3362', '3403', '3414', '3454',
+                 '340', '3414', '3454',
                  '3481', '3483', '7803', '7843'),
   
   icd9 = c('3319', '3320', '3321', '3334',
@@ -118,10 +121,10 @@ elixhausers_codes_2_check[['NEURO.OTHER']] = list(
 
 # Chronic pulmonary disease
 elixhausers_codes_2_check[['CHRONIC.PULM']] = list(
-  icd9_basic = c('4168', '4169', '490', '4902', '4912', '492', '4934',
-                 '4942', '4945', '496', '497', '498', '4999',
+  icd9_basic = c('490', '4902', '4912', '492', '4934',
+                 '494', '496', '497', '498', '4999',
                  '5002', '5012', '5023', '503', '5045', '5059',
-                 '5064', '5081', '5088'),
+                 '5064'),
   
   icd9 = c('4168', '4169', '490', '4902', '4912', '492', '4934',
            '4942', '4945', '496', '497', '498', '4999',
@@ -147,7 +150,7 @@ elixhausers_codes_2_check[['DM.UNCOMP']] = list(
 
 # Diabetes, complicated
 elixhausers_codes_2_check[['DM.COMP']] = list(
-  icd9_basic = c('2504', '2505', '2506', '2507', '2508', '2509'),
+  icd9_basic = c('2504', '2505', '2506', '25073', '2509'),
   
   icd9 = c('2504', '2505', '2506', '2507', '2508', '2509'),
   
@@ -158,7 +161,7 @@ elixhausers_codes_2_check[['DM.COMP']] = list(
 
 # Hypothyroidism
 elixhausers_codes_2_check[['HYPOTHYROID']] = list(
-  icd9_basic = c('2409', '2431', '2443', '2461', '2468'),
+  icd9_basic = c('2431', '2442', '2448', '2449'),
   
   icd9 = c('2409', '2431', '2443', '2461', '2468'),
   
@@ -166,14 +169,13 @@ elixhausers_codes_2_check[['HYPOTHYROID']] = list(
 
 # Renal failure
 elixhausers_codes_2_check[['RENAL']] = list(
-  icd9_basic = c('4030', '4031', '4039', '4040',
-                 '4040', '4041', '4041',
-                 '4049', '4049', '5854', '5863',
-                 '5880', 'V420', 'V451', 'V564'),
+  icd9_basic = c('40311', '40391', 
+                 '40492', '585', '586',
+                 'V420', 'V451', 'V560'),
   
-  icd9 = c('4030', '4031', '4039', '4040',
+  icd9 = c('4030', '4031', '4039', 
            '4040', '4041', '4041',
-           '4049', '4049', '5854', '5863',
+           '4049', '5854', '5863',
            '5880', 'V420', 'V451', 'V564'),
   
   icd10 = c('I120', 'I131', 'N182',
@@ -181,11 +183,9 @@ elixhausers_codes_2_check[['RENAL']] = list(
 
 # Liver disease
 elixhausers_codes_2_check[['LIVER']] = list(
-  icd9_basic = c('0702', '0703', 
-                 '0704', '0705',
-                 '4560', '4561', '4562', '5702', '5713',
-                 '5722', '5723', '5724', '5725', '5726', '5727', '5728', '5733', '5734',
-                 '5738', '5739', 'V427'),
+  icd9_basic = c('07032', '07033', 
+                 '07054', '4560', '4561', '4562', 
+                 '5713', '5723', '5728', 'V427'),
   
   icd9 = c('0702', '0703', 
            '0704', '0705',
@@ -235,7 +235,7 @@ elixhausers_codes_2_check[['LYMPHOMA']] = list(
 
 # Metastatic cancer
 elixhausers_codes_2_check[['METS']] = list(
-  icd9_basic = c('1967', '1977', '1998'),
+  icd9_basic = c('1967', '1977', '1991'),
   
   icd9 = c('1967', '1977', '1998'),
   
@@ -247,7 +247,7 @@ elixhausers_codes_2_check[['SOLID.TUMOR']] = list(
   icd9_basic = c('1402', '1412', '1438', '1444', '1459', '1461', '1477', '1489', '1491',
                  '1501', '1511', '1521', '1539', '1543', '1557', '1561', '1572', '1580', '1599',
                  '1601', '1619', '1621', '1637', '1644', '1652', '1666', '1671', '1688', '1691',
-                 '1707', '1712', '1723', '1743', '1755', '1761', '1777', '1789', '1790',
+                 '1707', '1712', '1723', '1743', '1755', '1790',
                  '1808', '1810', '1820', '1831', '1844', '1852', '1867', '1871', '1880', '1894',
                  '1905', '1913', '1921', '1939', '1945', '1951'),
   
@@ -272,10 +272,8 @@ elixhausers_codes_2_check[['SOLID.TUMOR']] = list(
 # Rheumatoid arthritis/collagen vascular diseases
 # Rheum => Rheum_A
 elixhausers_codes_2_check[['RHEUM']] = list(
-  icd9_basic = c('4462', '7010', '7100', '7101', '7102', '7103', '7104', '7108', '7109',
-                 '7112', '7148', '7193',
-                 '7203', '7258', '7285',
-                 '7288', '7293'),
+  icd9_basic = c('7010', '7100', '7101', '7102', '7103', '7104', '7108', '7109',
+                 '7148', '7203', '725'),
 
   icd9 = c('4462', '7010', '7100', '7101', '7102', '7103', '7104', '7108', '7109',
            '7112', '7148', '7193',
@@ -291,7 +289,7 @@ elixhausers_codes_2_check[['RHEUM']] = list(
 
 # Coagulopathy
 elixhausers_codes_2_check[['COAG']] = list(
-  icd9_basic = c('286x', '2871', '2873', '2874', '2875'),
+  icd9_basic = c('2860', '2864', '2871', '2873', '2874', '2875'),
   
   icd9 = c('286x', '2871', '2873', '2874', '2875'),
   
@@ -309,8 +307,7 @@ elixhausers_codes_2_check[['OBESITY']] = list(
 # Weight loss
 # WGHT_LOSS => WL
 elixhausers_codes_2_check[['WT.LOSS']] = list(
-  icd9_basic = c('2602', '2603', '2612', '2623', '2637', 
-                 '7832', '7994'),
+  icd9_basic = c('2602', '2603', '2612', '2623', '2637'),
   
   icd9 = c('2602', '2603', '2612', '2623', '2637', 
            '7832', '7994'),
@@ -320,7 +317,7 @@ elixhausers_codes_2_check[['WT.LOSS']] = list(
 
 # Fluid and electrolyte disorders
 elixhausers_codes_2_check[['LYTES']] = list(
-  icd9_basic = c('2536', '2762'),
+  icd9_basic = c('2760', '2762', '2769'),
   
   icd9 = c('2536', '2762'),
   
@@ -347,11 +344,10 @@ elixhausers_codes_2_check[['ANEMIA.DEF']] = list(
 
 # Alcohol abuse
 elixhausers_codes_2_check[['ETOH']] = list(
-  icd9_basic = c('2652', '2911', '2912', '2913',
-                 '2915', '2916', '2917', '2918', '2919', '3030',
-                 '3039', '3050', '3575',
-                 '4255', '5353',
-                 '5710', '5711', '5712', '5713', '9802', 'V113'),
+  icd9_basic = c('2911', '2912', 
+                 '2915', '2918', '2919', 
+                 '3039', '3050', 
+                 'V113'),
   
   icd9 = c('2652', '2911', '2912', '2913',
            '2915', '2916', '2917', '2918', '2919', '3030',
@@ -367,16 +363,18 @@ elixhausers_codes_2_check[['ETOH']] = list(
 # Drug abuse
 # DR_ABUSE => Drug
 elixhausers_codes_2_check[['DRUGS']] = list(
-  icd9_basic = c('2922', '3049', '3052', '3053', '3054', '3055', '3056', '3057', '3058', '3059', 'V6542'),
+  icd9_basic = c('2920', '29282', '3049', '3052', '3053', '3054', 
+                 '3055', '3056', '3057', '3058', '3059'),
   
-  icd9 = c('2922', '3049', '3052', '3053', '3054', '3055', '3056', '3057', '3058', '3059', 'V6542'),
+  icd9 = c('2922', '3049', '3052', '3053', '3054', '3055', '3056',
+           '3057', '3058', '3059', 'V6542'),
   
   icd10 = c('F112', 'F129', 'F134', 'F151', 'F160', 'F189', 'F196',
              'Z715', 'Z722'))
 
 # Psychoses
 elixhausers_codes_2_check[['PSYCHOSES']] = list(
-  icd9_basic = c('2938', '2952', '29604',
+  icd9_basic = c('2952', '29604',
                  '2960', '2968',
                  '2978', '2983'),
   
@@ -389,8 +387,7 @@ elixhausers_codes_2_check[['PSYCHOSES']] = list(
 
 # Depression
 elixhausers_codes_2_check[['DEPRESSION']] = list(
-  icd9_basic = c('2961', '2963', '2965',
-                 '3004', '3092', '311'),
+  icd9_basic = c('3004', '3091', '311'),
   
   icd9 = c('2961', '2963', '2965',
            '3004', '3092', '311'),
@@ -402,13 +399,16 @@ elixhausers_codes_2_check[['DEPRESSION']] = list(
 
 test_that("Check Elixhausers matches or the basic elixhauser() function",{
   for (n in names(elixhausers_codes_2_check)){
-    codes <- elixhausers_codes_2_check[[n]]$icd9_basic
-    test_df <- data.frame(Codes=codes)
-    out <- elixhauser(test_df)
-    found_codes <- out$COMORBIDITIES[,n] == 1
-    expect_true(all(found_codes), info=sprintf("The script fails to properly identify from '%s' the codes '%s'",
-                                               n,
-                                               paste(codes[!found_codes],
-                                                     collapse="', '")))
+    if ("icd9_basic" %in% names(elixhausers_codes_2_check[[n]])){
+      codes <- elixhausers_codes_2_check[[n]]$icd9_basic
+      test_df <- data.frame(Codes=codes)
+      out <- elixhauser(test_df)
+      found_codes <- out$COMORBIDITIES[,n] == 1
+      expect_true(all(found_codes), 
+                  info=sprintf("The script fails to properly identify from '%s' the codes '%s'",
+                               n,
+                               paste(codes[!found_codes],
+                                     collapse="', '")))
+    }
   }
 })

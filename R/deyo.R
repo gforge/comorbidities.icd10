@@ -107,6 +107,7 @@ prDeyo.ICD9.5digit <- function(icd.code){
     icd.code <- paste0(icd.code, paste0(rep("0", length.out=5-nchar(icd.code)),
                                         collapse=""))
   
+  icd.code = toupper(icd.code)
   icd9.3 <- substr(icd.code, 1, 3)
   icd9.4 <- substr(icd.code, 4, 4)
   icd9.5 <- substr(icd.code, 5, 5)
