@@ -152,8 +152,8 @@ points.elixhauser.30 <- function(input.frame) {
                   seq(from=42620L, to=42653L, by=1L),
                   seq(from=42660L, to=42689L, by=1L),
                   42700L,42720L,42731L,42760L,42790L,78500L)
-  valve <- c(seq(from=9329L, to=9324L, by=1L),
-             seq(from=39400L, to=39719L by=1L),
+  valve <- c(seq(from=9320L, to=9324L, by=1L),
+             seq(from=39400L, to=39719L, by=1L),
              seq(from=42400L, to=42491L, by=1L),
              seq(from=74630L, to=74669L, by=1L)) 
   pulm.circ <- c(seq(from=41600L, to=41690L, by=1L), 
@@ -162,8 +162,11 @@ points.elixhauser.30 <- function(input.frame) {
            44120L,44140L,44170L,44190L,
            seq(from=44310L, to=44399L, by=1L),
            44710L,55710L,55790L)
-  htn <- c(40110L,40190L,40210L,40290L,
-           40410L,40490L,40511L,40519L,40591L,40599L) 
+  htn <- c(40110L,40190L) 
+  htn.comp <- c(40210L,40290L, # Separated hypertension into complicated and un-complicated
+                40410L,40490L,
+                40511L,40519L,
+                40591L,40599L)
   paralysis <- c(seq(from =34200L, to=34212L, by=1L),
                  seq(from=34290L, to=34499L, by=1L)) 
   neuro.other <- c(33190L,33200L,33340L,33350L,
@@ -228,14 +231,15 @@ points.elixhauser.30 <- function(input.frame) {
   # 30 different groups - each line contains 3 groups
   elixhauser.list <- list(chf = chf, arrhythmia = arrhythmia, valve = valve, # 3
                           pulm.circ = pulm.circ, pvd = pvd, htn = htn, # 6
-                          paralysis = paralysis, neuro.other = neuro.other, chronic.pulm = chronic.pulm, # 9
-                          dm.uncomp = dm.uncomp, dm.comp = dm.comp, hypothyroid = hypothyroid, # 12
-                          renal = renal, liver = liver, pud = pud, # 15
-                          hiv = hiv, lymphoma = lymphoma, mets = mets, # 18
-                          solid.tumor = solid.tumor, rheum = rheum, coag = coag, # 21 
-                          obesity = obesity, wt.loss = wt.loss, lytes = lytes, # 24
-                          anemia.loss = anemia.loss, anemia.def = anemia.def, etoh = etoh, # 27
-                          drugs = drugs, psychoses = psychoses, depression = depression) # 30
+                          htn.comp = htn.comp, paralysis = paralysis, neuro.other = neuro.other, # 9
+                          chronic.pulm = chronic.pulm, dm.uncomp = dm.uncomp, dm.comp = dm.comp, # 12
+                          hypothyroid = hypothyroid, renal = renal, liver = liver, # 15
+                          pud = pud, hiv = hiv, lymphoma = lymphoma, # 18
+                          mets = mets, solid.tumor = solid.tumor, rheum = rheum, # 21 
+                          coag = coag, obesity = obesity, wt.loss = wt.loss, # 24
+                          lytes = lytes, anemia.loss = anemia.loss, anemia.def = anemia.def, # 27
+                          etoh = etoh, drugs = drugs, psychoses = psychoses, # 30
+                          depression = depression) # 31
   
   n.rows <- length(input.frame[,1])
   n.cols <- length(input.frame[1,])
