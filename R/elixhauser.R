@@ -56,11 +56,11 @@ elixhauser <- function(input.frame) {
 }
 
 prElixhauser.apply.icd9 <- function(input.frame) { 
-  n.rows <- length(input.frame[,1])
-  n.cols <- length(input.frame[1,])
-  output.frame <- matrix(0, nrow=n.rows, ncol=n.cols)
-  for (i in 1:n.rows){
-    for (j in 1:n.cols) {
+  output.frame <- matrix(0, 
+                         nrow=NROW(input.frame), 
+                         ncol=NCOL(input.frame))
+  for (i in 1:NROW(input.frame)){
+    for (j in 1:NCOL(input.frame)) {
       output.frame[i,j] <- prElixhauser.ICD9.5digit(input.frame[i,j])
     }
   }
@@ -229,15 +229,13 @@ points.elixhauser.30 <- function(input.frame) {
                        seq(from=29910L,to=29911L, by=1L)),
          depression = c(30040L,30112L,30900L,30910L,31100L))
   
-  
-  n.rows <- length(input.frame[,1])
-  n.cols <- length(input.frame[1,])
-  output.frame <- matrix(0, nrow=n.rows, 
+  output.frame <- matrix(0, 
+                         nrow=NROW(input.frame), 
                          ncol=length(elixhauser.list))
   # Using the names for columns limits the risk of missing 
   colnames(output.frame) <- names(elixhauser.list)
-  for (i in 1:n.rows){
-    for (j in 1:n.cols) {
+  for (i in 1:NROW(input.frame)){
+    for (j in 1:NCOL(input.frame)) {
       for (disease_group in names(elixhauser.list)){
         if (input.frame[i, j] %in% elixhauser.list[[disease_group]]) {
           output.frame[i,disease_group] <- 1
