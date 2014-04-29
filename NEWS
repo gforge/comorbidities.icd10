@@ -14,6 +14,8 @@ Changes for 0.2
 -  572.3 and 572.4 cause a floating point mismatch -> Switched everyting to integers for Deyo and Elixhausers
 * Bug found - frequent use of seq(xxx.0 to xxx.9, by=0.01) will not include xxx.91 or above
 * Bug found in Deyo renal group: 585 is a group and not just 585.00
+* Split Elixhauser hypertension group into complicated and uncomplicated
+* Switched to standard NROW/NCOL
 
 Changes for 0.1
 -------------------

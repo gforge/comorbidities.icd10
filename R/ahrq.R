@@ -67,11 +67,12 @@ ahrq <- function(input.frame) {
 #'  and rows as the \code{input.frame}
 #' @seealso\code{\link{ahrq}}
 prAHRQ.apply.icd9 <- function(input.frame) { 
-  n.rows <- length(input.frame[,1])
-  n.cols <- length(input.frame[1,])
-  output.frame <- matrix(0, nrow=n.rows, ncol=n.cols)
-  for (i in 1:n.rows){
-    for (j in 1:n.cols) {
+  output.frame <- matrix(0, 
+                         nrow=NROW(input.frame), 
+                         ncol=NCOL(input.frame))
+  # TODO: this loop is probably rather slow
+  for (i in 1:NROW(input.frame)){
+    for (j in 1:NCOL(input.frame)) {
       output.frame[i,j] <- prAHRQ.ICD9.5digit(input.frame[i,j])
     }
   }
@@ -164,7 +165,9 @@ prAHRQ.points <- function(input.frame) {
     list(
       chf = c(39891L,
               seq(from=42800L, to=42899L, by=1L), 
-              40201L,40211L,40291L, 40401L,40411L,40491L, 40403L,40413L,40493L),
+              40201L,40211L,40291L, 
+              40401L,40411L,40491L, 
+              40403L,40413L,40493L),
       valve = c(seq(from=9320L, to=9324L, by=1L),
                 seq(from=39400L, to=39719L, by=1L),
                 39790L,
@@ -278,13 +281,13 @@ prAHRQ.points <- function(input.frame) {
                     29910L,29911L),
       depression = c(30040L,30112L,30900L,30910L,31100L))
   
-  n.rows <- length(input.frame[,1])
-  n.cols <- length(input.frame[1,])
-  output.frame <- matrix(0, nrow=n.rows, ncol=29)
+  output.frame <- matrix(0, 
+                         nrow=NROW(input.frame), 
+                         ncol=length(ahrq.list))
   # Using the names for columns limits the risk of mixing groups 
   colnames(output.frame) <- names(ahrq.list)
-  for (i in 1:n.rows){
-    for (j in 1:n.cols) {
+  for (i in 1:NROW(input.frame)){
+    for (j in 1:NCOL(input.frame)) {
       for (k in name(ahrq.list)){
         if (input.frame[i, j] %in% ahrq.list[[k]]) {
           output.frame[i,k] <- 1
