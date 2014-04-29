@@ -49,13 +49,14 @@
 #' x <- as.data.frame(x)
 #' deyo(x)
 deyo <- function(input.frame) {
-  interim.frame.1 <- prDeyo.apply.icd9(input.frame)
-  interim.frame.2 <- apply.convert.na(interim.frame.1)
-  interim.frame.3 <- prDeyo.comorbidities(interim.frame.2)
-  interim.frame.4 <- prDeyo.convert.to.points(interim.frame.3)
-  POINTS <- total.points(interim.frame.4)
-  deyo.data <- list(POINTS, interim.frame.3,interim.frame.4)
-  names(deyo.data) <- c("CHARLSON.SCORE", "COMORBIDITIES", "COMORBIDITIES.POINTS")
+  ret <- prDeyo.apply.icd9(input.frame)
+  ret <- apply.convert.na(ret)
+  ret <- prDeyo.comorbidities(ret)
+  scores <- prDeyo.convert.to.points(ret)
+  POINTS <- total.points(ret)
+  deyo.data <- list(CHARLSON.SCORE = POINTS, 
+                    COMORBIDITIES = ret, 
+                    COMORBIDITIES.POINTS = scores)
   return(deyo.data)
 }
 

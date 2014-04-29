@@ -46,12 +46,12 @@
 #' elixhauser(x)
 elixhauser <- function(input.frame) {
   # Convert icd9 codes to numeric values and convert v codes
-  interim.frame.1 <- prElixhauser.apply.icd9(input.frame)
-  interim.frame.2 <- apply.convert.na(interim.frame.1)
-  interim.frame.3 <- points.elixhauser.30(interim.frame.2)
-  POINTS <- total.points(interim.frame.3)
-  elixhauser.data <- list(POINTS, interim.frame.3)
-  names(elixhauser.data) <- c("COMORBIDITY.CT", "COMORBIDITIES")
+  ret <- prElixhauser.apply.icd9(input.frame)
+  ret <- apply.convert.na(ret)
+  ret <- points.elixhauser.30(ret)
+  POINTS <- total.points(ret)
+  elixhauser.data <- list(COMORBIDITY.CT = POINTS, 
+                          COMORBIDITIES = ret)
   return(elixhauser.data)
 }
 
