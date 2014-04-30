@@ -53,8 +53,7 @@ ahrq <- function(input.frame) {
 	ret <- prAHRQ.apply.icd9(input.frame)
   ret <- apply.convert.na(ret)
   ret <- prAHRQ.points(ret)
-	POINTS <- total.points(ret)
-  ahrq.data <- list(COMORBIDITY.CT = POINTS, 
+  ahrq.data <- list(COMORBIDITY.CT = rowSums(ret), 
                     COMORBIDITIES = ret)
 	return(ahrq.data)
 }
@@ -91,7 +90,7 @@ prAHRQ.ICD9.5digit <- function(icd.code){
   }
   
   if (is.numeric(icd.code)){
-    if (icd.code != ceil(icd.code))
+    if (icd.code != floor(icd.code))
       stop("The software wants icd.codes provided in numeric format without",
            " decimals if ICD-9 is provided in numeric format, otherwise it does",
            " no know how to deal with the code. The code should be in the format ",

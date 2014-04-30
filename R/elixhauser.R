@@ -49,8 +49,7 @@ elixhauser <- function(input.frame) {
   ret <- prElixhauser.apply.icd9(input.frame)
   ret <- apply.convert.na(ret)
   ret <- points.elixhauser.30(ret)
-  POINTS <- total.points(ret)
-  elixhauser.data <- list(COMORBIDITY.CT = POINTS, 
+  elixhauser.data <- list(COMORBIDITY.CT = rowSums(ret), 
                           COMORBIDITIES = ret)
   return(elixhauser.data)
 }
@@ -79,7 +78,7 @@ prElixhauser.ICD9.5digit <- function(icd.code){
   }
   
   if (is.numeric(icd.code)){
-    if (icd.code != ceil(icd.code))
+    if (icd.code != floor(icd.code))
       stop("The software wants icd.codes provided in numeric format without",
            " decimals if ICD-9 is provided in numeric format, otherwise it does",
            " no know how to deal with the code. The code should be in the format ",
@@ -194,7 +193,7 @@ points.elixhauser.30 <- function(input.frame) {
                    seq(from=57140L, to=57149L, by=1L),
                    57150L,57160L,57180L,57190L,57230L,57280L),
          pud = c(53170L,53190L,53270L,53290L,53370L,53390L,53470L,53490L),
-         hiv = c(seq(from=42, to=4499L, by=1L)),
+         hiv = c(seq(from=4200L, to=4499L, by=1L)),
          lymphoma = c(seq(from=20000L,to=20238L, by=1L),
                       seq(from=20250L,to=20301L, by=1L),
                       seq(from=20380L,to=20381L, by=1L),
