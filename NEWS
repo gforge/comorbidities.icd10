@@ -2,7 +2,7 @@ NEWS for the Gmisc package
 
 Changes for 0.2
 ---------------
-* Started implementing testthat tests
+* Implemented testthat tests
 * Bug found in weights for Charlson's Deyo index the weights are set to 6 are wrong
 - note the code below:
 -  output.frame[, 16] <- output.frame[, 17] * 6

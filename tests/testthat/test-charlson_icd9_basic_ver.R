@@ -76,6 +76,151 @@ test_that("Check Charlson matches",{
                                                n,
                                                paste(charlsons_icd9_codes_2_test[[n]][!found_codes],
                                                      collapse="', '")))
+    
+    # Should not match other groups
+    not_found_codes <- rowSums(out$COMORBIDITIES[,-grep(n, 
+                                                        colnames(out),
+                                                        fixed=TRUE)]) == 0
+    expect_true(all(not_found_codes), 
+                info=sprintf("The script matches codes to other groups than '%s' for the codes '%s'",
+                             n,
+                             paste(charlsons_icd9_codes_2_test[[n]][!not_found_codes],
+                                   collapse="', '")))
   }
 })
 
+
+org_charlson_weights <-
+  list(
+    `2`= c('PLEGIA','RENAL','DM.COMP','MALIGNANCY'),
+    `3`= c('SEVERE.LIVER'),
+    `6`=c('METS','HIV'))
+
+test_that("Check Charlson individual scores",{
+  for (n in names(charlsons_icd9_codes_2_test)){
+    test_df <- data.frame(Codes=charlsons_icd9_codes_2_test[[n]])
+    out <- deyo(test_df)
+    score_points <- 1
+    for (group_points in names(org_charlson_weights)){
+      if (n %in% org_charlson_weights[[group_points]]){
+        score_points <- as.numeric(group_points)
+        break;
+      }
+    }
+    expect_true(all(out$COMORBIDITIES.POINTS[,n] == score_points), 
+                label="Comorbidity weight test",
+                info=sprintf("Comorbity weight for %s is expected to be %d while it actually is %s",
+                             n,
+                             score_points,
+                             paste(unique(out$COMORBIDITIES.POINTS[,n]), collapse=",")))
+
+  }
+})
+
+test_that("Check Charlson sum score",{
+  t1 <- data.frame(icd1=charlsons_icd9_codes_2_test$MI[1],
+                   icd2=charlsons_icd9_codes_2_test$CHF[1],
+                   icd3=charlsons_icd9_codes_2_test$PUD[1])
+  out <- deyo(t1)
+  expect_equal(out$CHARLSON.SCORE, 1+1+1,
+               label="3 same weights merged")
+
+  t2 <- data.frame(icd1=charlsons_icd9_codes_2_test$PVD[1],
+                   icd2=charlsons_icd9_codes_2_test$DEMENTIA[1],
+                   icd3=charlsons_icd9_codes_2_test$METS[1],
+                   icd4=charlsons_icd9_codes_2_test$HIV[1])
+  out <- deyo(t2)
+  expect_equal(out$CHARLSON.SCORE, 1+1+6+6, 
+               label="4 different weights merged")
+  
+  t3 <- data.frame(icd1=charlsons_icd9_codes_2_test$PVD[1],
+                   icd2=charlsons_icd9_codes_2_test$DEMENTIA[1],
+                   icd3=charlsons_icd9_codes_2_test$METS[1],
+                   icd4=NA)
+  out <- deyo(t3)
+  expect_equal(out$CHARLSON.SCORE, 1+1+6, 
+               label="3 different weights and one missing merged")
+
+  t4 <- data.frame(icd1=charlsons_icd9_codes_2_test$PVD[1],
+                   icd2=charlsons_icd9_codes_2_test$DEMENTIA[1],
+                   icd3=charlsons_icd9_codes_2_test$METS[1],
+                   icd4=NA)
+  out <- deyo(t4)
+  expect_equal(out$CHARLSON.SCORE, 1+1+6, 
+               label="3 different weights and one missing merged")
+
+  t5 <- data.frame(icd1=charlsons_icd9_codes_2_test$PVD[1],
+                   icd2=charlsons_icd9_codes_2_test$DEMENTIA[1],
+                   icd3=charlsons_icd9_codes_2_test$METS[1],
+                   icd4=NA,
+                   icd5="715.96")
+  out <- deyo(t5)
+  expect_equal(out$CHARLSON.SCORE, 1+1+6, 
+               label="3 different weights, one negative and one missing merged")
+})
+
+
+neg.icd9_codes <- 
+  as.character(
+    c(128.9, # 	HELMINTH INFECTION UNSPECIFIED
+      136.21, # 	SPECIFIC INFECTION DUE TO ACANTHAMOEBA
+      136.29, # 	OTHER SPECIFIC INFECTIONS BY FREE-LIVING AMEBAE
+      288.04, # 	NEUTROPENIA DUE TO INFECTION
+      323.41, # 	OTHER ENCEPHALITIS AND ENCEPHALOMYELITIS DUE TO OTHER INFECTIONS CLASSIFIED ELSEWHERE
+      323.42, # 	OTHER MYELITIS DUE TO OTHER INFECTIONS CLASSIFIED ELSEWHERE
+      326, #	LATE EFFECTS OF INTRACRANIAL ABSCESS OR PYOGENIC INFECTION
+      379.60, # 	INFLAMMATION (INFECTION) OF POSTPROCEDURAL BLEB, UNSPECIFIED
+      379.61, # 	INFLAMMATION (INFECTION) OF POSTPROCEDURAL BLEB, STAGE 1
+      379.62, # 	INFLAMMATION (INFECTION) OF POSTPROCEDURAL BLEB, STAGE 2
+      379.63, # 	INFLAMMATION (INFECTION) OF POSTPROCEDURAL BLEB, STAGE 3
+      380.11, # 	ACUTE INFECTION OF PINNA
+      380.13, # 	OTHER ACUTE INFECTIONS OF EXTERNAL EAR
+      465.8, # 	ACUTE UPPER RESPIRATORY INFECTIONS OF OTHER MULTIPLE SITES
+      465.9, # 	ACUTE UPPER RESPIRATORY INFECTIONS OF UNSPECIFIED SITE
+      519.01, # 	INFECTION OF TRACHEOSTOMY
+      733.93, # STRESS FRACTURE OF TIBIA OR FIBULA
+      733.94, # STRESS FRACTURE OF THE METATARSALS
+      733.95, # STRESS FRACTURE OF OTHER BONE
+      733.96, # STRESS FRACTURE OF FEMORAL NECK
+      806.9, # OPEN FRACTURE OF UNSPECIFIED VERTEBRA WITH SPINAL CORD INJURY
+      807.00, # CLOSED FRACTURE OF RIB(S) UNSPECIFIED
+      807.01, # CLOSED FRACTURE OF ONE RIB
+      807.02, # CLOSED FRACTURE OF TWO RIBS
+      807.03, # CLOSED FRACTURE OF THREE RIBS
+      807.04, # CLOSED FRACTURE OF FOUR RIBS
+      808.43, # MULTIPLE CLOSED PELVIC FRACTURES WITH DISRUPTION OF PELVIC CIRCLE
+      808.44, # MULTIPLE CLOSED PELVIC FRACTURES WITHOUT DISRUPTION OF PELVIC CIRCLE
+      808.49, # CLOSED FRACTURE OF OTHER SPECIFIED PART OF PELVIS
+      808.51, # OPEN FRACTURE OF ILIUM
+      808.52, # OPEN FRACTURE OF ISCHIUM
+      808.53, # MULTIPLE OPEN PELVIC FRACTURES WITH DISRUPTION OF PELVIC CIRCLE
+      808.54, # MULTIPLE OPEN PELVIC FRACTURES WITHOUT DISRUPTION OF PELVIC CIRCLE
+      808.59, # OPEN FRACTURE OF OTHER SPECIFIED PART OF PELVIS
+      808.8, # UNSPECIFIED CLOSED FRACTURE OF PELVIS
+      808.9, # UNSPECIFIED OPEN FRACTURE OF PELVIS
+      809.0, # FRACTURE OF BONES OF TRUNK CLOSED
+      809.1, # FRACTURE OF BONES OF TRUNK OPEN
+      810.00, # CLOSED FRACTURE OF CLAVICLE UNSPECIFIED PART
+      810.01, # CLOSED FRACTURE OF STERNAL END OF CLAVICLE
+      810.02, # CLOSED FRACTURE OF SHAFT OF CLAVICLE
+      812.10, # FRACTURE OF UNSPECIFIED PART OF UPPER END OF HUMERUS OPEN
+      812.11, # FRACTURE OF SURGICAL NECK OF HUMERUS OPEN
+      812.12, # FRACTURE OF ANATOMICAL NECK OF HUMERUS OPEN
+      812.13, # FRACTURE OF GREATER TUBEROSITY OF HUMERUS OPEN
+      812.19, # OTHER OPEN FRACTURE OF UPPER END OF HUMERUS
+      812.20, # FRACTURE OF UNSPECIFIED PART OF HUMERUS CLOSED
+      812.21, # FRACTURE OF SHAFT OF HUMERUS CLOSED
+      812.30, # FRACTURE OF UNSPECIFIED PART OF HUMERUS OPEN
+      812.31, # FRACTURE OF SHAFT OF HUMERUS OPEN
+      715.96, # Osteoarthrosis, unspecified whether generalized or localized, lower leg
+      NA))
+    
+test_that("Check Charlson handling of negative scores",{
+  test_df <- data.frame(Codes=neg.icd9_codes)
+  out <- deyo(test_df)
+  expect_true(all(out$COMORBIDITIES.POINTS == 0), 
+              label="Identified comorbidities that should be negative",
+              info=sprintf("Comorbity code(s) identified: %s",
+                           paste(neg.icd9_codes[rowSums(out$COMORBIDITIES.POINTS) > 0],
+                                 collapse=",")))
+})
