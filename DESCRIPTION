@@ -3,7 +3,7 @@ Type: Package
 Title: Categorizes ICD-9-CM and ICD-10 codes based on published comorbidity
     indices
 Version: 0.2
-Date: 2014-04-28
+Date: 2014-04-30
 Author: Max Gordon
 Maintainer: Max Gordon <max@gforge.se>
 Description: Methods to categorize ICD-9-CM and ICD-10 codes into sensible
