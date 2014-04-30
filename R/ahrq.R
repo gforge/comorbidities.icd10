@@ -50,6 +50,7 @@
 #' ahrq(x)
 ahrq <- function(input.frame) {
   warning("The current function has not yet been properly tested, please validate output.")
+  if(is.vector(input.frame)) input.frame <- data.frame(codes=input.frame)
 	ret <- prAHRQ.apply.icd9(input.frame)
   ret <- apply.convert.na(ret)
   ret <- prAHRQ.points(ret)

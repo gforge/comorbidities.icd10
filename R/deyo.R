@@ -49,6 +49,7 @@
 #' x <- as.data.frame(x)
 #' deyo(x)
 deyo <- function(input.frame) {
+  if(is.vector(input.frame)) input.frame <- data.frame(codes=input.frame)
   ret <- prDeyo.apply.icd9(input.frame)
   ret <- apply.convert.na(ret)
   ret <- prDeyo.comorbidities(ret)

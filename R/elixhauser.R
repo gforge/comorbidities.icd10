@@ -45,6 +45,7 @@
 #' x <- as.data.frame(x)
 #' elixhauser(x)
 elixhauser <- function(input.frame) {
+  if(is.vector(input.frame)) input.frame <- data.frame(codes=input.frame)
   # Convert icd9 codes to numeric values and convert v codes
   ret <- prElixhauser.apply.icd9(input.frame)
   ret <- apply.convert.na(ret)
