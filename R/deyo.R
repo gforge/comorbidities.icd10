@@ -145,6 +145,10 @@ pr.deyo.comorbidities <- function(input.frame) {
   # complicated diabetes at the same time
   output.frame[output.frame[,"dm.comp"]==TRUE, "dm"] <- 0
     
+  # You can't have both uncomplicated diabetes and
+  # complicated diabetes at the same time
+  output.frame[output.frame[,"severe.liver"]==TRUE, "mild.liver"] <- 0
+  
   # If a solid tumor has generated metastasis then it belongs in that group and not
   # the pure solid tumor group
   output.frame[output.frame[,"mets"]==TRUE, "malignancy"] <- 0
