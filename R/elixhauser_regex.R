@@ -66,7 +66,7 @@ pr.elixhauser_Quan2005_regex <- function(icdCode,
                        SE= c('^3980', '^402', '^4040', '^42(5[456789]|8)')))
   
   # Cardiac arrhythmias
-  elixhausers[['Arrhy']] <- 
+  elixhausers[['ARRHYTHMIA']] <- 
     list(icd10 = c('^I44[123]', '^I456', '^I459',
                    '^I4[789]', '^R00[018]', '^T821',
                    '^Z[49]50'),
@@ -84,7 +84,7 @@ pr.elixhauser_Quan2005_regex <- function(icdCode,
                               '^V450', '^V533')))
   
   # Valvular disease
-  elixhausers[['VD']] <- 
+  elixhausers[['VALVE']] <- 
     list(icd10 = c('^A520', '^I0[5678]',
                    '^I09[18]', '^I3[456789]',
                    '^Q23[0123]', '^Z95[234]'),
@@ -93,7 +93,7 @@ pr.elixhauser_Quan2005_regex <- function(icdCode,
                   '^746[3456]', '^V422', '^V433'))
   
   # Pulmonary circulation disorders
-  elixhausers[['PCD']] <- 
+  elixhausers[['PULM.CIRC']] <- 
     list(icd10 = c('^I2([67]|8[089])'),
          # No country code difference
          icd9 = c('^415[01]', '^416',
@@ -106,25 +106,25 @@ pr.elixhauser_Quan2005_regex <- function(icdCode,
                   '^557[19]', '^V434'))
   
   # Hypertension, uncomplicated
-  elixhausers[['HPTN_UC']] <- 
+  elixhausers[['HTN']] <- 
     list(icd10 = c('^I10'),
          # No country code difference
          icd9 = c('^401'))
   
   # Hypertension, complicated
-  elixhausers[['HPTN_C']] <- 
+  elixhausers[['HTN.COMP']] <- 
     list(icd10 = c('^I1[1235]'),
          # No country code difference
          icd9 = c('^40[2345]'))
   
   # Paralysis
-  elixhausers[['Para']] <- 
+  elixhausers[['PARALYSIS']] <- 
     list(icd10 = c('^G041', '^G114', '^G8(0[12]|[12]|3[012349])'),
          # No country code difference
          icd9 = c('^3341', '^34([23]|4[01234569])'))
   
   # Other neurological disorders
-  elixhausers[['OthND']] <- 
+  elixhausers[['NEURO.OTHER']] <- 
     list(icd10 = c('^G1[0123]', '^G2[012]', '^G25[45]',
                    '^G31[289]',
                    '^G3[2567]',
@@ -138,7 +138,7 @@ pr.elixhauser_Quan2005_regex <- function(icdCode,
                   '^78[04]3'))
   
   # Chronic pulmonary disease
-  elixhausers[['COPD']] <- 
+  elixhausers[['CHRONIC.PULM']] <- 
     list(icd10 = c('^I27[89]', '^J4[01234567]', '^J6([01234567]|84)', '^J70[13]'),
          # No country code difference
          icd9 = c('^416[89]', '^49', '^50([012345]|64|8[18])'))
@@ -146,27 +146,27 @@ pr.elixhauser_Quan2005_regex <- function(icdCode,
   
   # Diabetes, uncomplicated
   # Slightly different from charlsons
-  elixhausers[['Diab_UC']] <- 
+  elixhausers[['DM.UNCOMP']] <- 
     list(icd10 = c('^E1[01234][019]'),
          # No country code difference
          icd9 = c('^250[0123]'))
   
   # Diabetes, complicated
   # Slightly different from charlsons
-  elixhausers[['Diab_C']] <- 
+  elixhausers[['DM.COMP']] <- 
     list(icd10 = c('^E1[01234][2345678]'),
          # No country code difference
          icd9 = c('^250[456789]'))
   
   # Hypothyroidism
-  elixhausers[['Hptothy']] <- 
+  elixhausers[['HYPOTHYROID']] <- 
     list(icd10 = c('^E0[0123]', '^E890'),
          # No country code difference
          icd9 = c('^2409', '^24([34]|6[18])'))
   
   # Renal failure
   # Differs from Charlsons
-  elixhausers[['RF']] <- 
+  elixhausers[['RENAL']] <- 
     list(icd10 = c('^I120', '^I131', '^N1[89]', '^N250', '^Z49[012]', '^Z940', '^Z992'),
          icd9 = switch(country_code,
                        US=c('^403[019]1', '^404[019][23]', '^58([56]|80)', 
@@ -177,7 +177,7 @@ pr.elixhauser_Quan2005_regex <- function(icdCode,
   
   
   # Liver disease
-  elixhausers[['LD']] <- 
+  elixhausers[['LIVER']] <- 
     list(icd10 = c('^B18', '^I8(5|64)', '^I982', '^K7(0|1[13457]|[234]|6[023456789])', '^Z944'),
          icd9 = switch(country_code,
                        US=c('^070([23][23]|[45]4|[69])', '^456[012]', 
@@ -187,7 +187,7 @@ pr.elixhauser_Quan2005_regex <- function(icdCode,
   
   
   # Peptic ulcer disease excluding bleeding
-  elixhausers[['PUD_NB']] <- 
+  elixhausers[['PUD']] <- 
     list(icd10 = c('^K2[5678][79]'),
          # No country code difference
          icd9 = c('^53[1234][79]'))
@@ -200,7 +200,7 @@ pr.elixhauser_Quan2005_regex <- function(icdCode,
          icd9 = c('^04[234]'))
   
   # Lymphoma
-  elixhausers[['Lymp']] <- 
+  elixhausers[['LYMPHOMA']] <- 
     list(icd10 = c('^C8[123458]',
                    '^C96', '^C90[02]'),
          # No country code difference
@@ -213,7 +213,7 @@ pr.elixhauser_Quan2005_regex <- function(icdCode,
          icd9 = c('^19[6789]'))
   
   # Solid tumor without metastasis
-  elixhausers[['Tumor']] <- 
+  elixhausers[['SOLID.TUMOR']] <- 
     list(icd10 = c('^C[01]', '^C2[0123456]',
                    '^C3[01234789]', '^C4[01356789]', '^C5[012345678]',
                    '^C6', '^C7[0123456]', '^C97'),
@@ -221,7 +221,7 @@ pr.elixhauser_Quan2005_regex <- function(icdCode,
   
   
   # Rheumatoid arthritis/collagen vascular diseases
-  elixhausers[['Rheum_A']] <- 
+  elixhausers[['RHEUM']] <- 
     list(icd10 = c('^L94[013]', '^M0[568]', '^M12[03]',
                    '^M3(0|1[0123]|[2345])', '^M4(5|6[189])'),
          icd9 = switch(country_code,
@@ -231,44 +231,44 @@ pr.elixhauser_Quan2005_regex <- function(icdCode,
                             '^72([05]|8[58]|93)')))
   
   # Coagulopathy
-  elixhausers[['Coag']] <- 
+  elixhausers[['COAG']] <- 
     list(icd10 = c('^D6[5678]',
                    '^D69[13456]'),
          # No country code difference
          icd9 = c('^286', '^2871', '^287[345]'))
   
   # Obesity
-  elixhausers[['Obesity']] <- 
+  elixhausers[['OBESITY']] <- 
     list(icd10 = c('^E66'),
          # No country code difference
          icd9 = c('^2780'))
   
   # Weight loss
-  elixhausers[['WL']] <- 
+  elixhausers[['WT.LOSS']] <- 
     list(icd10 = c('^E4[0123456]', '^R634', '^R64'),
          # No country code difference
          icd9 = c('^26[0123]', '^7832', '^7994'))
   
   # Fluid and electrolyte disorders
-  elixhausers[['Fluid']] <- 
+  elixhausers[['LYTES']] <- 
     list(icd10 = c('^E222', '^E8[67]'),
          # No country code difference
          icd9 = c('^2536', '^276'))
   
   # Blood loss anemia
-  elixhausers[['BLA']] <- 
+  elixhausers[['ANEMIA.LOSS']] <- 
     list(icd10 = c('^D500'),
          # No country code difference
          icd9 = c('^2800'))
   
   # Deficiency anemia
-  elixhausers[['DA']] <-
+  elixhausers[['ANEMIA.DEF']] <-
     list(icd10 = c('^D50[89]', '^D5[123]'),
          # No country code difference
          icd9 = c('^280[123456789]', '^281'))
   
   # Alcohol abuse
-  elixhausers[['Alcohol']] <- 
+  elixhausers[['ETOH']] <- 
     list(icd10 = c('^F10', '^E52', '^G621', '^I426',
                    '^K292', '^K70[039]',
                    '^T51', '^Z502',
@@ -279,14 +279,14 @@ pr.elixhauser_Quan2005_regex <- function(icdCode,
                   '^4255', '^5353', '^571[0123]', '^980', '^V113'))
   
   # Drug abuse
-  elixhausers[['Drug']] <- 
+  elixhausers[['DRUGS']] <- 
     list(icd10 = c('^F1[12345689]',
                    '^Z715', '^Z722'),
          # No country code difference
          icd9 = c('^292', '^304', '^305[23456789]', '^V6542'))
   
   # Psychoses
-  elixhausers[['Psycho']] <- 
+  elixhausers[['PSYCHOSES']] <- 
     list(icd10 = c('^F2[0234589]',
                    '^F3([01]2|15)'),
          icd9 = switch(country_code,
@@ -301,7 +301,7 @@ pr.elixhauser_Quan2005_regex <- function(icdCode,
 
   
   # Depression
-  elixhausers[['Dep']] <- 
+  elixhausers[['DEPRESSION']] <- 
     list(icd10 = c('^F204',
                    '^F31[345]', '^F3[23]',
                    '^F341', '^F4[13]2'),
