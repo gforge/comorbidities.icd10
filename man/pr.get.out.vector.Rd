@@ -1,8 +1,8 @@
-\name{prGetOutVector}
-\alias{prGetOutVector}
+\name{pr.get.out.vector}
+\alias{pr.get.out.vector}
 \title{A internal function for generating an output vector containing the score elements}
 \usage{
-prGetOutVector(out, score)
+pr.get.out.vector(out, score)
 }
 \arguments{
   \item{out}{A vector or NULL}

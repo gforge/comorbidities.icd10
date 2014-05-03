@@ -1,8 +1,8 @@
-\name{prDeyo.apply.icd9}
-\alias{prDeyo.apply.icd9}
-\title{Convert icd9 codes to numeric values and convert V434X to 44390}
+\name{pr.ahrq.preprocess.icd9}
+\alias{pr.ahrq.preprocess.icd9}
+\title{Convert icd9 codes to numeric values}
 \usage{
-prDeyo.apply.icd9(input.frame)
+pr.ahrq.preprocess.icd9(input.frame)
 }
 \arguments{
   \item{input.frame}{This is a data frame with 5 character
@@ -14,13 +14,6 @@ prDeyo.apply.icd9(input.frame)
 columns and rows as the \code{input.frame}
 }
 \description{
-Convert icd9 codes to numeric values and convert V434X to
-44390
-}
-\author{
-Max
-}
-\seealso{
-\code{\link{ahrq}}
+Convert icd9 codes to numeric values
 }
 

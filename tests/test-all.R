@@ -1,2 +1,2 @@
 library('testthat')
-test_check('comorbidites_icd10')
+test_check('comorbidities.icd10')

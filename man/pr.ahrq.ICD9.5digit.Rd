@@ -1,8 +1,8 @@
-\name{prAHRQ.ICD9.5digit}
-\alias{prAHRQ.ICD9.5digit}
+\name{pr.ahrq.ICD9.5digit}
+\alias{pr.ahrq.ICD9.5digit}
 \title{Converts an icd9 code to numeric format}
 \usage{
-prAHRQ.ICD9.5digit(icd.code)
+pr.ahrq.ICD9.5digit(icd.code)
 }
 \arguments{
   \item{icd.code}{A string numeric code}

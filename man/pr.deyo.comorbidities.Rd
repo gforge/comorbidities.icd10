@@ -1,8 +1,8 @@
-\name{prAHRQ.points}
-\alias{prAHRQ.points}
-\title{Score points for AHRQ}
+\name{pr.deyo.comorbidities}
+\alias{pr.deyo.comorbidities}
+\title{Score points for Deyo Charlson's index}
 \usage{
-prAHRQ.points(input.frame)
+pr.deyo.comorbidities(input.frame)
 }
 \arguments{
   \item{input.frame}{This is a data frame with 5 digit
@@ -16,6 +16,10 @@ indicates existing comorbidity.
 }
 \description{
 The following function develops a matrix with rows devoted
-to respondents and each column a comorbidity.
+to respondents and each column a comorbidity. The number in
+each column is the point value of having the comorbidity.
+}
+\seealso{
+\code{\link{deyo}}
 }
 

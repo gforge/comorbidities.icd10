@@ -3,6 +3,9 @@ NEWS for the Gmisc package
 Changes for 0.3
 ---------------
 * Started implementing regular expression alternatives for elixhauser and charlson scores
+* Refactored use in order to optimize the use of vectors with icdCodes for a single individual. 
+* The original NA handling from the comorbidities package is now changed so that the missing codes are simply skipped - should have significant performance improvements
+* Renamed the functions to lower-case in for package consistency
 
 Changes for 0.2
 ---------------

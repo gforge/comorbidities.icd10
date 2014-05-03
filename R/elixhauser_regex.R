@@ -28,20 +28,20 @@
 #'  prior to the surgery.
 #' @param icd_ver The icd version of interest. If FALSE the software tries
 #'  to automatically identify code version depending on the first letter, 
-#'  \code{\link{prIsICD10Code}}
+#'  \code{\link{pr.get.icd.ver}}
 #' @return \code{vector} Returns a vector with the names of each comorbidity
 #'  group. If the entry is FALSE this correspond to that no code matched the
 #'  other group otherwise it returns TRUE.
 #' @references H. Quan, V. Sundararajan, P. Halfon, A. Fong, B. Burnand, J.-C. Luthi, 
-#' L. D. Saunders, C. A. Beck, T. E. Feasby, and W. A. Ghali, “Coding algorithms for 
-#' defining comorbidities in ICD-9-CM and ICD-10 administrative data,” Med Care, 
-#' vol. 43, no. 11, pp. 1130–1139, Nov. 2005.
+#' L. D. Saunders, C. A. Beck, T. E. Feasby, and W. A. Ghali, "Coding algorithms for 
+#' defining comorbidities in ICD-9-CM and ICD-10 administrative data" Med Care, 
+#' vol. 43, no. 11, pp. 1130-1139, Nov. 2005. - Elixhauser section
 #' @rdname pr_codefinder_regex
-prElixhausers_Quan2005_regex <- function(icdCode, 
+pr.elixhauser_Quan2005_regex <- function(icdCode, 
                               out,
                               country_code,
-                              include_acute = TRUE,
-                              icd_ver = FALSE){
+                              include_acute = rep(TRUE, times=length(icdCode)),
+                              icd_ver = rep(FALSE, times=length(icdCode))){
   
   available_country_codes <- c('SE', 'US')
   if (missing(country_code)){
@@ -168,7 +168,7 @@ prElixhausers_Quan2005_regex <- function(icdCode,
   # Differs from Charlsons
   elixhausers[['RF']] <- 
     list(icd10 = c('^I120', '^I131', '^N1[89]', '^N250', '^Z49[012]', '^Z940', '^Z992'),
-         icd9 = switch(counry_code,
+         icd9 = switch(country_code,
                        US=c('^403[019]1', '^404[019][23]', '^58([56]|80)', 
                             '^V4(20|51)', '^V56'),
                        # Swe change
@@ -310,45 +310,25 @@ prElixhausers_Quan2005_regex <- function(icdCode,
                             '^30(04|9)', '^311'),
                        SE=c('^296[135]',
                             '^30(04|9)', '^311')))
-
-  # Speeds up only to check the codes that are possible
-  if (icd_ver == FALSE){
-    code_is_icd10 <- prIsICD10Code(icdCode)
-  }else{
-    code_is_icd10 <- icd_ver == 10
-  }
-
-  if (missing(out) || 
-        length(out) == 0){
-    out <- rep(FALSE, times=length(elixhausers))
-    names(out) <- names(elixhausers)
-  }else if(length(out) != length(elixhausers)){
-    stop("You have provided a list from previous runs that does not seem to originate",
-         " from the elixhauser calculation, it has the length of '", length(out), "'",
-         " while it should have the length '", length(elixhausers), "'")
-  }else if(!all(names(elixhausers) %in% names(out))){
-      stop("You have provided a list from previous runs that does not seem to originate",
-           " from the elixhauser calculation, it has the correct length",
-           " but lacks the elements: ", 
-           paste0("'",
-                  names(elixhausers)[!names(elixhausers) %in% names(out)],
-                  "'",
-                  collapse="','"))
-      
-  }
   
-  # TODO: Check which codes are non-unique and need to loop further
-  #       there should be substantial benefit if the code stepped out
-  #       from the function as it hits the first match
-  for (key_disease in names(elixhausers)){
-    for (regex_str in elixhausers[[key_disease]][[ifelse(code_is_icd10, 
-                                                         "icd10", "icd9")]]){
-      if (grepl(regex_str, icdCode, ignore.case=TRUE)){
-        out[key_disease] <- TRUE
-        break;
-      }
-    }
-  }
+  acute_icd_codes <- list(icd10= '^(I2[123]|J46|N17[12]|N19)',
+                          # Used the translator from the Swedish National Board of Healthe and Welfare (Socialstyrelsen)
+                          icd9 = '^(410|42(30|95|96|98)|4939|58[34][67]|5908|586|7919|5939)')
+  
+  
+  # Speeds up only to check the codes that are possible
+  icd_ver <- pr.get.icd.ver(icdCode, icd_ver)
+
+  # Get a correctly formatted output vector
+  out <- pr.get.out.vector(out, elixhausers)
+  
+  # Do the actual test loop
+  out <- pr.regex.code.match(out = out, 
+                             icdCode = icdCode, 
+                             comorbidity_regex = elixhausers,
+                             icd_ver =  icd_ver,
+                             include_acute = include_acute,
+                             acute_regex = acute_icd_codes)
   
   return(out)
 }

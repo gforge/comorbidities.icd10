@@ -1,21 +1,25 @@
-\name{prCharlson_Armitage2010_regex}
-\alias{prCharlson_Armitage2010_regex}
-\alias{prCharlson_Quan2005_regex}
-\alias{prCharlson_Sundarajan2004_regex}
-\alias{prElixhausers_Quan2005_regex}
+\name{pr.charlson_Armitage2010_regex}
+\alias{pr.charlson_Armitage2010_regex}
+\alias{pr.charlson_Quan2005_regex}
+\alias{pr.charlson_Sundarajan2004_regex}
+\alias{pr.elixhauser_Quan2005_regex}
 \title{Finds the matching codes for the different comorbidity groups}
 \usage{
-prCharlson_Armitage2010_regex(icdCode, out, country_code,
-  include_acute = TRUE, icd_ver = FALSE)
+pr.charlson_Armitage2010_regex(icdCode, out, country_code,
+  include_acute = rep(TRUE, times = length(icdCode)), icd_ver = rep(FALSE,
+  times = length(icdCode)))
 
-prCharlson_Quan2005_regex(icdCode, out, country_code, include_acute = TRUE,
-  icd_ver = FALSE)
+pr.charlson_Quan2005_regex(icdCode, out, country_code,
+  include_acute = rep(TRUE, times = length(icdCode)), icd_ver = rep(FALSE,
+  times = length(icdCode)))
 
-prCharlson_Sundarajan2004_regex(icdCode, out, country_code,
-  include_acute = TRUE, icd_ver = FALSE, version = 2)
+pr.charlson_Sundarajan2004_regex(icdCode, out, country_code,
+  include_acute = rep(TRUE, times = length(icdCode)), icd_ver = rep(FALSE,
+  times = length(icdCode)))
 
-prElixhausers_Quan2005_regex(icdCode, out, country_code, include_acute = TRUE,
-  icd_ver = FALSE)
+pr.elixhauser_Quan2005_regex(icdCode, out, country_code,
+  include_acute = rep(TRUE, times = length(icdCode)), icd_ver = rep(FALSE,
+  times = length(icdCode)))
 }
 \arguments{
   \item{icdCode}{The icd code of interest, either a number
@@ -48,7 +52,7 @@ prElixhausers_Quan2005_regex(icdCode, out, country_code, include_acute = TRUE,
   \item{icd_ver}{The icd version of interest. If FALSE the
   software tries to automatically identify code version
   depending on the first letter,
-  \code{\link{prIsICD10Code}}}
+  \code{\link{pr.get.icd.ver}}}
 }
 \value{
 \code{vector} Returns a vector with the names of each
@@ -68,30 +72,26 @@ also identify acute conditions and ignore those if
 specified.
 }
 \references{
-J. N. Armitage and J. H. van der Meulen, “Identifying
-co‐morbidity in surgical patients using administrative
-data with the Royal College of Surgeons Charlson Score,”
-British Journal of Surgery, vol. 97, no. 5, pp. 772–781,
-May 2010.
+J. N. Armitage and J. H. van der Meulen, "Identifying
+co-morbidity in surgical patients using administrative data
+with the Royal College of Surgeons Charlson Score" British
+Journal of Surgery, vol. 97, no. 5, pp. 772-781, May 2010.
 
 H. Quan, V. Sundararajan, P. Halfon, A. Fong, B. Burnand,
 J.-C. Luthi, L. D. Saunders, C. A. Beck, T. E. Feasby, and
-W. A. Ghali, “Coding algorithms for defining
-comorbidities in ICD-9-CM and ICD-10 administrative
-data,” Med Care, vol. 43, no. 11, pp. 1130–1139, Nov.
-2005.
+W. A. Ghali, "Coding algorithms for defining comorbidities
+in ICD-9-CM and ICD-10 administrative data" Med Care, vol.
+43, no. 11, pp. 1130-1139, Nov. 2005. - Charlson section
 
 V. Sundararajan, T. Henderson, C. Perry, A. Muggivan, H.
-Quan, and W. A. Ghali, “New ICD-10 version of the
-Charlson comorbidity index predicted in-hospital
-mortality,” J Clin Epidemiol, vol. 57, no. 12, pp.
-1288–1294, Dec. 2004.
+Quan, and W. A. Ghali, "New ICD-10 version of the Charlson
+comorbidity index predicted in-hospital mortality" J Clin
+Epidemiol, vol. 57, no. 12, pp. 1288-1294, Dec. 2004.
 
 H. Quan, V. Sundararajan, P. Halfon, A. Fong, B. Burnand,
 J.-C. Luthi, L. D. Saunders, C. A. Beck, T. E. Feasby, and
-W. A. Ghali, “Coding algorithms for defining
-comorbidities in ICD-9-CM and ICD-10 administrative
-data,” Med Care, vol. 43, no. 11, pp. 1130–1139, Nov.
-2005.
+W. A. Ghali, "Coding algorithms for defining comorbidities
+in ICD-9-CM and ICD-10 administrative data" Med Care, vol.
+43, no. 11, pp. 1130-1139, Nov. 2005. - Elixhauser section
 }
 

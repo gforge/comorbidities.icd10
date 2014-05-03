@@ -16,3 +16,7 @@ Description: Methods to categorize ICD-9-CM and ICD-10 codes into sensible
     builds upon the work of Paul Gerrard and his comorbidities package.
 License: GPL-2
 LazyLoad: yes
+URL: https://github.com/gforge/comorbidities.icd10
+BugReports: https://github.com/gforge/comorbidities.icd10/issues
+Suggests:
+    testthat (>= 0.8)

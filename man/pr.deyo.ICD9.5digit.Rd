@@ -1,8 +1,8 @@
-\name{prElixhauser.ICD9.5digit}
-\alias{prElixhauser.ICD9.5digit}
+\name{pr.deyo.ICD9.5digit}
+\alias{pr.deyo.ICD9.5digit}
 \title{Convert to 5 digit ICD-code}
 \usage{
-prElixhauser.ICD9.5digit(icd.code)
+pr.deyo.ICD9.5digit(icd.code)
 }
 \arguments{
   \item{icd.code}{\code{string} indicating the code}
@@ -14,6 +14,6 @@ prElixhauser.ICD9.5digit(icd.code)
 Convert to 5 digit ICD-code
 }
 \seealso{
-\code{\link{elixhauser}}
+\code{\link{deyo}}
 }
 

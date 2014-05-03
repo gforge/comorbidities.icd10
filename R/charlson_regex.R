@@ -1,13 +1,13 @@
 #' @rdname pr_codefinder_regex
 #' @references H. Quan, V. Sundararajan, P. Halfon, A. Fong, B. Burnand, J.-C. Luthi, 
-#' L. D. Saunders, C. A. Beck, T. E. Feasby, and W. A. Ghali, “Coding algorithms for 
-#' defining comorbidities in ICD-9-CM and ICD-10 administrative data,” Med Care, 
-#' vol. 43, no. 11, pp. 1130–1139, Nov. 2005.
-prCharlson_Quan2005_regex <- function(icdCode, 
+#' L. D. Saunders, C. A. Beck, T. E. Feasby, and W. A. Ghali, "Coding algorithms for 
+#' defining comorbidities in ICD-9-CM and ICD-10 administrative data" Med Care, 
+#' vol. 43, no. 11, pp. 1130-1139, Nov. 2005. - Charlson section
+pr.charlson_Quan2005_regex <- function(icdCode, 
                              out,
                              country_code,
-                             include_acute = TRUE,
-                             icd_ver = FALSE){
+                             include_acute = rep(TRUE, times=length(icdCode)),
+                             icd_ver = rep(FALSE, times=length(icdCode))){
     
   # Based on Quan et al 2005
   charlsons_v2 <- list()
@@ -79,21 +79,23 @@ prCharlson_Quan2005_regex <- function(icdCode,
     list(icd10 = c('^B2[0124]'),
          icd9 = c( '^04[234]'))
   
+  acute_icd_codes <- list(icd10= '^(I2[123]|J46|N17[12]|N19)',
+                          # Used the translator from the Swedish National Board of Healthe and Welfare (Socialstyrelsen)
+                          icd9 = '^(410|42(30|95|96|98)|4939|58[34][67]|5908|586|7919|5939)')
+  
   # Speeds up only to check the codes that are possible
-  if (icd_ver == FALSE){
-    code_is_icd10 <- prIsICD10Code(icdCode)
-  }else{
-    code_is_icd10 <- icd_ver == 10
-  }
+  icd_ver <- pr.get.icd.ver(icdCode, icd_ver)
   
   # Get a correctly formatted output vector
-  out <- prGetOutVector(out, charlsons_v2)
+  out <- pr.get.out.vector(out, charlsons_v2)
   
   # Do the actual test loop
-  out <- prCheckCodes(out = out, 
-                      icdCode = icdCode, 
-                      score_codes = charlsons_v2,
-                      code_is_icd10 =  code_is_icd10)
+  out <- pr.regex.code.match(out = out, 
+                             icdCode = icdCode, 
+                             comorbidity_regex = charlsons_v2,
+                             icd_ver =  icd_ver,
+                             include_acute = include_acute,
+                             acute_regex = acute_icd_codes)
   
   return(out)
 }
@@ -101,16 +103,15 @@ prCharlson_Quan2005_regex <- function(icdCode,
 
 #' @rdname pr_codefinder_regex
 #' @references V. Sundararajan, T. Henderson, C. Perry, A. Muggivan, 
-#' H. Quan, and W. A. Ghali, “New ICD-10 version of the Charlson 
-#' comorbidity index predicted in-hospital mortality,” J Clin Epidemiol, 
-#' vol. 57, no. 12, pp. 1288–1294, Dec. 2004.
-prCharlson_Sundarajan2004_regex <- 
+#' H. Quan, and W. A. Ghali, "New ICD-10 version of the Charlson 
+#' comorbidity index predicted in-hospital mortality" J Clin Epidemiol, 
+#' vol. 57, no. 12, pp. 1288-1294, Dec. 2004.
+pr.charlson_Sundarajan2004_regex <- 
   function(icdCode, 
            out,
            country_code,
-           include_acute = TRUE,
-           icd_ver = FALSE, 
-           version = 2){
+           include_acute = rep(TRUE, times=length(icdCode)),
+           icd_ver = rep(FALSE, times=length(icdCode))){
     
   # Create the charlsons regular expressions
   # to compare 2
@@ -183,21 +184,23 @@ prCharlson_Sundarajan2004_regex <-
     list(icd9 = c('^04[234]'),
          icd10 = c('^B2[01234]'))
 
+  acute_icd_codes <- list(icd10= '^(I2[123]|J46|N17[12]|N19)',
+                          # Used the translator from the Swedish National Board of Healthe and Welfare (Socialstyrelsen)
+                          icd9 = '^(410|42(30|95|96|98)|4939|58[34][67]|5908|586|7919|5939)')
+  
   # Speeds up only to check the codes that are possible
-  if (icd_ver == FALSE){
-    code_is_icd10 <- prIsICD10Code(icdCode)
-  }else{
-    code_is_icd10 <- icd_ver == 10
-  }
+  icd_ver <- pr.get.icd.ver(icdCode, icd_ver)
   
   # Get a correctly formatted output vector
-  out <- prGetOutVector(out, charlsons_v1)
+  out <- pr.get.out.vector(out, charlsons_v1)
   
   # Do the actual test loop
-  out <- prCheckCodes(out = out, 
-                      icdCode = icdCode, 
-                      score_codes = charlsons_v1,
-                      code_is_icd10 =  code_is_icd10)
+  out <- pr.regex.code.match(out = out, 
+                             icdCode = icdCode, 
+                             comorbidity_regex = charlsons_v1,
+                             icd_ver =  icd_ver,
+                             include_acute = include_acute,
+                             acute_regex = acute_icd_codes)
   
   return(out)
 }

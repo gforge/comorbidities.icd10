@@ -1,8 +1,8 @@
-\name{prDeyo.comorbidities}
-\alias{prDeyo.comorbidities}
-\title{Score points for Deyo Charlson's index}
+\name{pr.deyo.convert.to.points}
+\alias{pr.deyo.convert.to.points}
+\title{Score points for Deyo's comorbidity weights}
 \usage{
-prDeyo.comorbidities(input.frame)
+pr.deyo.convert.to.points(input.frame)
 }
 \arguments{
   \item{input.frame}{This is a data frame with 5 digit
@@ -15,9 +15,8 @@ comorbidity. No comorbidity is indicated by 0 while 1
 indicates existing comorbidity.
 }
 \description{
-The following function develops a matrix with rows devoted
-to respondents and each column a comorbidity. The number in
-each column is the point value of having the comorbidity.
+The following function adds the weights of the Charlson
+original weight system.
 }
 \seealso{
 \code{\link{deyo}}

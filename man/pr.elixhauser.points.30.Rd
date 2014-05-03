@@ -1,8 +1,8 @@
-\name{prDeyo.convert.to.points}
-\alias{prDeyo.convert.to.points}
-\title{Score points for Deyo's comorbidity weights}
+\name{pr.elixhauser.points.30}
+\alias{pr.elixhauser.points.30}
+\title{Score points for Elixhauser's comorbidity count}
 \usage{
-prDeyo.convert.to.points(input.frame)
+pr.elixhauser.points.30(input.frame)
 }
 \arguments{
   \item{input.frame}{This is a data frame with 5 digit
@@ -15,10 +15,10 @@ comorbidity. No comorbidity is indicated by 0 while 1
 indicates existing comorbidity.
 }
 \description{
-The following function adds the weights of the Charlson
-original weight system.
+The following function develops a matrix with rows devoted
+to respondents and each column a comorbidity.
 }
 \seealso{
-\code{\link{deyo}}
+\code{\link{elixhauser}}
 }
 

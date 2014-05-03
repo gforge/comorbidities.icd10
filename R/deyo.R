@@ -50,10 +50,9 @@
 #' deyo(x)
 deyo <- function(input.frame) {
   if(is.vector(input.frame)) input.frame <- data.frame(codes=input.frame)
-  ret <- prDeyo.apply.icd9(input.frame)
-  ret <- apply.convert.na(ret)
-  ret <- prDeyo.comorbidities(ret)
-  scores <- prDeyo.convert.to.points(ret)
+  ret <- pr.deyo.preprocess.icd9(input.frame)
+  ret <- pr.deyo.comorbidities(ret)
+  scores <- pr.deyo.convert.to.points(ret)
   
   deyo.data <- list(CHARLSON.SCORE = rowSums(scores), 
                     COMORBIDITIES = ret, 
@@ -70,13 +69,13 @@ deyo <- function(input.frame) {
 #' @seealso \code{\link{ahrq}}
 #' 
 #' @author Max
-prDeyo.apply.icd9 <- function(input.frame) {
+pr.deyo.preprocess.icd9 <- function(input.frame) {
   output.frame <- matrix(0, 
                          nrow=NROW(input.frame), 
                          ncol=NCOL(input.frame))
   for (i in 1:NROW(input.frame)){
     for (j in 1:NCOL(input.frame)) {
-      output.frame[i,j] <- prDeyo.ICD9.5digit(input.frame[i,j])
+      output.frame[i,j] <- pr.deyo.ICD9.5digit(input.frame[i,j])
     }
   }
   return(output.frame)
@@ -87,10 +86,9 @@ prDeyo.apply.icd9 <- function(input.frame) {
 #' @param icd.code \code{string} indicating the code 
 #' @return \code{float} Returns a float value XXX.XX
 #' @seealso \code{\link{deyo}}
-prDeyo.ICD9.5digit <- function(icd.code){
-  # NA is converted to 0
+pr.deyo.ICD9.5digit <- function(icd.code){
   if (is.na(icd.code)) {
-    return(0)
+    return(NA)
   }
   
   if (is.numeric(icd.code)){
@@ -132,69 +130,24 @@ prDeyo.ICD9.5digit <- function(icd.code){
 #'  comorbidity. No comorbidity is indicated by 0 while 1 indicates 
 #'  existing comorbidity.
 #' @seealso \code{\link{deyo}}
-prDeyo.comorbidities <- function(input.frame) {
-  #create lists of comorbidities
-  deyo.list <- 
-    list(
-      mi = c(seq(from=41000L, to=41099L, by=1L),
-             41200L),
-      chf = c(seq(from=42800L, to=42899L, by=1L)),
-      pvd = c(seq(44100L, 44199L, by=1L), # This should include everything under 441
-              seq(44390L, 44399L, by=1L), 
-              78540L), #v code v43.4 not included in this list
-      cvd = c(seq(from=43000L, to=43799L, by=1L),
-              43813L, 43814L), # Note table cross saying that only late effects were included from the 438 group
-      dementia = c(seq(from=29000L, to=29099L, by=1L)),
-      copd = c(seq(from=49000L, to=49699L, by=1L), 
-               seq(from=50000L, to=50599L, by=1L), 
-               50640L),
-      rheum = c(71000L, 71010L, 71040L, 
-                seq(from=71400L, to=71429L, by=1L),
-                71481L, 72500L),
-      pud = c(seq(from=53100L, to=53499L, by=1L)),
-      mild.liver = c(57120L, 57150L, 57160L, 
-                     seq(from=57140L, to=57149L, by=1L)),
-      dm = c(seq(from=25000L,to=25039L,by=1L),
-             25070L),
-      dm.comp = c(seq(from=25040L, to=25069L, by=1L)), #2 point items start here
-      plegia = c(34410L, 
-                 seq(from=34200L, to=34299L, by=1L)),
-      renal = c(seq(from=58200L, to=58299L, by=1L), 
-                seq(from=58300L, to=58379L, by=1L),
-                seq(from=58500L, to=58599L, by=1L), # Multiple in group
-                58600L, # Only one in this group
-                seq(from=58800L, to=58899L, by=1L)),
-      malignancy = c(seq(from=14000L, to=17299L, by=1L), 
-                     seq(from=17400L, to=19589L, by=1L), 
-                     seq(from=20000L, to=20899L, by=1L)),
-      severe.liver = c(seq(from=57220L, to=57289L, by=1L),
-                       seq(from=45600L, to=45621L, by=1L)), # 3 point item
-      mets = c(seq(from=19600L, to=19919L, by=1L)), # 6 point items
-      hiv = c(seq(from=4200L, to=4493L, by=1L)))
-  
-  output.frame <- matrix(0, 
-                         nrow=NROW(input.frame), 
-                         ncol=length(deyo.list))
-  # Using the names for columns limits the risk of missing 
-  colnames(output.frame) <- names(deyo.list)
-  
+pr.deyo.comorbidities <- function(input.frame) {
+  output.frame <- NULL
   for (i in 1:NROW(input.frame)){
-    for (j in 1:NCOL(input.frame)) {
-      for (k in names(deyo.list)) {
-        if (input.frame[i, j] %in% deyo.list[[k]]) {
-          output.frame[i,k] <- 1
-        }
-      }
-    }
+    # The rbind() may be somewhat slower than setting up the 
+    # the full matrix but I think the gain from separating the 
+    # the identification function from the logic clearly outweighs 
+    # this cost.
+    output.frame <- rbind(output.frame,
+                          pr.charlson_Deyo1992_numeric(icdCode = input.frame[i, ]))
   }
   
   # You can't have both uncomplicated diabetes and
   # complicated diabetes at the same time
-  output.frame[output.frame[,"dm.comp"]==1, "dm"] <- 0
+  output.frame[output.frame[,"dm.comp"]==TRUE, "dm"] <- 0
     
   # If a solid tumor has generated metastasis then it belongs in that group and not
   # the pure solid tumor group
-  output.frame[output.frame[,"mets"]==1, "malignancy"] <- 0
+  output.frame[output.frame[,"mets"]==TRUE, "malignancy"] <- 0
   
   output.frame <- as.data.frame(output.frame)
   # Change the names to upper case as in original script
@@ -213,7 +166,7 @@ prDeyo.comorbidities <- function(input.frame) {
 #'  comorbidity. No comorbidity is indicated by 0 while 1 indicates 
 #'  existing comorbidity.
 #' @seealso \code{\link{deyo}}
-prDeyo.convert.to.points <- function(input.frame) {
+pr.deyo.convert.to.points <- function(input.frame) {
   output.frame <- input.frame
   # Set all columns that have 2 points
   for (var in c("PLEGIA", "DM.COMP",

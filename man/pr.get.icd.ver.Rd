@@ -1,11 +1,15 @@
-\name{prIsICD10Code}
-\alias{prIsICD10Code}
+\name{pr.get.icd.ver}
+\alias{pr.get.icd.ver}
 \title{Checks if it is ICD-9 or ICD-10}
 \usage{
-prIsICD10Code(code)
+pr.get.icd.ver(codes, icd_ver = rep(FALSE, times = length(codes)))
 }
 \arguments{
-  \item{code}{A string with the ICD-code}
+  \item{codes}{A vector with ICD-codes}
+
+  \item{icd_ver}{A vector with icd versions, same length as
+  \code{code} argument.  If FALSE then all are checked
+  otherwise only those that are FALSE are checked}
 }
 \value{
 \code{boolean} Returns TRUE if the code is deemed to be and
