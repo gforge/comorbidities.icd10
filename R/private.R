@@ -76,7 +76,7 @@ pr.get.out.vector <- function(out, score){
 #' @param comorbidity_regex The regular expression list with all the comorbidities
 #' @param include_acute If acute diagnosis are to be included, e.g. myocardial
 #'  infarction.
-#' @param acute_regex A vector with the regular expressions that identify the 
+#' @param acute_regex A list with vectors containing  regular expressions that identify the 
 #'  acute diagnoses that should be excluded if \code{include_acute} is set to TRUE
 #'  for the specific code. If not provided the code will not check for acute diagnoses.
 #' @return \code{vector} Returns the out with TRUE for those groups
@@ -124,7 +124,7 @@ pr.regex.code.match <-
             if (!missing(acute_regex) &&
                   !include_acute[code_i]){
               out[key_disease] <- TRUE
-              for (ar in acute_regex){
+              for (ar in acute_regex[[paste0("icd",icd_ver[1])]]){
                 if (grepl(ar, icdCode[code_i], ignore.case=TRUE)){
                   out[key_disease] <- FALSE
                   break
@@ -165,7 +165,7 @@ pr.regex.code.match <-
             if (!missing(acute_regex) &&
                   !include_acute[code_i]){
               out[key_disease] <- TRUE
-              for (ar in acute_regex){
+              for (ar in acute_regex[[paste0("icd",icd_ver[code_i])]]){
                 if (grepl(ar, icdCode[code_i], ignore.case=TRUE)){
                   out[key_disease] <- FALSE
                   break
