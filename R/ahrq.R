@@ -123,26 +123,37 @@ pr.ahrq.ICD9.5digit <- function(icd.code){
 #' @return \code{int} Returns an int with 5 digits
 #' @seealso \code{\link{ahrq}}
 pr.ahrq.preprocess.v.codes <- function(v.code) {
-  icd9.2.5 <- as.numeric(substr(v.code, 2, 5))
-  #Valvular disease
-  if (icd9.2.5 == 4220) {v.code <- 09320} 
-  if (icd9.2.5 == 4330) {v.code <- 09320}
-  #PVD
-  if (icd9.2.5 == 4340) {v.code <- 44000} 
-  #Renal Failure
-  if (icd9.2.5 == 4200) {v.code <- 58530} 
-  if (icd9.2.5 == 4510) {v.code <- 58530} 
-  if ((icd9.2.5 >= 5600) & (icd9.2.5 <= 5632)) {v.code <- 58530}  
-  if (icd9.2.5 == 5680) {v.code <- 58530} 
-  if (icd9.2.5 == 4511) {v.code <- 58530}  
-  if (icd9.2.5 == 4512) {v.code <- 58530}  
-  #Liver Diseae
-  if (icd9.2.5 == 4270) {v.code <- 07022}
-  #Obsesity
-  if ((icd9.2.5 >= 8530) & (icd9.2.5 <= 8539)) {v.code <- 02780}
-  if ((icd9.2.5 >= 8541) & (icd9.2.5 <= 8545)) {v.code <- 02780}  			
-  if (icd9.2.5 == 8554) {v.code <- 02780}
-  
+  if (any(nchar(nchar(v.code) < 5))){
+    for (i in which(nchar(v.code) < 5)){
+      v.code[i] <- paste0(v.code[i], paste(rep(0, times=5-nchar(v.code[i]))))
+      
+    }
+  }
+  v.code <- 
+    sapply(v.code, USE.NAMES=FALSE,
+           FUN=function(code){
+             icd9.2.5 <- as.numeric(substr(code, 2, 5))
+             #Valvular disease
+             if (icd9.2.5 == 4220) {return(09320L)} 
+             if (icd9.2.5 == 4330) {return(09320L)}
+             #PVD
+             if (icd9.2.5 == 4340) {return(44000L)} 
+             #Renal Failure
+             if (icd9.2.5 == 4200) {return(58530L)} 
+             if (icd9.2.5 == 4510) {return(58530L)} 
+             if ((icd9.2.5 >= 5600) & (icd9.2.5 <= 5632)) {return(58530L)}  
+             if (icd9.2.5 == 5680) {return(58530L)} 
+             if (icd9.2.5 == 4511) {return(58530L)}  
+             if (icd9.2.5 == 4512) {return(58530L)}  
+             #Liver Diseae
+             if (icd9.2.5 == 4270) {return(07022L)}
+             #Obsesity
+             if ((icd9.2.5 >= 8530) & (icd9.2.5 <= 8539)) {return(02780L)}
+             if ((icd9.2.5 >= 8541) & (icd9.2.5 <= 8545)) {return(02780L)}  			
+             if (icd9.2.5 == 8554) {return(02780L)}
+             return(code)
+           })
+             
   return (v.code)
 }
 

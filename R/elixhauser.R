@@ -110,23 +110,37 @@ pr.elixhauser.ICD9.5digit <- function(icd.code){
 #' @return \code{int} Returns an int with 5 digits
 #' @seealso \code{\link{elixhauser}}
 pr.elixhauser.process.v.codes <- function(v.code) {
-  icd9.2.5 <- as.numeric(substr(v.code, 2, 5))
-  if (icd9.2.5 == 4500L) {v.code <- 42610L}
-  if (icd9.2.5 == 5330L) {v.code <- 42610L}
-  if (icd9.2.5 == 4220L) {v.code <- 09320L}
-  if (icd9.2.5 == 4330L) {v.code <- 09320L}
-  if (icd9.2.5 == 4340L) {v.code <- 44000L}
-  if (icd9.2.5 == 4200L) {v.code <- 40311L}
-  if (icd9.2.5 == 4510L) {v.code <- 40311L}
-  if (icd9.2.5 == 5600L) {v.code <- 40311L}
-  if (icd9.2.5 == 5680L) {v.code <- 40311L}
-  if (icd9.2.5 == 4270L) {v.code <- 07032L}
-  if (icd9.2.5 == 1271L) {v.code <- 53170L}
-  if ((icd9.2.5 >= 1000L) & (icd9.2.5 <= 1090L)) {v.code <- 14000L}
-  if (icd9.2.5 == 1071L) {v.code <- 20000L}
-  if (icd9.2.5 == 1072L) {v.code <- 20000L}
-  if (icd9.2.5 == 1079L) {v.code <- 20000L}
-  if (icd9.2.5 == 1130L) {v.code <- 29110L}
+  if (class(v.code) == "factor") 
+    v.code <- as.character(v.code)
+  
+  if (any(nchar(nchar(v.code) < 5))){
+    for (i in which(nchar(v.code) < 5)){
+      v.code[i] <- paste0(v.code[i], paste(rep(0, times=5-nchar(v.code[i]))))
+      
+    }
+  }
+  v.code <- 
+    sapply(v.code, USE.NAMES=FALSE,
+           FUN=function(code){
+      icd9.2.5 <- as.integer(substr(code, 2, 5))
+      if (icd9.2.5 == 4500L) {return(42610L)}
+      if (icd9.2.5 == 5330L) {return(42610L)}
+      if (icd9.2.5 == 4220L) {return(09320L)}
+      if (icd9.2.5 == 4330L) {return(09320L)}
+      if (icd9.2.5 == 4340L) {return(44000L)}
+      if (icd9.2.5 == 4200L) {return(40311L)}
+      if (icd9.2.5 == 4510L) {return(40311L)}
+      if (icd9.2.5 == 5600L) {return(40311L)}
+      if (icd9.2.5 == 5680L) {return(40311L)}
+      if (icd9.2.5 == 4270L) {return(07032L)}
+      if (icd9.2.5 == 1271L) {return(53170L)}
+      if ((icd9.2.5 >= 1000L) & (icd9.2.5 <= 1090L)) {return(14000L)}
+      if (icd9.2.5 == 1071L) {return(20000L)}
+      if (icd9.2.5 == 1072L) {return(20000L)}
+      if (icd9.2.5 == 1079L) {return(20000L)}
+      if (icd9.2.5 == 1130L) {return(29110L)}
+      return(code)
+    })
   
   return (v.code)
 }
