@@ -23,4 +23,9 @@ biking and automobile accidents. It is therefore better to
 sort any of these codes into the ICD-9 in case they
 actually belong there.
 }
+\details{
+Note that E-code for the "SUPPLEMENTARY CLASSIFICATION OF
+EXTERNAL CAUSES OF INJURY AND POISONING (E800-E999)" are
+not included in the code check.
+}
 

@@ -20,11 +20,11 @@ pr.regex.code.match(icdCode, icd_ver, out, comorbidity_regex,
   \item{include_acute}{If acute diagnosis are to be
   included, e.g. myocardial infarction.}
 
-  \item{acute_regex}{A vector with the regular expressions
-  that identify the acute diagnoses that should be excluded
-  if \code{include_acute} is set to TRUE for the specific
-  code. If not provided the code will not check for acute
-  diagnoses.}
+  \item{acute_regex}{A list with vectors containing regular
+  expressions that identify the acute diagnoses that should
+  be excluded if \code{include_acute} is set to TRUE for
+  the specific code. If not provided the code will not
+  check for acute diagnoses.}
 }
 \value{
 \code{vector} Returns the out with TRUE for those groups

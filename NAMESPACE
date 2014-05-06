@@ -1,3 +1,4 @@
 export(ahrq)
 export(deyo)
 export(elixhauser)
+export(translate.ICD9.from.Swedish)
