@@ -46,6 +46,9 @@ cmrbdt.finder.numeric.ahrq_2010v3.5 <-
   if (!missing(country_code) && country_code != "US") { stop("Only US country code is currently supported")}
   if (!missing(include_acute) && any(include_acute == FALSE)) { stop("Excluding acute codes from episodes for the AHRQ is not yet implemented")}
   
+  # Pre-process the comorbidity codes to match the searched codes
+  icd_codes <- pr.ahrq.ICD9.5digit(icd_codes)
+  
   #create lists of comorbidities
   ahrq.list <- 
     list(
@@ -182,4 +185,85 @@ cmrbdt.finder.numeric.ahrq_2010v3.5 <-
   }
   
   return(out)
+}
+
+#' Converts an icd9 code to numeric format
+#'  
+#' @param codes A \code{string/vector} numeric code
+#' @return \code{integer} Returns a integer code XXXXX 
+#' @seealso \code{\link{ahrq}}, \code{\link{cmrbdt.finder.numeric.ahrq_2010v3.5}}
+pr.ahrq.ICD9.5digit <- function(codes){
+  sapply(codes, function(icd.code){
+    if (is.na(icd.code)) {
+      return(NA)
+    }
+    
+    if (is.numeric(icd.code)){
+      if (icd.code != floor(icd.code))
+        stop("The software wants icd.codes provided in numeric format without",
+             " decimals if ICD-9 is provided in numeric format, otherwise it does",
+             " no know how to deal with the code. The code should be in the format ",
+             " 58510 and not 585.1 or anything similar. You have provided the code: ", icd.code)
+      return(icd.code)
+    }
+    
+    if (class(icd.code) == "factor")
+      icd.code <- as.character(icd.code)
+    
+    if (nchar(icd.code) < 5)
+      icd.code <- paste0(icd.code, paste0(rep("0", length.out=5-nchar(icd.code)),
+                                          collapse=""))
+    
+    icd.code = toupper(icd.code)
+    icd9.1 <- substr(icd.code, 1, 1)
+    icd9.3 <- substr(icd.code, 1, 3)
+    icd9.4 <- substr(icd.code, 4, 4)
+    icd9.5 <- substr(icd.code, 5, 5)
+    if (icd9.4 == "X") {icd9.4 <- 0}
+    if (icd9.5 == "X") {icd9.5 <- 0}
+    icd9.result <- paste(icd9.3, icd9.4, icd9.5, sep = "")
+    if (icd9.1 == "V") {icd9.result <- pr.ahrq.preprocess.v.codes(icd9.result)}
+    
+    return(as.integer(icd9.result))
+  })
+}
+
+#' Converts icd9 codes with V at the first letter into numeric format
+#'  
+#' @param v.code A string numeric icd-code that starts with a V
+#' @return \code{int} Returns an int with 5 digits
+#' @seealso \code{\link{ahrq}}
+pr.ahrq.preprocess.v.codes <- function(v.code) {
+  if (any(nchar(nchar(v.code) < 5))){
+    for (i in which(nchar(v.code) < 5)){
+      v.code[i] <- paste0(v.code[i], paste(rep(0, times=5-nchar(v.code[i]))))
+      
+    }
+  }
+  v.code <- 
+    sapply(v.code, USE.NAMES=FALSE,
+           FUN=function(code){
+             icd9.2.5 <- as.numeric(substr(code, 2, 5))
+             #Valvular disease
+             if (icd9.2.5 == 4220) {return(09320L)} 
+             if (icd9.2.5 == 4330) {return(09320L)}
+             #PVD
+             if (icd9.2.5 == 4340) {return(44000L)} 
+             #Renal Failure
+             if (icd9.2.5 == 4200) {return(58530L)} 
+             if (icd9.2.5 == 4510) {return(58530L)} 
+             if ((icd9.2.5 >= 5600) & (icd9.2.5 <= 5632)) {return(58530L)}  
+             if (icd9.2.5 == 5680) {return(58530L)} 
+             if (icd9.2.5 == 4511) {return(58530L)}  
+             if (icd9.2.5 == 4512) {return(58530L)}  
+             #Liver Diseae
+             if (icd9.2.5 == 4270) {return(07022L)}
+             #Obsesity
+             if ((icd9.2.5 >= 8530) & (icd9.2.5 <= 8539)) {return(02780L)}
+             if ((icd9.2.5 >= 8541) & (icd9.2.5 <= 8545)) {return(02780L)}    		
+             if (icd9.2.5 == 8554) {return(02780L)}
+             return(code)
+           })
+  
+  return (v.code)
 }

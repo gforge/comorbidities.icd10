@@ -13,7 +13,10 @@ cmrbdt.finder.numeric.elixhauser_Elixhauser1998 <-
   if (any(icd_ver != 9)) { stop("Only ICD-9 version is supported for the Deyo 1992")}
   if (!missing(country_code) && country_code != "US") { stop("Only US country code is currently supported")}
   if (!missing(include_acute) && any(include_acute == FALSE)) { stop("Excluding acute codes from episodes for the  Deyo 1992 is not yet implemented")}
-    
+  
+  # Pre-process the comorbidity codes to match the searched codes
+  icd_codes <- pr.elixhauser.ICD9.5digit(icd_codes)
+  
   #create lists of comorbidities
   elixhauser.list <-
     list(CHF = c(39891L,40211L,40291L,40411L,40413L,40491L,40493L,
@@ -114,4 +117,86 @@ cmrbdt.finder.numeric.elixhauser_Elixhauser1998 <-
   }
   
   return(out)
+}
+
+
+#' Convert to 5 digit ICD-code
+#' 
+#' @param icd.code \code{string/vector} indicating the code 
+#' @return \code{integer} Returns a integer value XXXXX
+#' @seealso \code{\link{elixhauser}}, \code{\link{cmrbdt.finder.numeric.elixhauser_Elixhauser1998}}
+pr.elixhauser.ICD9.5digit <- function(codes){ 
+  sapply(codes, FUN=function(icd.code){
+    if (is.na(icd.code)) {
+      return(NA)
+    }
+    
+    if (is.numeric(icd.code)){
+      if (icd.code != floor(icd.code))
+        stop("The software wants icd.codes provided in numeric format without",
+             " decimals if ICD-9 is provided in numeric format, otherwise it does",
+             " no know how to deal with the code. The code should be in the format ",
+             " 58510 and not 585.1 or anything similar. You have provided the code: ", icd.code)
+      return(icd.code)
+    }
+    
+    if (class(icd.code) == "factor")
+      icd.code <- as.character(icd.code)
+    
+    if (nchar(icd.code) < 5)
+      icd.code <- paste0(icd.code, paste0(rep("0", length.out=5-nchar(icd.code)),
+                                          collapse=""))
+    icd.code = toupper(icd.code)
+    icd9.1 <- substr(icd.code, 1, 1)
+    icd9.3 <- substr(icd.code, 1, 3)
+    icd9.4 <- substr(icd.code, 4, 4)
+    icd9.5 <- substr(icd.code, 5, 5)
+    if (icd9.4 == "X") {icd9.4 <- 0}
+    if (icd9.5 == "X") {icd9.5 <- 0}
+    icd9.result <- paste(icd9.3, icd9.4, icd9.5, sep = "")
+    if (icd9.1 == "V") {icd9.result <- pr.elixhauser.process.v.codes(icd9.result)}
+    
+    return(as.integer(icd9.result))
+  })
+}
+
+#' Converts icd9 codes with V at the first letter into numeric format
+#'  
+#' @param v.code A string numeric icd-code that starts with a V
+#' @return \code{int} Returns an int with 5 digits
+#' @seealso \code{\link{elixhauser}}
+pr.elixhauser.process.v.codes <- function(v.code) {
+  if (class(v.code) == "factor") 
+    v.code <- as.character(v.code)
+  
+  if (any(nchar(nchar(v.code) < 5))){
+    for (i in which(nchar(v.code) < 5)){
+      v.code[i] <- paste0(v.code[i], paste(rep(0, times=5-nchar(v.code[i]))))
+      
+    }
+  }
+  v.code <- 
+    sapply(v.code, USE.NAMES=FALSE,
+           FUN=function(code){
+             icd9.2.5 <- as.integer(substr(code, 2, 5))
+             if (icd9.2.5 == 4500L) {return(42610L)}
+             if (icd9.2.5 == 5330L) {return(42610L)}
+             if (icd9.2.5 == 4220L) {return(09320L)}
+             if (icd9.2.5 == 4330L) {return(09320L)}
+             if (icd9.2.5 == 4340L) {return(44000L)}
+             if (icd9.2.5 == 4200L) {return(40311L)}
+             if (icd9.2.5 == 4510L) {return(40311L)}
+             if (icd9.2.5 == 5600L) {return(40311L)}
+             if (icd9.2.5 == 5680L) {return(40311L)}
+             if (icd9.2.5 == 4270L) {return(07032L)}
+             if (icd9.2.5 == 1271L) {return(53170L)}
+             if ((icd9.2.5 >= 1000L) & (icd9.2.5 <= 1090L)) {return(14000L)}
+             if (icd9.2.5 == 1071L) {return(20000L)}
+             if (icd9.2.5 == 1072L) {return(20000L)}
+             if (icd9.2.5 == 1079L) {return(20000L)}
+             if (icd9.2.5 == 1130L) {return(29110L)}
+             return(code)
+           })
+  
+  return (v.code)
 }

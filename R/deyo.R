@@ -50,72 +50,13 @@
 #' deyo(x)
 deyo <- function(input.frame) {
   if(is.vector(input.frame)) input.frame <- data.frame(codes=input.frame)
-  ret <- pr.deyo.preprocess.icd9(input.frame)
-  ret <- pr.deyo.comorbidities(ret)
+  ret <- pr.deyo.comorbidities(input.frame)
   scores <- weight.Charlsons.org(ret)
   
   deyo.data <- list(CHARLSON.SCORE = rowSums(scores), 
                     COMORBIDITIES = ret, 
                     COMORBIDITIES.POINTS = scores)
   return(deyo.data)
-}
-
-#' Convert icd9 codes to numeric values and convert V434X to 44390
-#'  
-#' @param input.frame This is a data frame with 5 character ICD-9-CM codes
-#'  without decimal points. This can also be provided as a vector or matrix.
-#' @return \code{matrix} Returns a matrix with the same number of columns
-#'  and rows as the \code{input.frame}
-#' @seealso \code{\link{ahrq}}
-#' 
-#' @author Max
-pr.deyo.preprocess.icd9 <- function(input.frame) {
-  output.frame <- matrix(0, 
-                         nrow=NROW(input.frame), 
-                         ncol=NCOL(input.frame))
-  for (i in 1:NROW(input.frame)){
-    for (j in 1:NCOL(input.frame)) {
-      output.frame[i,j] <- pr.deyo.ICD9.5digit(input.frame[i,j])
-    }
-  }
-  return(output.frame)
-}
-
-#' Convert to 5 digit ICD-code
-#' 
-#' @param icd.code \code{string} indicating the code 
-#' @return \code{float} Returns a float value XXX.XX
-#' @seealso \code{\link{deyo}}
-pr.deyo.ICD9.5digit <- function(icd.code){
-  if (is.na(icd.code)) {
-    return(NA)
-  }
-  
-  if (is.numeric(icd.code)){
-    if (icd.code != floor(icd.code))
-      stop("The software wants icd.codes provided in numeric format without",
-           " decimals if ICD-9 is provided in numeric format, otherwise it does",
-           " no know how to deal with the code. The code should be in the format ",
-           " 58510 and not 585.1 or anything similar. You have provided the code: ", icd.code)
-    return(icd.code)
-  }
-  
-  if (class(icd.code) == "factor")
-    icd.code <- as.character(icd.code)
-  
-  if (nchar(icd.code) < 5)
-    icd.code <- paste0(icd.code, paste0(rep("0", length.out=5-nchar(icd.code)),
-                                        collapse=""))
-  
-  icd.code = toupper(icd.code)
-  icd9.3 <- substr(icd.code, 1, 3)
-  icd9.4 <- substr(icd.code, 4, 4)
-  icd9.5 <- substr(icd.code, 5, 5)
-  if (icd9.4 == "X") {icd9.4 <- 0}
-  if (icd9.5 == "X") {icd9.5 <- 0}
-  icd9.result <- paste(icd9.3, icd9.4, icd9.5, sep = "")
-  if (icd9.result == "V4340") {icd9.result <- 44390}
-  return(as.integer(icd9.result))
 }
 
 #' Score points for Deyo Charlson's index

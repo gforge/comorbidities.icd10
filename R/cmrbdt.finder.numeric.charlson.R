@@ -16,6 +16,9 @@ cmrbdt.finder.numeric.charlson_Deyo1992 <-
   if (!missing(country_code) && country_code != "US") { stop("Only US country code is currently supported")}
   if (!missing(include_acute) && any(include_acute == FALSE)) { stop("Excluding acute codes from episodes for the  Deyo 1992 is not yet implemented")}
   
+  # Pre-process the comorbidity codes to match the searched codes
+  icd_codes <- pr.deyo.ICD9.5digit(icd_codes)
+  
   #create lists of comorbidities
   deyo.list <- 
     list(
@@ -71,4 +74,43 @@ cmrbdt.finder.numeric.charlson_Deyo1992 <-
   }
   
   return(out)
+}
+
+#' Convert to 5 digit ICD-code
+#' 
+#' @param codes \code{string/vector} indicating the code 
+#' @return \code{float} Returns a float value XXXXX
+#' @seealso \code{\link{deyo}}, \code{\link{cmrbdt.finder.numeric.charlson_Deyo1992}}
+pr.deyo.ICD9.5digit <- function(codes){
+  sapply(codes, FUN=function(icd.code){
+    if (is.na(icd.code)) {
+      return(NA)
+    }
+    
+    if (is.numeric(icd.code)){
+      if (icd.code != floor(icd.code))
+        stop("The software wants icd.codes provided in numeric format without",
+             " decimals if ICD-9 is provided in numeric format, otherwise it does",
+             " no know how to deal with the code. The code should be in the format ",
+             " 58510 and not 585.1 or anything similar. You have provided the code: ", icd.code)
+      return(icd.code)
+    }
+    
+    if (class(icd.code) == "factor")
+      icd.code <- as.character(icd.code)
+    
+    if (nchar(icd.code) < 5)
+      icd.code <- paste0(icd.code, paste0(rep("0", length.out=5-nchar(icd.code)),
+                                          collapse=""))
+    
+    icd.code = toupper(icd.code)
+    icd9.3 <- substr(icd.code, 1, 3)
+    icd9.4 <- substr(icd.code, 4, 4)
+    icd9.5 <- substr(icd.code, 5, 5)
+    if (icd9.4 == "X") {icd9.4 <- 0}
+    if (icd9.5 == "X") {icd9.5 <- 0}
+    icd9.result <- paste(icd9.3, icd9.4, icd9.5, sep = "")
+    if (icd9.result == "V4340") {icd9.result <- 44390L}
+    return(as.integer(icd9.result))
+  })
 }
