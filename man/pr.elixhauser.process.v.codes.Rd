@@ -1,0 +1,21 @@
+\name{pr.elixhauser.process.v.codes}
+\alias{pr.elixhauser.process.v.codes}
+\title{Converts icd9 codes with V at the first letter into numeric format}
+\usage{
+pr.elixhauser.process.v.codes(v.code)
+}
+\arguments{
+  \item{v.code}{A string numeric icd-code that starts with
+  a V}
+}
+\value{
+\code{int} Returns an int with 5 digits
+}
+\description{
+Converts icd9 codes with V at the first letter into numeric
+format
+}
+\seealso{
+\code{\link{elixhauser}}
+}
+

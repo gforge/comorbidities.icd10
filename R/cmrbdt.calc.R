@@ -129,13 +129,13 @@ cmrbdt.calc <- function(ds,
                                  1:NCOL(icd_codes))
 
   # Check the first entries if they are valid ICD-codes
-  test_codes <- as.vector(head(icd_codes, 50))
+  test_codes <- as.vector(as.matrix(head(icd_codes, 50)))
   valid_test_codes <- is.ICD(test_codes)
-  if (!all(valid_test_codes)){
+  if (!all(valid_test_codes[!is.na(test_codes)])){
     stop("There seems to be some issue with your test codes, ",
          " the following test codes from your input data",
          " did not validate the is.ICD function: ",
-         paste(test_codes[!valid_test_codes], collapse=", "))
+         paste(test_codes[!valid_test_codes & !is.na(test_codes)], collapse=", "))
   }
   # Get the ID-column if any has been provided
   if (missing(id_column)){

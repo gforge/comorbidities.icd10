@@ -1,0 +1,24 @@
+\name{is.ICD}
+\alias{is.ICD}
+\title{Check if icd code is valid}
+\usage{
+is.ICD(codes, preprocess_fn)
+}
+\arguments{
+  \item{codes}{The ICD codes of interest that have the
+  needed format for the functions to work. That is without
+  any ., etc.}
+
+  \item{preprocess_fn}{Any pre-processing function that is
+  needed to prepare the codes.}
+}
+\value{
+\code{vector} Returns a vector with all the codes
+}
+\description{
+Check if icd code is valid
+}
+\examples{
+is.ICD(c("M161", "M16.1", "1998-01-01", "4521"))
+}
+

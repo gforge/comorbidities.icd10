@@ -88,6 +88,8 @@ data2analyze$include_acute <-
               # hence we should not include any acute episodes
               # as we are interested in pre-existing conditions
               TRUE))
-cmrbdt.calc(data2analyze,id_column="Patient_ID", 
+cmrbdt.calc(data2analyze,
+            icd_columns=grep("^ICD", colnames(data2analyze)),
+            id_column="Patient_ID", 
             cmrbdt.finder_hierarchy_fn=hierarchy.elixhauser_Quan2005,
             cmrbdt.finder_fn=cmrbdt.finder.regex.elixhauser_Quan2005)

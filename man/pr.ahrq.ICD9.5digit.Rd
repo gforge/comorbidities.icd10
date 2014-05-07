@@ -1,0 +1,20 @@
+\name{pr.ahrq.ICD9.5digit}
+\alias{pr.ahrq.ICD9.5digit}
+\title{Converts an icd9 code to numeric format}
+\usage{
+pr.ahrq.ICD9.5digit(codes)
+}
+\arguments{
+  \item{codes}{A \code{string/vector} numeric code}
+}
+\value{
+\code{integer} Returns a integer code XXXXX
+}
+\description{
+Converts an icd9 code to numeric format
+}
+\seealso{
+\code{\link{ahrq}},
+\code{\link{cmrbdt.finder.numeric.ahrq_2010v3.5}}
+}
+

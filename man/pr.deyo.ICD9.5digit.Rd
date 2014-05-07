@@ -1,0 +1,20 @@
+\name{pr.deyo.ICD9.5digit}
+\alias{pr.deyo.ICD9.5digit}
+\title{Convert to 5 digit ICD-code}
+\usage{
+pr.deyo.ICD9.5digit(codes)
+}
+\arguments{
+  \item{codes}{\code{string/vector} indicating the code}
+}
+\value{
+\code{float} Returns a float value XXXXX
+}
+\description{
+Convert to 5 digit ICD-code
+}
+\seealso{
+\code{\link{deyo}},
+\code{\link{cmrbdt.finder.numeric.charlson_Deyo1992}}
+}
+

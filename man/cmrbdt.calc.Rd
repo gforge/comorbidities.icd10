@@ -1,0 +1,239 @@
+\name{cmrbdt.calc}
+\alias{cmrbdt.calc}
+\title{The main comorbidity calculator function}
+\usage{
+cmrbdt.calc(ds, id_column, icd_columns, icd_ver_column, include_acute_column,
+  icd_code_preprocess_fn, cmrbdt.finder_fn, cmrbdt.finder_hierarchy_fn,
+  cmrbdt_weight_fn, country_code = "US")
+}
+\arguments{
+  \item{ds}{The data.frame/matrix/vector that is to be
+  analyzed for matching icd-codes.}
+
+  \item{id_column}{The id of the \code{ds} parameter. If
+  included in the ds then provide only column names,
+  otherwise this should be in the format of a
+  vector/matrix/data.frame matching the size of the
+  \code{ds} input. You can have multiple columns as
+  ID-parameters.}
+
+  \item{icd_columns}{If the \code{ds} contains more than
+  just the ICD-code columns then you need to specify the
+  ICD-columns, either by name or numbers.}
+
+  \item{icd_ver_column}{The ICD-version number if you don't
+  want auto-detect. This can either be a single number if
+  they are all of the same ICD-version or you can have a
+  column in the \code{ds} that signals the version,
+  alternatively this can be a vector of the same length as
+  the \code{ds}.  As auto-detect may fail try to specify
+  this if you can. For those that you are uncertain you can
+  simple set the value to \code{FALSE} and the software
+  will attempt to autodetect those specific instances.}
+
+  \item{include_acute_column}{Certain codes may indicate a
+  non-chronic disease such as heart infarction, stroke or
+  similar. Under some circumstances these should be
+  ignored, e.g. when studying predictors for hip
+  arthroplasty re-operations codes during the admission for
+  the surgery should not include myocardial infarction as
+  this is most likely a postoperative condition not
+  available for scoring prior to the surgery.}
+
+  \item{icd_code_preprocess_fn}{Sometimes the codes need to
+  be pre-processed prior to feeding them into the
+  algorithm. For instance the ICD-columns may be crammed
+  into one single column where each code is separated by a
+  ' '. When this is the case the pre-processing allows a
+  split prior to calling the \code{cmrbdt.finder_fn}, e.g.
+  splitting 'M161 E110' could need a function as
+  \code{function(code){unlist(strsplit(code, " "))}} -
+  \emph{note} the unlist, your function should return a
+  vector and not a list.}
+
+  \item{cmrbdt.finder_fn}{This is one of the cmrbdt.finder
+  functions that you want to apply. The cmrbdt.finder is at
+  the heart of the algorithm and does the actual
+  comorbidity identidication. See below for a list of
+  available functions.}
+
+  \item{cmrbdt.finder_hierarchy_fn}{This functions applies
+  any hierarchy needed in order to retain logic, e.g.
+  complicated diabetes and uncomplicated diabetes should
+  not co-exist in one and the same patient. You can provide
+  here any of the \code{hierarchy.*()} functions. E.g. if
+  you are using Elixhausers Quan 2005 version you provide
+  the function
+  \code{\link{hierarchy.elixhauser_Quan2005}}.}
+
+  \item{cmrbdt_weight_fn}{The comorbidity weight function
+  that you want to apply to the current calculation. E.g.
+  you can use the \code{\link{weight.Charlsons.org}} if you
+  want to apply the traditional Charlson comorbidity score
+  or you can write your own function.}
+
+  \item{country_code}{The two-letter \code{ISO 3166-1
+  alpha-2} code indicating the country of interest (the
+  same as the top-level internet domain name of that
+  country). As certain countries have adapted
+  country-specific ICD-coding there may be minor
+  differences between countries. Currently only Swedish
+  (SE) and US codes are implemented. The function defaults
+  to 'US'.}
+}
+\description{
+This function is the main comorbidity calculator. You
+should try to use this function whenever you want to get a
+full comorbidity count. By providing the individual
+functions you can easily switch code identifier, weights,
+and code pre-processing.
+}
+\details{
+The function returns a list with: \itemize{ \item{score/ct}
+If you have provided a weight function you will have a
+score item, otherwise it is just a simple count of how many
+comorbidity groups that have been identified. The name of
+the item is either \code{"score"} or \code{"ct"} in order
+to avoid mistakes.  \item{cmrbdt} This is a matrix with
+comorbidity TRUE/FALSE for each group of the comorbidity by
+\code{id} as returned by \code{\link[plyr]{ddply}}.
+\item{cmrbdt.weighted} If you have provided a comorbidity
+weighting function then this will also be included in the
+returned list. This matrix is also by \code{id} as returned
+by \code{\link[plyr]{ddply}}. }
+}
+\examples{
+# Completely made up datasets
+prim_data <- 
+  data.frame(Patient_ID = c("A",
+                            "B",
+                            "C",
+                            "D",
+                            "MISSING"), # Has on purpose no match - should theoretically no occur
+             # Transition from ICD-9 to ICD 10 was during 1997 in Sweden
+             Surgery_date = as.Date(c("1999-01-25",
+                                      "2004-02-25",
+                                      "1996-07-04",
+                                      "1997-12-04",
+                                      "2014-05-06")),
+             Surgery_type = c("Hip", # Add some non-relevant data
+                              "Foot",
+                              "Hand",
+                              "Hip",
+                              "Hand"))
+
+admission_data <-
+  data.frame(Patient_ID = 
+               c("A", "A", # 2 A admission
+                 "B", # 1 B admissions
+                 "C", "C", "C", # 3 C admissions
+                 "D", "D", "D", "D" # 4 D admissions
+               ),
+             admission_date = 
+               as.Date(c("1999-01-24", "1998-05-29", # A
+                         "2004-02-24", # B
+                         "1996-07-01", "1995-02-01", "1992-10-04", # C
+                         "1997-12-03", # D
+                         "1998-03-01", # Admission should not be used as it is after surgery
+                         "1995-10-24", "1995-08-20")),
+             discharge_date = 
+               as.Date(c("1999-02-01", "1998-05-25",# A
+                         "2004-02-27", # B
+                         "1996-07-08", "1995-02-04", "1992-10-14",# C
+                         "1997-12-06", "1998-03-04", "1995-11-01", "1995-08-24" # D
+               )),
+             ICD1 = 
+               c("M161", "S7200", # A's codes
+                 "S8240", # B's codes
+                 "3540", "486", "431", # C's codes
+                 "M169", 
+                 "B238", # This admission should be ignored!
+                 "5400", "4220"), # D's codes
+             ICD2 = 
+               c("I252", "I252", # A's codes
+                 "N390", # B's codes
+                 NA, "4011", "4011", # C's codes
+                 "N052", "C619", "7812", "5569"), # D's codes
+             ICD3 = 
+               c("E890X", "E039", # A's codes
+                 NA, # B's codes
+                 NA, "30301", "30009", # C's codes
+                 "E001", NA, "5810", "01280"), # D's codes
+             ICD4 = 
+               c("J189", NA, # A's codes
+                 NA, # B's codes
+                 NA, "55090", NA, # C's codes
+                 "N309", NA, "42611", "6802") # D's codes
+  )
+
+# Merge the data sets and include the one with no admissions
+complete <- merge(prim_data, admission_data, 
+                  by="Patient_ID", all=TRUE)
+
+# Choose those with valid observations
+# just to stress the code we will keep the MISSSING patient
+data2analyze <- subset(complete, 
+                       Surgery_date >= admission_date || 
+                         is.na(admission_date))
+
+# Deduce the ICD-version from the date variable
+data2analyze$icd_version <- 
+  ifelse(data2analyze$discharge_date < "1997-01-01",
+         9,
+         ifelse(data2analyze$discharge_date >= "1998-01-01",
+                10,
+                FALSE))
+
+# Figure out if the admission is the one registered for the surgery
+data2analyze$include_acute <- 
+  with(data2analyze,
+       ifelse(discharge_date >= Surgery_date &
+                admission_date <= Surgery_date,
+              FALSE, # Current admission is the admission of the surgery, 
+              # hence we should not include any acute episodes
+              # as we are interested in pre-existing conditions
+              TRUE))
+cmrbdt.calc(data2analyze,
+            icd_columns=grep("^ICD", colnames(data2analyze)),
+            id_column="Patient_ID", 
+            cmrbdt.finder_hierarchy_fn=hierarchy.elixhauser_Quan2005,
+            cmrbdt.finder_fn=cmrbdt.finder.regex.elixhauser_Quan2005)
+}
+\seealso{
+\itemize{
+\item{\code{\link{cmrbdt.finder.numeric.ahrq_2010v3.5}}:
+}{Numeric funciton for identifying AHRQ codes, \emph{note}
+that this is not the latest version! Works only with ICD-9
+codes.}
+\item{\code{\link{cmrbdt.finder.numeric.elixhauser_Elixhauser1998}}:
+}{Numeric function for identifying the original Elixhauser
+codes from 1998, \emph{note} that newer versions code
+versions are available. Works only with ICD-9 codes.}
+\item{\code{\link{cmrbdt.finder.numeric.charlson_Deyo1992}}:
+}{Numeric function for identifying Deyo's original
+translation of the Elixhauser comorbidity groups. Works
+only with ICD-9 codes.}
+\item{\code{\link{cmrbdt.finder.regex.charlson_Sundarajan2004}}:
+}{A function based on regular expressions for identifying
+Sundarajan's codeset for Charlsons index, \emph{note} that
+the Quan article that they wrote one year later is an
+update to the current code set.}
+\item{\code{\link{cmrbdt.finder.regex.charlson_Quan2005}}:
+}{A function based on regular expressions for identifying
+Quan's codeset for Charlsons index. This is currently
+(written 2014-05-07) the most up-to-date version of the
+Charlson code set unless the Royal College of Surgeons
+attempt at changing the Charlson counts.}
+\item{\code{\link{cmrbdt.finder.regex.charlson_Armitage2010}}:
+}{A function based on regular expressions for identifying
+an adaptation and simplification of the Charlsons index.
+\emph{Note} that this is no longer the Charlsons but an
+adaptation with only 14 comorbidity groups.}
+\item{\code{\link{cmrbdt.finder.regex.elixhauser_Quan2005}}:
+}{A function based on regular expressions for identifying
+Quan's codeset for Charlsons index. This is currently
+(written 2014-05-07) the most up-to-date version of the
+Elixhauser code set unless the AHRQ is included although
+the AHRQ has never been updated to ICD-10.} }
+}
+

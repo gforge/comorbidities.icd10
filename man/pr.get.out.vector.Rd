@@ -1,0 +1,18 @@
+\name{pr.get.out.vector}
+\alias{pr.get.out.vector}
+\title{A internal function for generating an output vector containing the score elements}
+\usage{
+pr.get.out.vector(out, score)
+}
+\arguments{
+  \item{out}{A vector or NULL}
+
+  \item{score}{The score list with element names}
+}
+\value{
+\code{vector} A named vector
+}
+\description{
+Throws errors if the output has an invalid format
+}
+

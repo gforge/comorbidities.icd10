@@ -7,6 +7,9 @@
 #' @param input.frame This is a \code{data.frame} or \code{matrix} with
 #'  the comorbidity groups as returned by any of the Charlson functions
 #' @return Weighted comorbidities
+#' @examples
+#' out <- cmrbdt.finder.regex.charlson_Quan2005("I252")
+#' weight.Charlsons.org(out)
 #' @export
 weight.Charlsons.org <- function(input.frame) {
   output.frame <- input.frame

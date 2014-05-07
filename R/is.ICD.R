@@ -17,5 +17,5 @@ is.ICD <- function(codes, preprocess_fn){
     }
   }
   
-  return(grepl("^([A-Za-z][0-9]{2}[^\\.]|[EV0-9][0-9]+)$", codes))
+  return(grepl("^([A-Za-z][0-9]{2}[^\\.]*([0-9]+|[0-9]+[0-9ABX])|[EV0-9][0-9]+)$", codes))
 }

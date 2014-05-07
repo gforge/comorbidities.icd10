@@ -1,0 +1,22 @@
+\name{preproc.strip.dot}
+\alias{preproc.strip.dot}
+\title{Dot stripper}
+\usage{
+preproc.strip.dot(codes)
+}
+\arguments{
+  \item{codes}{The ICD-codes to be stripped}
+}
+\value{
+\code{vector/matrix} Codes that are stripped from any .
+}
+\description{
+ICD-codes have frequently \code{.} in them, e.g.
+\code{M16.1}. These need to be stripped for the code to
+work.
+}
+\examples{
+preproc.strip.dot(c("M16.1", "M161"))
+preproc.strip.dot(matrix(c("M16.1", "M162", NA, "M16.9"), ncol=2, nrow=2))
+}
+
