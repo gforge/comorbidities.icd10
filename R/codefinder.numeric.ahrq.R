@@ -35,7 +35,6 @@
 #' @rdname codefinder.numeric
 #' @examples
 #' codefinder.numeric.ahrq_2010v3.5(9320)
-#' 
 #' @export
 codefinder.numeric.ahrq_2010v3.5 <- 
   function(icd_codes, 

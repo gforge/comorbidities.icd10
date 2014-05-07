@@ -72,6 +72,10 @@ interest. The match is case-insensitive. The function can
 also identify acute conditions and ignore those if
 specified.
 }
+\examples{
+codefinder.regex.charlson_Quan2005("I212")
+codefinder.regex.charlson_Sundarajan2004(c("430", "J40"))
+}
 \references{
 J. N. Armitage and J. H. van der Meulen, "Identifying
 co-morbidity in surgical patients using administrative data

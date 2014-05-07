@@ -2,6 +2,8 @@
 #' @references Elixhauser A, Steiner C, Harris DR, Coffey RM. (1998)
 #' Comorbidity measures for use with administrative data.  Med Care. 36:8-27.
 #' @export
+#' @examples
+#' codefinder.numeric.elixhauser_Elixhauser1998(34190)
 codefinder.numeric.elixhauser_Elixhauser1998 <- 
   function(icd_codes, 
            out,

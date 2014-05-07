@@ -4,6 +4,8 @@
 #' defining comorbidities in ICD-9-CM and ICD-10 administrative data" Med Care, 
 #' vol. 43, no. 11, pp. 1130-1139, Nov. 2005. - Charlson section
 #' @export
+#' @examples
+#' codefinder.regex.charlson_Quan2005("I212")
 codefinder.regex.charlson_Quan2005 <- function(icd_codes, 
                              out,
                              country_code,
@@ -108,6 +110,8 @@ codefinder.regex.charlson_Quan2005 <- function(icd_codes,
 #' comorbidity index predicted in-hospital mortality" J Clin Epidemiol, 
 #' vol. 57, no. 12, pp. 1288-1294, Dec. 2004.
 #' @export
+#' @examples
+#' codefinder.regex.charlson_Sundarajan2004(c("430", "J40"))
 codefinder.regex.charlson_Sundarajan2004 <- 
   function(icd_codes, 
            out,

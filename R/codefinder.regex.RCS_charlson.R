@@ -5,6 +5,8 @@
 #'  Charlson Score" British Journal of Surgery, vol. 97, 
 #'  no. 5, pp. 772-781, May 2010.
 #' @export
+#' @examples
+#' codefinder.regex.charlson_Armitage2010("I252")
 codefinder.regex.charlson_Armitage2010 <- 
   function(icd_codes, 
            out,
