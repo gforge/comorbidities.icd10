@@ -138,7 +138,7 @@ pr.deyo.comorbidities <- function(input.frame) {
     # the identification function from the logic clearly outweighs 
     # this cost.
     output.frame <- rbind(output.frame,
-                          pr.charlson_Deyo1992_numeric(icdCode = input.frame[i, ]))
+                          codefinder.numeric.charlson_Deyo1992(icd_codes = input.frame[i, ]))
   }
   
   # You can't have both uncomplicated diabetes and

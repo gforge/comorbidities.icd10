@@ -7,9 +7,10 @@ pr.get.icd.ver(codes, icd_ver = rep(FALSE, times = length(codes)))
 \arguments{
   \item{codes}{A vector with ICD-codes}
 
-  \item{icd_ver}{A vector with icd versions, same length as
-  \code{code} argument.  If FALSE then all are checked
-  otherwise only those that are FALSE are checked}
+  \item{icd_ver}{A vector with icd versions, has to have
+  the length of 1 or the same length as \code{code}
+  argument. If FALSE then all are checked otherwise only
+  those that are FALSE are checked.}
 }
 \value{
 \code{boolean} Returns TRUE if the code is deemed to be and

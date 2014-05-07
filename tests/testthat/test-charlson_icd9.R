@@ -51,15 +51,47 @@ charlsons_icd9_codes_2_test[['METASTASIS']] = c('196','197','198','199')
 # AIDS/HIV
 charlsons_icd9_codes_2_test[['HIV']] = c('042','043','044')
 
-test_that("Check Charlson matches",{
+test_that("Check Charlson matches for numeric Charlsons",{
+  for (n in names(charlsons_icd9_codes_2_test)){
+    test_df <- data.frame(Codes=charlsons_icd9_codes_2_test[[n]])
+    out <- deyo(test_df)
+    found_codes <- out$COMORBIDITIES[,n] == 1
+    expect_true(all(found_codes), info=sprintf("The script fails to properly identify fro '%s' the codes '%s'",
+                                               n,
+                                               paste(charlsons_icd9_codes_2_test[[n]][!found_codes],
+                                                     collapse="', '")))
+  }
   
 })
-for (n in names(charlsons_icd9_codes_2_test)){
-  test_df <- data.frame(Codes=charlsons_icd9_codes_2_test[[n]])
-  out <- deyo(test_df)
-  found_codes <- out$COMORBIDITIES[,n] == 1
-  expect_true(all(found_codes), info=sprintf("The script fails to properly identify fro '%s' the codes '%s'",
-                                             n,
-                                             paste(charlsons_icd9_codes_2_test[[n]][!found_codes],
-                                                   collapse="', '")))
-}
+
+
+test_that("Check Charlson matches for regular expression Charlsons",{
+  for (n in names(charlsons_icd9_codes_2_test)){
+    test_df <- data.frame(Codes=charlsons_icd9_codes_2_test[[n]])
+    out <- deyo(test_df)
+    found_codes <- out$COMORBIDITIES[,n] == 1
+    expect_true(all(found_codes), info=sprintf("The script fails to properly identify fro '%s' the codes '%s'",
+                                               n,
+                                               paste(charlsons_icd9_codes_2_test[[n]][!found_codes],
+                                                     collapse="', '")))
+  }
+  
+})
+
+test_that("Check Charlson matches to the regular expression Quan version",{
+  for (n in names(charlsons_icd9_codes_2_test)){
+    codes <- charlsons_icd9_codes_2_test[[n]]
+    out <- t(sapply(codes,
+                    function(code)
+                      pr.charlson_Quan2005_regex(icdCode=code, 
+                                                 country_code=country_code,
+                                                 icd_ver=9)))
+    found_codes <- out[,n]
+    expect_true(all(found_codes), 
+                info=sprintf("The script fails to properly identify ICD-%s from '%s' the codes '%s'",
+                             gsub("[^0-9]", "", icd_ver),
+                             n,
+                             paste(codes[!found_codes],
+                                   collapse="', '")))
+  }
+})

@@ -1,13 +1,13 @@
 #' Finds the matching codes for the different comorbidity groups
 #' 
 #' The functions loop through all the comorbidity groups in search
-#' for a matching group to the provided \code{icdCode}. 
+#' for a matching group to the provided \code{icd_codes}. 
 #' 
 #' The \code{_regex} indicates that these functions use regular expressions
 #' for identification of codes of interest. The match is case-insensitive.
 #' The function can also identify acute conditions and ignore those if specified. 
 #' 
-#' @param icdCode The icd code of interest, either a number or a string
+#' @param icd_codes The icd code of interest, either a number or a string
 #' @param out If the function has been run previously there
 #'  may already be matches for a particular group, if the
 #'  out parameter is supplied with a vector equal to the
@@ -36,12 +36,13 @@
 #' L. D. Saunders, C. A. Beck, T. E. Feasby, and W. A. Ghali, "Coding algorithms for 
 #' defining comorbidities in ICD-9-CM and ICD-10 administrative data" Med Care, 
 #' vol. 43, no. 11, pp. 1130-1139, Nov. 2005. - Elixhauser section
-#' @rdname pr_codefinder_regex
-pr.elixhauser_Quan2005_regex <- function(icdCode, 
+#' @rdname codefinder.regex
+#' @export
+codefinder.regex.elixhauser_Quan2005 <- function(icd_codes, 
                               out,
                               country_code,
-                              include_acute = rep(TRUE, times=length(icdCode)),
-                              icd_ver = rep(FALSE, times=length(icdCode))){
+                              include_acute = rep(TRUE, times=length(icd_codes)),
+                              icd_ver = rep(FALSE, times=length(icd_codes))){
   
   available_country_codes <- c('SE', 'US')
   if (missing(country_code)){
@@ -317,18 +318,18 @@ pr.elixhauser_Quan2005_regex <- function(icdCode,
   
   
   # Speeds up only to check the codes that are possible
-  icd_ver <- pr.get.icd.ver(icdCode, icd_ver)
+  icd_ver <- pr.get.icd.ver(icd_codes, icd_ver)
 
   # Get a correctly formatted output vector
   out <- pr.get.out.vector(out, elixhausers)
   
   # Do the actual test loop
   out <- pr.regex.code.match(out = out, 
-                             icdCode = icdCode, 
-                             comorbidity_regex = elixhausers,
+                             icd_codes = icd_codes, 
+                             codefinder.regex.comorbidity = elixhausers,
                              icd_ver =  icd_ver,
                              include_acute = include_acute,
-                             acute_regex = acute_icd_codes)
+                             codefinder.regex.acute = acute_icd_codes)
   
   return(out)
 }

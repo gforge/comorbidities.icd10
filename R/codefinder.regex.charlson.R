@@ -1,13 +1,14 @@
-#' @rdname pr_codefinder_regex
+#' @rdname codefinder.regex
 #' @references H. Quan, V. Sundararajan, P. Halfon, A. Fong, B. Burnand, J.-C. Luthi, 
 #' L. D. Saunders, C. A. Beck, T. E. Feasby, and W. A. Ghali, "Coding algorithms for 
 #' defining comorbidities in ICD-9-CM and ICD-10 administrative data" Med Care, 
 #' vol. 43, no. 11, pp. 1130-1139, Nov. 2005. - Charlson section
-pr.charlson_Quan2005_regex <- function(icdCode, 
+#' @export
+codefinder.regex.charlson_Quan2005 <- function(icd_codes, 
                              out,
                              country_code,
-                             include_acute = rep(TRUE, times=length(icdCode)),
-                             icd_ver = rep(FALSE, times=length(icdCode))){
+                             include_acute = rep(TRUE, times=length(icd_codes)),
+                             icd_ver = rep(FALSE, times=length(icd_codes))){
     
   # Based on Quan et al 2005
   charlsons_v2 <- list()
@@ -71,7 +72,7 @@ pr.charlson_Quan2005_regex <- function(icdCode,
     list(icd10 = c('^I8(5[09]|64)', '^I982', '^K7(04|[12]1|29|6[567])'),
          icd9 = c('^456[012]', '^572[2345678]'))
   
-  charlsons_v2[['METS']] <- 
+  charlsons_v2[['METASTASIS']] <- 
     list(icd10 = c('^C7[789]', '^C80'),
          icd9 = c( '^19[6789]'))
   
@@ -84,34 +85,35 @@ pr.charlson_Quan2005_regex <- function(icdCode,
                           icd9 = '^(410|42(30|95|96|98)|4939|58[34][67]|5908|586|7919|5939)')
   
   # Speeds up only to check the codes that are possible
-  icd_ver <- pr.get.icd.ver(icdCode, icd_ver)
+  icd_ver <- pr.get.icd.ver(icd_codes, icd_ver)
   
   # Get a correctly formatted output vector
   out <- pr.get.out.vector(out, charlsons_v2)
   
   # Do the actual test loop
   out <- pr.regex.code.match(out = out, 
-                             icdCode = icdCode, 
-                             comorbidity_regex = charlsons_v2,
+                             icd_codes = icd_codes, 
+                             codefinder.regex.comorbidity = charlsons_v2,
                              icd_ver =  icd_ver,
                              include_acute = include_acute,
-                             acute_regex = acute_icd_codes)
+                             codefinder.regex.acute = acute_icd_codes)
   
   return(out)
 }
 
 
-#' @rdname pr_codefinder_regex
+#' @rdname codefinder.regex
 #' @references V. Sundararajan, T. Henderson, C. Perry, A. Muggivan, 
 #' H. Quan, and W. A. Ghali, "New ICD-10 version of the Charlson 
 #' comorbidity index predicted in-hospital mortality" J Clin Epidemiol, 
 #' vol. 57, no. 12, pp. 1288-1294, Dec. 2004.
-pr.charlson_Sundarajan2004_regex <- 
-  function(icdCode, 
+#' @export
+codefinder.regex.charlson_Sundarajan2004 <- 
+  function(icd_codes, 
            out,
            country_code,
-           include_acute = rep(TRUE, times=length(icdCode)),
-           icd_ver = rep(FALSE, times=length(icdCode))){
+           include_acute = rep(TRUE, times=length(icd_codes)),
+           icd_ver = rep(FALSE, times=length(icd_codes))){
     
   # Create the charlsons regular expressions
   # to compare 2
@@ -172,7 +174,7 @@ pr.charlson_Sundarajan2004_regex <-
     list(icd9 = c('^1([4568]|7[0124569]|9[0123459])', '^20[012345678]'),
          icd10 = c('^C[012356]', '^C4[01356789]', '^C7[0123456]', '^C8([12345]|8[379])', '^C9(0[01]|[12356]|4([01237]|51))'))
   
-  charlsons_v1[['METS']] <- 
+  charlsons_v1[['METASTASIS']] <- 
     list(icd9 = c('^19([678]|9[01])'),
          icd10 = c('^C7[789]', '^C80'))
   
@@ -189,18 +191,18 @@ pr.charlson_Sundarajan2004_regex <-
                           icd9 = '^(410|42(30|95|96|98)|4939|58[34][67]|5908|586|7919|5939)')
   
   # Speeds up only to check the codes that are possible
-  icd_ver <- pr.get.icd.ver(icdCode, icd_ver)
+  icd_ver <- pr.get.icd.ver(icd_codes, icd_ver)
   
   # Get a correctly formatted output vector
   out <- pr.get.out.vector(out, charlsons_v1)
   
   # Do the actual test loop
   out <- pr.regex.code.match(out = out, 
-                             icdCode = icdCode, 
-                             comorbidity_regex = charlsons_v1,
+                             icd_codes = icd_codes, 
+                             codefinder.regex.comorbidity = charlsons_v1,
                              icd_ver =  icd_ver,
                              include_acute = include_acute,
-                             acute_regex = acute_icd_codes)
+                             codefinder.regex.acute = acute_icd_codes)
   
   return(out)
 }

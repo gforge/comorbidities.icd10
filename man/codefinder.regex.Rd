@@ -1,29 +1,29 @@
-\name{pr.charlson_Armitage2010_regex}
-\alias{pr.charlson_Armitage2010_regex}
-\alias{pr.charlson_Quan2005_regex}
-\alias{pr.charlson_Sundarajan2004_regex}
-\alias{pr.elixhauser_Quan2005_regex}
+\name{codefinder.regex.charlson_Armitage2010}
+\alias{codefinder.regex.charlson_Armitage2010}
+\alias{codefinder.regex.charlson_Quan2005}
+\alias{codefinder.regex.charlson_Sundarajan2004}
+\alias{codefinder.regex.elixhauser_Quan2005}
 \title{Finds the matching codes for the different comorbidity groups}
 \usage{
-pr.charlson_Armitage2010_regex(icdCode, out, country_code,
-  include_acute = rep(TRUE, times = length(icdCode)), icd_ver = rep(FALSE,
-  times = length(icdCode)))
+codefinder.regex.charlson_Armitage2010(icd_codes, out, country_code,
+  include_acute = rep(TRUE, times = length(icd_codes)), icd_ver = rep(FALSE,
+  times = length(icd_codes)))
 
-pr.charlson_Quan2005_regex(icdCode, out, country_code,
-  include_acute = rep(TRUE, times = length(icdCode)), icd_ver = rep(FALSE,
-  times = length(icdCode)))
+codefinder.regex.charlson_Quan2005(icd_codes, out, country_code,
+  include_acute = rep(TRUE, times = length(icd_codes)), icd_ver = rep(FALSE,
+  times = length(icd_codes)))
 
-pr.charlson_Sundarajan2004_regex(icdCode, out, country_code,
-  include_acute = rep(TRUE, times = length(icdCode)), icd_ver = rep(FALSE,
-  times = length(icdCode)))
+codefinder.regex.charlson_Sundarajan2004(icd_codes, out, country_code,
+  include_acute = rep(TRUE, times = length(icd_codes)), icd_ver = rep(FALSE,
+  times = length(icd_codes)))
 
-pr.elixhauser_Quan2005_regex(icdCode, out, country_code,
-  include_acute = rep(TRUE, times = length(icdCode)), icd_ver = rep(FALSE,
-  times = length(icdCode)))
+codefinder.regex.elixhauser_Quan2005(icd_codes, out, country_code,
+  include_acute = rep(TRUE, times = length(icd_codes)), icd_ver = rep(FALSE,
+  times = length(icd_codes)))
 }
 \arguments{
-  \item{icdCode}{The icd code of interest, either a number
-  or a string}
+  \item{icd_codes}{The icd code of interest, either a
+  number or a string}
 
   \item{out}{If the function has been run previously there
   may already be matches for a particular group, if the out
@@ -62,7 +62,8 @@ TRUE.
 }
 \description{
 The functions loop through all the comorbidity groups in
-search for a matching group to the provided \code{icdCode}.
+search for a matching group to the provided
+\code{icd_codes}.
 }
 \details{
 The \code{_regex} indicates that these functions use

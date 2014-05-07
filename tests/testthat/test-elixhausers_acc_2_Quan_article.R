@@ -5,7 +5,10 @@ elixhausers_codes_2_check[['CHF']] = list(
                  '40291', '40411', '40413',
                  '40491', '40493', '4283'),
   
-  icd9 = c('3980', '4020', '4021',
+  icd9 = c('39891', '40201', '40211',
+           '40291', '40401', '4283'),
+  
+  icd9_SE = c('3980', '4020', '4021',
            '4029', '4040', '4283'),
   
   icd10 = c('I099', 'I110', 'I130', 'I132',
@@ -173,9 +176,14 @@ elixhausers_codes_2_check[['RENAL']] = list(
                  '40492', '585', '586',
                  'V420', 'V451', 'V560'),
   
-  icd9 = c('4030', '4031', '4039', 
-           '4040', '4041', '4041',
-           '4049', '5854', '5863',
+  icd9_SE = c('4030', '4031', '4039', 
+              '4040', '4041', '4041',
+              '4049', '5854', '5863',
+              '5880', 'V420', 'V451', 'V564'),
+  
+  icd9 = c('40301', '40311', '40391', 
+           '40402', '40413', '40412',
+           '40492', '5854', '5863',
            '5880', 'V420', 'V451', 'V564'),
   
   icd10 = c('I120', 'I131', 'N182',
@@ -187,8 +195,14 @@ elixhausers_codes_2_check[['LIVER']] = list(
                  '07054', '4560', '4561', '4562', 
                  '5713', '5723', '5728', 'V427'),
   
-  icd9 = c('0702', '0703', 
-           '0704', '0705',
+  icd9_SE = c('0702', '0703', 
+              '0704', '0705',
+              '4560', '4561', '4562', '5702', '5713',
+              '5722', '5723', '5724', '5725', '5726', '5727', '5728', '5733', '5734',
+              '5738', '5739', 'V427'),
+  
+  icd9 = c('07022', '07032', 
+           '07044', '07054',
            '4560', '4561', '4562', '5702', '5713',
            '5722', '5723', '5724', '5725', '5726', '5727', '5728', '5733', '5734',
            '5738', '5739', 'V427'),
@@ -275,10 +289,15 @@ elixhausers_codes_2_check[['RHEUM']] = list(
   icd9_basic = c('7010', '7100', '7101', '7102', '7103', '7104', '7108', '7109',
                  '7148', '7203', '725'),
 
+  icd9_SE = c('4462', '7010', '7100', '7101', '7102', '7103', '7104', '7108', '7109',
+              '7112', '7148', '7193',
+              '7203', '7258', '7285',
+              '7288', '7293'),
+  
   icd9 = c('4462', '7010', '7100', '7101', '7102', '7103', '7104', '7108', '7109',
            '7112', '7148', '7193',
            '7203', '7258', '7285',
-           '7288', '7293'),
+           '72889', '72930'),
   
   icd10 = c('L940', 'L941', 'L943', 'M051',
             'M062', 'M083', 'M120', 'M123',
@@ -378,10 +397,14 @@ elixhausers_codes_2_check[['PSYCHOSES']] = list(
                  '2960', '2968',
                  '2978', '2983'),
   
-  icd9 = c('2938', '2952', '29604',
+  icd9_SE = c('2938', '2952', '29604',
            '2960', '2968',
            '2978', '2983'),
   
+  icd9 = c('2938', '2952', '29604',
+           '29614', '29644',
+           '2978', '2983'),
+
   icd10 = c('F202', 'F222', 'F232', 'F249', 'F257', 'F281',
             'F292', 'F302', 'F312', 'F315'))
 
@@ -389,13 +412,17 @@ elixhausers_codes_2_check[['PSYCHOSES']] = list(
 elixhausers_codes_2_check[['DEPRESSION']] = list(
   icd9_basic = c('3004', '3091', '311'),
   
-  icd9 = c('2961', '2963', '2965',
+  icd9_SE = c('2961', '2963', '2965',
            '3004', '3092', '311'),
 
+  icd9 = c('2962', '2963', '2965',
+           '3004', '3092', '311'),
+  
   icd10 = c('F204', 'F313', 'F314', 'F315', 'F322',
             'F339', 'F341', 'F412', 'F432'))
 
 
+context("Numeric functions")
 
 test_that("Check Elixhausers matches or the basic elixhauser() function",{
   for (n in names(elixhausers_codes_2_check)){
@@ -505,4 +532,44 @@ test_that("Check elixhauser handling of negative scores",{
               info=sprintf("Comorbity code(s) identified: %s",
                            paste(neg.icd9_codes[rowSums(out$COMORBIDITIES) > 0],
                                  collapse=",")))
+})
+
+
+context("Regular expression functions")
+
+test_that("Check Elixhausers matches to the regular expression Quan version",{
+  for (n in names(elixhausers_codes_2_check)){
+    for (icd_ver in names(elixhausers_codes_2_check[[n]])){
+      if (icd_ver == "icd9_basic") {next;} # Only for the numerical version
+      # There are a few Swedish adaptations that have a different match
+      if (grepl("_SE", icd_ver)) {
+        country_code = "SE"
+      }else{
+        country_code = "US"
+      }
+      codes <- elixhausers_codes_2_check[[n]][[icd_ver]]
+      out <- t(sapply(codes,
+                      function(code)
+                        codefinder.regex.elixhauser_Quan2005(icd_codes=code, 
+                                                     country_code=country_code,
+                                                     icd_ver=gsub("[^0-9]", "", icd_ver))))
+      found_codes <- out[,n]
+      expect_true(all(found_codes), 
+                  info=sprintf("The script fails to properly identify ICD-%s from '%s' the codes '%s'",
+                               gsub("[^0-9]", "", icd_ver),
+                               n,
+                               paste(codes[!found_codes],
+                                     collapse="', '")))
+
+#       # HTN.COMP overlaps and others - skip this check
+#       falsely_found_codes <- apply(out[,-grep(n, colnames(out))], 1, any)
+#       expect_true(all(!falsely_found_codes), 
+#                   info=sprintf("The script fails to properly not identify ICD-%s from '%s' the codes '%s'",
+#                                substring(icd_ver, nchar(icd_ver)),
+#                                n,
+#                                paste(codes[falsely_found_codes],
+#                                      collapse="', '")))
+      
+    }
+  }
 })

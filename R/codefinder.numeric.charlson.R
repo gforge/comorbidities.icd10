@@ -1,13 +1,14 @@
-#' @rdname pr_codefinder_numeric
+#' @rdname codefinder.numeric
 #' @references R. A. Deyo, D. C. Cherkin, and M. A. Ciol, 
 #'  "Adapting a clinical comorbidity index for use with 
 #'  ICD-9-CM administrative databases" Journal of Clinical Epidemiology, 
 #'  vol. 45, no. 6, pp. 613-619, Jun. 1992.
-pr.charlson_Deyo1992_numeric <- 
-  function(icdCode, 
+#'  @export
+codefinder.numeric.charlson_Deyo1992 <- 
+  function(icd_codes, 
            out,
            country_code,
-           include_acute = rep(TRUE, length(icdCode)),
+           include_acute = rep(TRUE, length(icd_codes)),
            icd_ver = 9){
   if (any(icd_ver != 9)) { stop("Only ICD-9 version is supported for the Deyo 1992")}
   if (!missing(country_code) && country_code != "US") { stop("Only US country code is currently supported")}
@@ -56,12 +57,12 @@ pr.charlson_Deyo1992_numeric <-
   out <- pr.get.out.vector(out, deyo.list)
   
   # Just return the empty vector if there is nothing to check
-  if (is.na(icdCode) || 
-        icdCode %in% c(0, '')) {return(out)}
+  if (is.na(icd_codes) || 
+        icd_codes %in% c(0, '')) {return(out)}
   
   # Do the actual test loop
   for (k in names(deyo.list)) {
-    if (any(icdCode %in% deyo.list[[k]])) {
+    if (any(icd_codes %in% deyo.list[[k]])) {
         out[k] <- TRUE
         next;
     }

@@ -1,21 +1,21 @@
-\name{pr.ahrq_2010v3.5_numeric}
-\alias{pr.ahrq_2010v3.5_numeric}
-\alias{pr.charlson_Deyo1992_numeric}
-\alias{pr.elixhauser_Elixhauser1998_numeric}
+\name{codefinder.numeric.ahrq_2010v3.5}
+\alias{codefinder.numeric.ahrq_2010v3.5}
+\alias{codefinder.numeric.charlson_Deyo1992}
+\alias{codefinder.numeric.elixhauser_Elixhauser1998}
 \title{Finds the matching codes for the different comorbidity groups}
 \usage{
-pr.ahrq_2010v3.5_numeric(icdCode, out, country_code, include_acute = rep(TRUE,
-  length(icdCode)), icd_ver = 9)
+codefinder.numeric.ahrq_2010v3.5(icd_codes, out, country_code,
+  include_acute = rep(TRUE, length(icd_codes)), icd_ver = 9)
 
-pr.charlson_Deyo1992_numeric(icdCode, out, country_code,
-  include_acute = rep(TRUE, length(icdCode)), icd_ver = 9)
+codefinder.numeric.charlson_Deyo1992(icd_codes, out, country_code,
+  include_acute = rep(TRUE, length(icd_codes)), icd_ver = 9)
 
-pr.elixhauser_Elixhauser1998_numeric(icdCode, out, country_code,
-  include_acute = rep(TRUE, length(icdCode)), icd_ver = 9)
+codefinder.numeric.elixhauser_Elixhauser1998(icd_codes, out, country_code,
+  include_acute = rep(TRUE, length(icd_codes)), icd_ver = 9)
 }
 \arguments{
-  \item{icdCode}{The icd code of interest, either a number
-  or a string}
+  \item{icd_codes}{The icd code of interest, either a
+  number or a string}
 
   \item{out}{If the function has been run previously there
   may already be matches for a particular group, if the out
@@ -52,7 +52,8 @@ TRUE.
 }
 \description{
 The functions loop through all the comorbidity groups in
-search for a matching group to the provided \code{icdCode}.
+search for a matching group to the provided
+\code{icd_codes}.
 }
 \details{
 The \code{_regex} indicates that these functions use
@@ -60,6 +61,9 @@ regular expressions for identification of codes of
 interest. The match is case-insensitive. The function can
 also identify acute conditions and ignore those if
 specified.
+}
+\examples{
+codefinder.numeric.ahrq_2010v3.5(9320)
 }
 \references{
 http://www.hcup-us.ahrq.gov/toolssoftware/comorbidity/comorbidity.jsp

@@ -9,14 +9,15 @@
 #' OF INJURY AND POISONING (E800-E999)" are not included in the code check.
 #' 
 #' @param codes A vector with ICD-codes
-#' @param icd_ver A vector with icd versions, same length as \code{code} argument.
-#'  If FALSE then all are checked otherwise only those that are FALSE are checked
+#' @param icd_ver A vector with icd versions, has to have the length of
+#'  1 or the same length as \code{code} argument. If FALSE then all are 
+#'  checked otherwise only those that are FALSE are checked.
 #' @return \code{boolean} Returns TRUE if the code is deemed to be and ICD-10 code
 #'  otherwise it returns FALSE.
 pr.get.icd.ver <- function(codes, icd_ver = rep(FALSE, times=length(codes))){
   if (length(icd_ver) != length(codes)){
-    if (length(icd_ver) == 1 && icd_ver[1] == FALSE){
-      icd_ver <- rep(FALSE, times=length(codes))
+    if (length(icd_ver) == 1){
+      icd_ver <- rep(icd_ver[1], times=length(codes))
     }else{
       stop("Your the length of the ICD version indicator (", length(icd_ver),")",
            " does not match with the number of provided codes (", length(codes), ")")
@@ -73,31 +74,31 @@ pr.get.out.vector <- function(out, score){
 #' The function loops through all the codes and the different
 #' regular expressions in search for a match.n 
 #' 
-#' @param icdCode The vector with all the icdCodes that should be tested
+#' @param icd_codes The vector with all the icd_codess that should be tested
 #' @param icd_ver The ICD-version, currently either 9 or 10
 #' @param out The out vector, see \code{\link{pr.get.out.vector}}
-#' @param comorbidity_regex The regular expression list with all the comorbidities
+#' @param codefinder.regex.comorbidity The regular expression list with all the comorbidities
 #' @param include_acute If acute diagnosis are to be included, e.g. myocardial
 #'  infarction.
-#' @param acute_regex A list with vectors containing  regular expressions that identify the 
+#' @param codefinder.regex.acute A list with vectors containing  regular expressions that identify the 
 #'  acute diagnoses that should be excluded if \code{include_acute} is set to TRUE
 #'  for the specific code. If not provided the code will not check for acute diagnoses.
 #' @return \code{vector} Returns the out with TRUE for those groups
 #'  where a match was found.
-#' @seealso \code{\link{pr.elixhauser_Quan2005_regex}},
-#'  \code{\link{pr.charlson_Quan2005_regex}},
-#'  \code{\link{pr.charlson_Armitage2010_regex}},
-#'  \code{\link{pr.charlson_Sundarajan2004_regex}}
+#' @seealso \code{\link{codefinder.regex.elixhauser_Quan2005}},
+#'  \code{\link{codefinder.regex.charlson_Quan2005}},
+#'  \code{\link{codefinder.regex.charlson_Armitage2010}},
+#'  \code{\link{codefinder.regex.charlson_Sundarajan2004}}
 pr.regex.code.match <- 
-  function(icdCode, icd_ver, out, comorbidity_regex, 
-           include_acute = rep(TRUE, length(icdCode)), 
-           acute_regex)
+  function(icd_codes, icd_ver, out, codefinder.regex.comorbidity, 
+           include_acute = rep(TRUE, length(icd_codes)), 
+           codefinder.regex.acute)
 {
-  if (!missing(acute_regex)
-      && length(icdCode) != length(include_acute)){
-    stop("Each icdCode needs to have an indicator for if the disease is acute or not",
+  if (!missing(codefinder.regex.acute)
+      && length(icd_codes) != length(include_acute)){
+    stop("Each icd_codes needs to have an indicator for if the disease is acute or not",
          " if you intend to separate acute codes from the search.",
-         " Currently you have '", length(icdCode), "' codes ",
+         " Currently you have '", length(icd_codes), "' codes ",
          " while you have only provided '", length(include_acute), "' acute identifiers")
   }
   
@@ -106,29 +107,29 @@ pr.regex.code.match <-
   if (length(unique(icd_ver))==1){
     
     # Loop through all the disease categories
-    for (key_disease in names(comorbidity_regex)){
+    for (key_disease in names(codefinder.regex.comorbidity)){
       
       # TODO: Order the regular expression according to disease frequency
       # in order to increase speed. I.e. a frequent disease in a category
       # should be prioritized as the chances for a match is greater
-      for (regex_str in comorbidity_regex[[key_disease]][[paste0("icd",icd_ver[1])]]){
+      for (regex_str in codefinder.regex.comorbidity[[key_disease]][[paste0("icd",icd_ver[1])]]){
         # Loop through all the codes
-        for (code_i in 1:length(icdCode)){
-          if (is.na(icdCode[code_i])){ next }
+        for (code_i in 1:length(icd_codes)){
+          if (is.na(icd_codes[code_i])){ next }
           
-          # TODO: An alternative could be to do any(grep(regex_str, icdCode))
+          # TODO: An alternative could be to do any(grep(regex_str, icd_codes))
           # but there is a risk that this would actually slow down the code 
           # as it currently stops on the first match. This should probably be
           # more closely investigated for performance.
-          if (grepl(regex_str, icdCode[code_i], ignore.case=TRUE)){
+          if (grepl(regex_str, icd_codes[code_i], ignore.case=TRUE)){
             
             # Check if this is an acute diagnosis that is to be
             # skipped if we should not include acute diagnosis
-            if (!missing(acute_regex) &&
+            if (!missing(codefinder.regex.acute) &&
                   !include_acute[code_i]){
               out[key_disease] <- TRUE
-              for (ar in acute_regex[[paste0("icd",icd_ver[1])]]){
-                if (grepl(ar, icdCode[code_i], ignore.case=TRUE)){
+              for (ar in codefinder.regex.acute[[paste0("icd",icd_ver[1])]]){
+                if (grepl(ar, icd_codes[code_i], ignore.case=TRUE)){
                   out[key_disease] <- FALSE
                   break
                 }
@@ -152,24 +153,24 @@ pr.regex.code.match <-
     }
   }else{
     # Loop through all the codes
-    for (code_i in 1:length(icdCode)){
-      if (is.na(icdCode[code_i])){ next }
+    for (code_i in 1:length(icd_codes)){
+      if (is.na(icd_codes[code_i])){ next }
       
       # Loop through all the comorbidity groups
-      for (key_disease in names(comorbidity_regex)){
+      for (key_disease in names(codefinder.regex.comorbidity)){
         
         # Exit loop if comorbidity group has already been found by another icd-code
         if (out[key_disease]) { break }
         
-        for (regex_str in comorbidity_regex[[key_disease]][[paste0("icd",icd_ver[code_i])]]){
-          if (grepl(regex_str, icdCode[code_i], ignore.case=TRUE)){
+        for (regex_str in codefinder.regex.comorbidity[[key_disease]][[paste0("icd",icd_ver[code_i])]]){
+          if (grepl(regex_str, icd_codes[code_i], ignore.case=TRUE)){
             # Check if this is an acute diagnosis that is to be
             # skipped if we should not include acute diagnosis
-            if (!missing(acute_regex) &&
+            if (!missing(codefinder.regex.acute) &&
                   !include_acute[code_i]){
               out[key_disease] <- TRUE
-              for (ar in acute_regex[[paste0("icd",icd_ver[code_i])]]){
-                if (grepl(ar, icdCode[code_i], ignore.case=TRUE)){
+              for (ar in codefinder.regex.acute[[paste0("icd",icd_ver[code_i])]]){
+                if (grepl(ar, icd_codes[code_i], ignore.case=TRUE)){
                   out[key_disease] <- FALSE
                   break
                 }

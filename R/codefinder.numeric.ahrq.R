@@ -1,13 +1,13 @@
 #' Finds the matching codes for the different comorbidity groups
 #' 
 #' The functions loop through all the comorbidity groups in search
-#' for a matching group to the provided \code{icdCode}. 
+#' for a matching group to the provided \code{icd_codes}. 
 #' 
 #' The \code{_regex} indicates that these functions use regular expressions
 #' for identification of codes of interest. The match is case-insensitive.
 #' The function can also identify acute conditions and ignore those if specified. 
 #' 
-#' @param icdCode The icd code of interest, either a number or a string
+#' @param icd_codes The icd code of interest, either a number or a string
 #' @param out If the function has been run previously there
 #'  may already be matches for a particular group, if the
 #'  out parameter is supplied with a vector equal to the
@@ -32,12 +32,16 @@
 #'  group. If the entry is FALSE this correspond to that no code matched the
 #'  other group otherwise it returns TRUE.
 #' @references http://www.hcup-us.ahrq.gov/toolssoftware/comorbidity/comorbidity.jsp
-#' @rdname pr_codefinder_numeric
-pr.ahrq_2010v3.5_numeric <- 
-  function(icdCode, 
+#' @rdname codefinder.numeric
+#' @examples
+#' codefinder.numeric.ahrq_2010v3.5(9320)
+#' 
+#' @export
+codefinder.numeric.ahrq_2010v3.5 <- 
+  function(icd_codes, 
            out,
            country_code,
-           include_acute = rep(TRUE, length(icdCode)),
+           include_acute = rep(TRUE, length(icd_codes)),
            icd_ver = 9){
   if (any(icd_ver != 9)) { stop("Only ICD-9 version is supported for the AHRQ v3.5")}
   if (!missing(country_code) && country_code != "US") { stop("Only US country code is currently supported")}
@@ -168,11 +172,11 @@ pr.ahrq_2010v3.5_numeric <-
   out <- pr.get.out.vector(out, ahrq.list)
  
   # Don't check if all codes are missing
-  if (all(is.na(icdCode))) {return(out)}
+  if (all(is.na(icd_codes))) {return(out)}
   
   # Do the actual test loop
   for (k in names(ahrq.list)) {
-    if (any(icdCode %in% ahrq.list[[k]])) {
+    if (any(icd_codes %in% ahrq.list[[k]])) {
       out[k] <- 1
       next;
     }

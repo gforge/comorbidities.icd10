@@ -1,11 +1,12 @@
-#' @rdname pr_codefinder_numeric
+#' @rdname codefinder.numeric
 #' @references Elixhauser A, Steiner C, Harris DR, Coffey RM. (1998)
 #' Comorbidity measures for use with administrative data.  Med Care. 36:8-27.
-pr.elixhauser_Elixhauser1998_numeric <- 
-  function(icdCode, 
+#' @export
+codefinder.numeric.elixhauser_Elixhauser1998 <- 
+  function(icd_codes, 
            out,
            country_code,
-           include_acute = rep(TRUE, length(icdCode)),
+           include_acute = rep(TRUE, length(icd_codes)),
            icd_ver = 9){
   if (any(icd_ver != 9)) { stop("Only ICD-9 version is supported for the Deyo 1992")}
   if (!missing(country_code) && country_code != "US") { stop("Only US country code is currently supported")}
@@ -99,12 +100,12 @@ pr.elixhauser_Elixhauser1998_numeric <-
   out <- pr.get.out.vector(out, elixhauser.list)
   
   # Just return the empty vector if there is nothing to check
-  if (is.na(icdCode) || 
-        icdCode %in% c(0, '')) {return(out)}
+  if (is.na(icd_codes) || 
+        icd_codes %in% c(0, '')) {return(out)}
   
   # Do the actual test loop
   for (k in names(elixhauser.list)) {
-    if (any(icdCode %in% elixhauser.list[[k]])) {
+    if (any(icd_codes %in% elixhauser.list[[k]])) {
       out[k] <- TRUE
       next;
     }

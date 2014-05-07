@@ -1,15 +1,16 @@
-#' @rdname pr_codefinder_regex
+#' @rdname codefinder.regex
 #' @references J. N. Armitage and J. H. van der Meulen, 
 #'  "Identifying co-morbidity in surgical patients using 
 #'  administrative data with the Royal College of Surgeons 
 #'  Charlson Score" British Journal of Surgery, vol. 97, 
 #'  no. 5, pp. 772-781, May 2010.
-pr.charlson_Armitage2010_regex <- 
-  function(icdCode, 
+#' @export
+codefinder.regex.charlson_Armitage2010 <- 
+  function(icd_codes, 
            out,
            country_code,
-           include_acute = rep(TRUE, times=length(icdCode)),
-           icd_ver = rep(FALSE, times=length(icdCode))){
+           include_acute = rep(TRUE, times=length(icd_codes)),
+           icd_ver = rep(FALSE, times=length(icd_codes))){
   
   # Based on Armitage JN, van der Meulen JH. 
   # -- Identifying co-morbidity in surgical patients using 
@@ -78,18 +79,18 @@ pr.charlson_Armitage2010_regex <-
                           icd9 = '^(410|42(30|95|96|98)|4939|58[34][67]|5908|586|7919|5939)')
   
   # Speeds up only to check the codes that are possible
-  icd_ver = pr.get.icd.ver(icdCode, icd_ver)
+  icd_ver = pr.get.icd.ver(icd_codes, icd_ver)
   
   # Get a correctly formatted output vector
   out <- pr.get.out.vector(out, rcs_charlsons)
   
   # Do the actual test loop
   out <- pr.regex.code.match(out = out, 
-                             icdCode = icdCode, 
-                             comorbidity_regex = rcs_charlsons,
+                             icd_codes = icd_codes, 
+                             codefinder.regex.comorbidity = rcs_charlsons,
                              icd_ver =  icd_ver,
                              include_acute = include_acute,
-                             acute_regex = acute_icd_codes)
+                             codefinder.regex.acute = acute_icd_codes)
   
   return(out)
 }

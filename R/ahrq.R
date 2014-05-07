@@ -176,7 +176,7 @@ pr.ahrq.points <- function(input.frame) {
     # the identification function from the logic clearly outweighs 
     # this cost.
     output.frame <- rbind(output.frame,
-                          pr.ahrq_2010v3.5_numeric(icdCode = input.frame[i, ]))
+                          codefinder.numeric.ahrq_2010v3.5(icd_codes = input.frame[i, ]))
   }
     
   #Apply the elixhauser hierarchy

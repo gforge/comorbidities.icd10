@@ -164,7 +164,7 @@ pr.elixhauser.points.30 <- function(input.frame) {
     # the identification function from the logic clearly outweighs 
     # this cost.
     output.frame <- rbind(output.frame,
-                          pr.elixhauser_Elixhauser1998_numeric(icdCode = input.frame[i, ]))
+                          codefinder.numeric.elixhauser_Elixhauser1998(icd_codes = input.frame[i, ]))
   }
   
   # You can't have both uncomplicated diabetes and
