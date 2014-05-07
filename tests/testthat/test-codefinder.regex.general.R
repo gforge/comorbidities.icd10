@@ -88,7 +88,9 @@ data2analyze$include_acute <-
                      # hence we should not include any acute episodes
                      # as we are interested in pre-existing conditions
               TRUE))
-
+cmrbdt.calc(data2analyze,id_column="Patient_ID", 
+            codefinder_hierarchy_fn=hierarchy.elixhauser_Quan2005,
+            codefinder_fn=codefinder.regex.elixhauser_Quan2005)
 library(plyr)
 ddply(data2analyze, 
       .(Patient_ID),
@@ -98,10 +100,10 @@ ddply(data2analyze,
         icd_colname <- "icd_version"
         out <- NULL
         for (i in 1:nrow(x)){
-          out <- comorbidities.icd10:::pr.charlson_Quan2005_regex(icdCode=x[i, icd_cols],
-                                                                    out=out,
-                                                                    include_acute=rep(x[i, incl_acute_colname], times=length(icd_cols)),
-                                                                    icd_ver=rep(x[i, icd_colname], times=length(icd_cols)))
+          out <- codefinder.regex.charlson_Quan2005(icd_codes=x[i, icd_cols],
+                                                    out=out,
+                                                    include_acute=rep(x[i, incl_acute_colname], times=length(icd_cols)),
+                                                    icd_ver=rep(x[i, icd_colname], times=length(icd_cols)))
         }
         
         return(out)

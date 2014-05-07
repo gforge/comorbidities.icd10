@@ -167,17 +167,8 @@ pr.elixhauser.points.30 <- function(input.frame) {
                           codefinder.numeric.elixhauser_Elixhauser1998(icd_codes = input.frame[i, ]))
   }
   
-  # You can't have both uncomplicated diabetes and
-  # complicated diabetes at the same time
-  output.frame[output.frame[,"dm.comp"]==1,"dm.uncomp"] <- 0
-    
-  # If a solid tumor has generated metastasis then it belongs in that group and not
-  # the pure solid tumor group
-  output.frame[output.frame[,"mets"]==1, "solid.tumor"] <- 0
-  
+  output.frame <- hierarchy.elixhauser_Elixhauser1998(output.frame)
   output.frame <- as.data.frame(output.frame)
-  # Change the names to upper case as in original script
-  colnames(output.frame) <- toupper(colnames(output.frame))
   
   return(output.frame)
 }

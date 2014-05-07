@@ -102,6 +102,12 @@ pr.regex.code.match <-
          " while you have only provided '", length(include_acute), "' acute identifiers")
   }
   
+  # The data.frame behaves strangely sometimes
+  # force therefor the codes into a vector
+  if ("data.frame" %in% class(icd_codes)){
+    icd_codes <- as.vector(as.matrix(icd_codes))
+  }
+  
   # If there is a mix of icd-10 and icd-9 codes for the given subject
   # then the loop is slightly more complicated
   if (length(unique(icd_ver))==1){

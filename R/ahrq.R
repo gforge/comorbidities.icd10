@@ -179,19 +179,9 @@ pr.ahrq.points <- function(input.frame) {
                           codefinder.numeric.ahrq_2010v3.5(icd_codes = input.frame[i, ]))
   }
     
-  #Apply the elixhauser hierarchy
-  # You can't have both uncomplicated diabetes and
-  # complicated diabetes at the same time
-  output.frame[output.frame[,"dm.comp"]==TRUE,"dm.uncomp"] <- 0
-    
-  # If a solid tumor has generated metastasis then it belongs in that group and not
-  # the pure solid tumor group
-  output.frame[output.frame[,"mets"]==TRUE,"solid.tumor"] <- 0
+  output.frame <- hierarchy.ahrq_2010v3.5(output.frame)
   
   output.frame <- as.data.frame(output.frame)
-  
-  # Change the names to upper case as in original script
-  colnames(output.frame) <- toupper(colnames(output.frame))
   
   return(output.frame)
 }

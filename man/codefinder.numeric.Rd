@@ -64,6 +64,8 @@ specified.
 }
 \examples{
 codefinder.numeric.ahrq_2010v3.5(9320)
+codefinder.numeric.charlson_Deyo1992(c(9320, 41000))
+codefinder.numeric.elixhauser_Elixhauser1998(34190)
 }
 \references{
 http://www.hcup-us.ahrq.gov/toolssoftware/comorbidity/comorbidity.jsp

@@ -52,7 +52,7 @@ deyo <- function(input.frame) {
   if(is.vector(input.frame)) input.frame <- data.frame(codes=input.frame)
   ret <- pr.deyo.preprocess.icd9(input.frame)
   ret <- pr.deyo.comorbidities(ret)
-  scores <- pr.deyo.convert.to.points(ret)
+  scores <- weight.Charlsons.org(ret)
   
   deyo.data <- list(CHARLSON.SCORE = rowSums(scores), 
                     COMORBIDITIES = ret, 
@@ -141,49 +141,11 @@ pr.deyo.comorbidities <- function(input.frame) {
                           codefinder.numeric.charlson_Deyo1992(icd_codes = input.frame[i, ]))
   }
   
-  # You can't have both uncomplicated diabetes and
-  # complicated diabetes at the same time
-  output.frame[output.frame[,"dm.comp"]==TRUE, "dm"] <- 0
-    
-  # You can't have both uncomplicated diabetes and
-  # complicated diabetes at the same time
-  output.frame[output.frame[,"severe.liver"]==TRUE, "mild.liver"] <- 0
-  
-  # If a solid tumor has generated metastasis then it belongs in that group and not
-  # the pure solid tumor group
-  output.frame[output.frame[,"mets"]==TRUE, "malignancy"] <- 0
-  
+  output.frame <- hierarchy.charlson_Deyo1992(output.frame)  
   output.frame <- as.data.frame(output.frame)
+  
   # Change the names to upper case as in original script
   colnames(output.frame) <- toupper(colnames(output.frame))
   return(output.frame)
 }
 
-#' Score points for Deyo's comorbidity weights
-#' 
-#' The following function adds the weights of the Charlson
-#' original weight system.
-#'  
-#' @param input.frame This is a data frame with 5 digit ICD-9-CM codes as XXX.XX
-#'  This can also be provided as a vector or matrix.
-#' @return \code{matrix} Returns a matrix with the one column per 
-#'  comorbidity. No comorbidity is indicated by 0 while 1 indicates 
-#'  existing comorbidity.
-#' @seealso \code{\link{deyo}}
-pr.deyo.convert.to.points <- function(input.frame) {
-  output.frame <- input.frame
-  # Set all columns that have 2 points
-  for (var in c("PLEGIA", "DM.COMP",
-                "MALIGNANCY", "RENAL"))
-    output.frame[,var] <- output.frame[,var] *2
-  
-  # Set all columns that have 3 points
-  for (var in c("SEVERE.LIVER"))
-    output.frame[,var] <- output.frame[,var] *3
-  
-  # Set all columns that have 6 points
-  for (var in c("METS", "HIV"))
-    output.frame[,var] <- output.frame[,var] *6
-  
-  return(output.frame)
-}

@@ -1,5 +1,10 @@
 NEWS for the Gmisc package
 
+Changes for 0.4
+---------------
+* Externalized hierarchy and points calculator
+* Added the main cmrbdt.calc() function
+
 Changes for 0.3
 ---------------
 * Started implementing regular expression alternatives for elixhauser and charlson scores
@@ -7,7 +12,6 @@ Changes for 0.3
 * The original NA handling from the comorbidities package is now changed so that the missing codes are simply skipped - should have significant performance improvements
 * Renamed the functions to lower-case in for package consistency
 * Externalized numeric and regular expression functions as these may be of interest to users and renamed them to codefinder.*
-
 
 Changes for 0.2
 ---------------

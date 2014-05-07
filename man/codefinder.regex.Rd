@@ -73,6 +73,7 @@ also identify acute conditions and ignore those if
 specified.
 }
 \examples{
+codefinder.regex.charlson_Armitage2010("I252")
 codefinder.regex.charlson_Quan2005("I212")
 codefinder.regex.charlson_Sundarajan2004(c("430", "J40"))
 }
