@@ -40,3 +40,20 @@ translate.ICD9.from.Swedish <- function(icd){
    return(icd)
  })
 }
+
+#' Dot stripper
+#' 
+#' ICD-codes have frequently \code{.} in them,
+#' e.g. \code{M16.1}. These need to be stripped
+#' for the code to work.
+#' 
+#' @param codes The ICD-codes to be stripped
+#' @return \code{vector/matrix} Codes that are stripped from any .
+#' @examples
+#' preproc.strip.dot(c("M16.1", "M161"))
+#' preproc.strip.dot(matrix(c("M16.1", "M162", NA, "M16.9"), ncol=2, nrow=2))
+#' @export
+preproc.strip.dot <- function(codes){
+  if (is.data.frame(codes)) {codes <- as.matrix(codes)}
+  return(gsub(".", "", codes, fixed=TRUE))
+}

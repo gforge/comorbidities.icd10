@@ -138,7 +138,7 @@ pr.deyo.comorbidities <- function(input.frame) {
     # the identification function from the logic clearly outweighs 
     # this cost.
     output.frame <- rbind(output.frame,
-                          codefinder.numeric.charlson_Deyo1992(icd_codes = input.frame[i, ]))
+                          cmrbdt.finder.numeric.charlson_Deyo1992(icd_codes = input.frame[i, ]))
   }
   
   output.frame <- hierarchy.charlson_Deyo1992(output.frame)  

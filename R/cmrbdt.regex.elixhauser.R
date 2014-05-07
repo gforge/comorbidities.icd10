@@ -36,9 +36,9 @@
 #' L. D. Saunders, C. A. Beck, T. E. Feasby, and W. A. Ghali, "Coding algorithms for 
 #' defining comorbidities in ICD-9-CM and ICD-10 administrative data" Med Care, 
 #' vol. 43, no. 11, pp. 1130-1139, Nov. 2005. - Elixhauser section
-#' @rdname codefinder.regex
+#' @rdname cmrbdt.finder.regex
 #' @export
-codefinder.regex.elixhauser_Quan2005 <- function(icd_codes, 
+cmrbdt.finder.regex.elixhauser_Quan2005 <- function(icd_codes, 
                               out,
                               country_code,
                               include_acute = rep(TRUE, times=length(icd_codes)),
@@ -326,10 +326,10 @@ codefinder.regex.elixhauser_Quan2005 <- function(icd_codes,
   # Do the actual test loop
   out <- pr.regex.code.match(out = out, 
                              icd_codes = icd_codes, 
-                             codefinder.regex.comorbidity = elixhausers,
+                             cmrbdt.finder.regex.comorbidity = elixhausers,
                              icd_ver =  icd_ver,
                              include_acute = include_acute,
-                             codefinder.regex.acute = acute_icd_codes)
+                             cmrbdt.finder.regex.acute = acute_icd_codes)
   
   return(out)
 }

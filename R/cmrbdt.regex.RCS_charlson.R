@@ -1,4 +1,4 @@
-#' @rdname codefinder.regex
+#' @rdname cmrbdt.finder.regex
 #' @references J. N. Armitage and J. H. van der Meulen, 
 #'  "Identifying co-morbidity in surgical patients using 
 #'  administrative data with the Royal College of Surgeons 
@@ -6,8 +6,8 @@
 #'  no. 5, pp. 772-781, May 2010.
 #' @export
 #' @examples
-#' codefinder.regex.charlson_Armitage2010("I252")
-codefinder.regex.charlson_Armitage2010 <- 
+#' cmrbdt.finder.regex.charlson_Armitage2010("I252")
+cmrbdt.finder.regex.charlson_Armitage2010 <- 
   function(icd_codes, 
            out,
            country_code,
@@ -89,10 +89,10 @@ codefinder.regex.charlson_Armitage2010 <-
   # Do the actual test loop
   out <- pr.regex.code.match(out = out, 
                              icd_codes = icd_codes, 
-                             codefinder.regex.comorbidity = rcs_charlsons,
+                             cmrbdt.finder.regex.comorbidity = rcs_charlsons,
                              icd_ver =  icd_ver,
                              include_acute = include_acute,
-                             codefinder.regex.acute = acute_icd_codes)
+                             cmrbdt.finder.regex.acute = acute_icd_codes)
   
   return(out)
 }

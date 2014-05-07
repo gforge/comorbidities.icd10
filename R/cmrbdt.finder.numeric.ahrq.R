@@ -32,11 +32,11 @@
 #'  group. If the entry is FALSE this correspond to that no code matched the
 #'  other group otherwise it returns TRUE.
 #' @references http://www.hcup-us.ahrq.gov/toolssoftware/comorbidity/comorbidity.jsp
-#' @rdname codefinder.numeric
+#' @rdname cmrbdt.finder.numeric
 #' @examples
-#' codefinder.numeric.ahrq_2010v3.5(9320)
+#' cmrbdt.finder.numeric.ahrq_2010v3.5(9320)
 #' @export
-codefinder.numeric.ahrq_2010v3.5 <- 
+cmrbdt.finder.numeric.ahrq_2010v3.5 <- 
   function(icd_codes, 
            out,
            country_code,

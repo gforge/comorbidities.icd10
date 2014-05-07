@@ -550,7 +550,7 @@ test_that("Check Elixhausers matches to the regular expression Quan version",{
       codes <- elixhausers_codes_2_check[[n]][[icd_ver]]
       out <- t(sapply(codes,
                       function(code)
-                        codefinder.regex.elixhauser_Quan2005(icd_codes=code, 
+                        cmrbdt.finder.regex.elixhauser_Quan2005(icd_codes=code, 
                                                      country_code=country_code,
                                                      icd_ver=gsub("[^0-9]", "", icd_ver))))
       found_codes <- out[,n]

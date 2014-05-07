@@ -164,7 +164,7 @@ pr.elixhauser.points.30 <- function(input.frame) {
     # the identification function from the logic clearly outweighs 
     # this cost.
     output.frame <- rbind(output.frame,
-                          codefinder.numeric.elixhauser_Elixhauser1998(icd_codes = input.frame[i, ]))
+                          cmrbdt.finder.numeric.elixhauser_Elixhauser1998(icd_codes = input.frame[i, ]))
   }
   
   output.frame <- hierarchy.elixhauser_Elixhauser1998(output.frame)

@@ -1,12 +1,12 @@
-#' @rdname codefinder.regex
+#' @rdname cmrbdt.finder.regex
 #' @references H. Quan, V. Sundararajan, P. Halfon, A. Fong, B. Burnand, J.-C. Luthi, 
 #' L. D. Saunders, C. A. Beck, T. E. Feasby, and W. A. Ghali, "Coding algorithms for 
 #' defining comorbidities in ICD-9-CM and ICD-10 administrative data" Med Care, 
 #' vol. 43, no. 11, pp. 1130-1139, Nov. 2005. - Charlson section
 #' @export
 #' @examples
-#' codefinder.regex.charlson_Quan2005("I212")
-codefinder.regex.charlson_Quan2005 <- function(icd_codes, 
+#' cmrbdt.finder.regex.charlson_Quan2005("I212")
+cmrbdt.finder.regex.charlson_Quan2005 <- function(icd_codes, 
                              out,
                              country_code,
                              include_acute = rep(TRUE, times=length(icd_codes)),
@@ -95,24 +95,24 @@ codefinder.regex.charlson_Quan2005 <- function(icd_codes,
   # Do the actual test loop
   out <- pr.regex.code.match(out = out, 
                              icd_codes = icd_codes, 
-                             codefinder.regex.comorbidity = charlsons_v2,
+                             cmrbdt.finder.regex.comorbidity = charlsons_v2,
                              icd_ver =  icd_ver,
                              include_acute = include_acute,
-                             codefinder.regex.acute = acute_icd_codes)
+                             cmrbdt.finder.regex.acute = acute_icd_codes)
   
   return(out)
 }
 
 
-#' @rdname codefinder.regex
+#' @rdname cmrbdt.finder.regex
 #' @references V. Sundararajan, T. Henderson, C. Perry, A. Muggivan, 
 #' H. Quan, and W. A. Ghali, "New ICD-10 version of the Charlson 
 #' comorbidity index predicted in-hospital mortality" J Clin Epidemiol, 
 #' vol. 57, no. 12, pp. 1288-1294, Dec. 2004.
 #' @export
 #' @examples
-#' codefinder.regex.charlson_Sundarajan2004(c("430", "J40"))
-codefinder.regex.charlson_Sundarajan2004 <- 
+#' cmrbdt.finder.regex.charlson_Sundarajan2004(c("430", "J40"))
+cmrbdt.finder.regex.charlson_Sundarajan2004 <- 
   function(icd_codes, 
            out,
            country_code,
@@ -203,10 +203,10 @@ codefinder.regex.charlson_Sundarajan2004 <-
   # Do the actual test loop
   out <- pr.regex.code.match(out = out, 
                              icd_codes = icd_codes, 
-                             codefinder.regex.comorbidity = charlsons_v1,
+                             cmrbdt.finder.regex.comorbidity = charlsons_v1,
                              icd_ver =  icd_ver,
                              include_acute = include_acute,
-                             codefinder.regex.acute = acute_icd_codes)
+                             cmrbdt.finder.regex.acute = acute_icd_codes)
   
   return(out)
 }

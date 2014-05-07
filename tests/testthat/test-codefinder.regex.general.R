@@ -91,11 +91,11 @@ data2analyze$include_acute <-
                      # as we are interested in pre-existing conditions
               TRUE))
 
-test_that("Check codefinder with cmrbdt.calc", {
+test_that("Check cmrbdt.finder with cmrbdt.calc", {
   out <- cmrbdt.calc(data2analyze,id_column="Patient_ID", 
                      icd_columns=grep("^ICD", colnames(data2analyze)),
-                     codefinder_hierarchy_fn=hierarchy.elixhauser_Quan2005,
-                     codefinder_fn=codefinder.regex.elixhauser_Quan2005)
+                     cmrbdt.finder_hierarchy_fn=hierarchy.elixhauser_Quan2005,
+                     cmrbdt.finder_fn=cmrbdt.finder.regex.elixhauser_Quan2005)
   expect_equal(sum(out$ct), 2)
   expect_equivalent(tail(out$ct, 1), 0, "Missing has a match")
   

@@ -176,7 +176,7 @@ pr.ahrq.points <- function(input.frame) {
     # the identification function from the logic clearly outweighs 
     # this cost.
     output.frame <- rbind(output.frame,
-                          codefinder.numeric.ahrq_2010v3.5(icd_codes = input.frame[i, ]))
+                          cmrbdt.finder.numeric.ahrq_2010v3.5(icd_codes = input.frame[i, ]))
   }
     
   output.frame <- hierarchy.ahrq_2010v3.5(output.frame)

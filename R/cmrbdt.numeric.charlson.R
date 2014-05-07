@@ -1,12 +1,12 @@
-#' @rdname codefinder.numeric
+#' @rdname cmrbdt.finder.numeric
 #' @references R. A. Deyo, D. C. Cherkin, and M. A. Ciol, 
 #'  "Adapting a clinical comorbidity index for use with 
 #'  ICD-9-CM administrative databases" Journal of Clinical Epidemiology, 
 #'  vol. 45, no. 6, pp. 613-619, Jun. 1992.
 #'  @export
 #' @examples
-#' codefinder.numeric.charlson_Deyo1992(c(9320, 41000))
-codefinder.numeric.charlson_Deyo1992 <- 
+#' cmrbdt.finder.numeric.charlson_Deyo1992(c(9320, 41000))
+cmrbdt.finder.numeric.charlson_Deyo1992 <- 
   function(icd_codes, 
            out,
            country_code,

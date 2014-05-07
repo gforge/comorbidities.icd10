@@ -46,13 +46,13 @@
 #'  pre-processed prior to feeding them into the algorithm. For instance
 #'  the ICD-columns may be crammed into one single column where each 
 #'  code is separated by a ' '. When this is the case the pre-processing
-#'  allows a split prior to calling the \code{codefinder_fn}, e.g. splitting
+#'  allows a split prior to calling the \code{cmrbdt.finder_fn}, e.g. splitting
 #'  'M161 E110' could need a function as \code{function(code){unlist(strsplit(code, " "))}}
 #'  - \emph{note} the unlist, your function should return a vector and not a list.
-#' @param codefinder_fn This is one of the codefinder functions that you want
-#'  to apply. The codefinder is at the heart of the algorithm and does the 
+#' @param cmrbdt.finder_fn This is one of the cmrbdt.finder functions that you want
+#'  to apply. The cmrbdt.finder is at the heart of the algorithm and does the 
 #'  actual comorbidity identidication. See below for a list of available functions.
-#' @param codefinder_hierarchy_fn This functions applies any hierarchy needed in order
+#' @param cmrbdt.finder_hierarchy_fn This functions applies any hierarchy needed in order
 #'  to retain logic, e.g. complicated diabetes and uncomplicated diabetes should not
 #'  co-exist in one and the same patient. You can provide here any of the \code{hierarchy.*()}
 #'  functions. E.g. if you are using Elixhausers Quan 2005 version you provide the 
@@ -69,28 +69,28 @@
 #'  US codes are implemented. The function defaults to 'US'.
 #' @seealso 
 #' \itemize{
-#'  \item{\code{\link{codefinder.numeric.ahrq_2010v3.5}}: }{Numeric funciton for 
+#'  \item{\code{\link{cmrbdt.finder.numeric.ahrq_2010v3.5}}: }{Numeric funciton for 
 #'   identifying AHRQ codes, \emph{note} that this is not the latest version! Works only 
 #'   with ICD-9 codes.}
-#'  \item{\code{\link{codefinder.numeric.elixhauser_Elixhauser1998}}: }{Numeric function
+#'  \item{\code{\link{cmrbdt.finder.numeric.elixhauser_Elixhauser1998}}: }{Numeric function
 #'   for identifying the original Elixhauser codes from 1998, \emph{note} that newer versions
 #'   code versions are available. Works only with ICD-9 codes.}
-#'  \item{\code{\link{codefinder.numeric.charlson_Deyo1992}}: }{Numeric function for
+#'  \item{\code{\link{cmrbdt.finder.numeric.charlson_Deyo1992}}: }{Numeric function for
 #'   identifying Deyo's original translation of the Elixhauser comorbidity groups. Works only 
 #'   with ICD-9 codes.}
-#'  \item{\code{\link{codefinder.regex.charlson_Sundarajan2004}}: }{A function based
+#'  \item{\code{\link{cmrbdt.finder.regex.charlson_Sundarajan2004}}: }{A function based
 #'   on regular expressions for identifying Sundarajan's codeset for Charlsons index, \emph{note} 
 #'   that the Quan article that they wrote one year later is an update to the current code
 #'   set.}
-#'  \item{\code{\link{codefinder.regex.charlson_Quan2005}}: }{A function based
+#'  \item{\code{\link{cmrbdt.finder.regex.charlson_Quan2005}}: }{A function based
 #'   on regular expressions for identifying Quan's codeset for Charlsons index. This
 #'   is currently (written 2014-05-07) the most up-to-date version of the Charlson code set unless
 #'   the Royal College of Surgeons attempt at changing the Charlson counts.}
-#'  \item{\code{\link{codefinder.regex.charlson_Armitage2010}}: }{A function based
+#'  \item{\code{\link{cmrbdt.finder.regex.charlson_Armitage2010}}: }{A function based
 #'   on regular expressions for identifying an adaptation and simplification of the
 #'   Charlsons index. \emph{Note} that this is no longer the Charlsons but an adaptation with
 #'   only 14 comorbidity groups.}
-#'  \item{\code{\link{codefinder.regex.elixhauser_Quan2005}}: }{A function based
+#'  \item{\code{\link{cmrbdt.finder.regex.elixhauser_Quan2005}}: }{A function based
 #'   on regular expressions for identifying Quan's codeset for Charlsons index. This
 #'   is currently (written 2014-05-07) the most up-to-date version of the Elixhauser code set unless
 #'   the AHRQ is included although the AHRQ has never been updated to ICD-10.}
@@ -104,8 +104,8 @@ cmrbdt.calc <- function(ds,
                         icd_ver_column,
                         include_acute_column,
                         icd_code_preprocess_fn,
-                        codefinder_fn,
-                        codefinder_hierarchy_fn,
+                        cmrbdt.finder_fn,
+                        cmrbdt.finder_hierarchy_fn,
                         cmrbdt_weight_fn,
                         country_code = 'US'){
   # Extract only what we need from the data set
@@ -216,22 +216,22 @@ cmrbdt.calc <- function(ds,
   }
   include_acute_column <- as.matrix(include_acute_column, ncol=1)
   
-  # Get the codefinder function
-  if (is.character(codefinder_fn)){
-    if (!exists(codefinder_fn))
-      stop("Could not identify the codefinder function that you want to use,",
-           " i.e. the function '", codefinder_fn, "' is not defined")
-    codefinder_fn <- get(codefinder_fn)
+  # Get the cmrbdt.finder function
+  if (is.character(cmrbdt.finder_fn)){
+    if (!exists(cmrbdt.finder_fn))
+      stop("Could not identify the cmrbdt.finder function that you want to use,",
+           " i.e. the function '", cmrbdt.finder_fn, "' is not defined")
+    cmrbdt.finder_fn <- get(cmrbdt.finder_fn)
   }
   
-  if (!missing(codefinder_hierarchy_fn) &&
-        is.character(codefinder_hierarchy_fn)){
-    if (!exists(codefinder_hierarchy_fn))
-      stop("Could not identify the codefinder_hierarchy_fn function that you want to use,",
-           " i.e. the function '", codefinder_hierarchy_fn, "' is not defined")
-    codefinder_hierarchy_fn <- get(codefinder_hierarchy_fn)
+  if (!missing(cmrbdt.finder_hierarchy_fn) &&
+        is.character(cmrbdt.finder_hierarchy_fn)){
+    if (!exists(cmrbdt.finder_hierarchy_fn))
+      stop("Could not identify the cmrbdt.finder_hierarchy_fn function that you want to use,",
+           " i.e. the function '", cmrbdt.finder_hierarchy_fn, "' is not defined")
+    cmrbdt.finder_hierarchy_fn <- get(cmrbdt.finder_hierarchy_fn)
   }else{
-    codefinder_hierarchy_fn <- NULL
+    cmrbdt.finder_hierarchy_fn <- NULL
   }
 
   if (!missing(icd_code_preprocess_fn) &&
@@ -262,14 +262,14 @@ cmrbdt.calc <- function(ds,
     list(cmrbdt =
            ddply(d2a, 
                  colnames(id_column),
-                 codefinder_fn = codefinder_fn,
-                 codefinder_hierarchy_fn = codefinder_hierarchy_fn,
+                 cmrbdt.finder_fn = cmrbdt.finder_fn,
+                 cmrbdt.finder_hierarchy_fn = cmrbdt.finder_hierarchy_fn,
                  icd_code_preprocess_fn = icd_code_preprocess_fn,
                  icd_cols = NCOL(id_column) + 1:NCOL(icd_codes),
                  .fun=function(x,
                           icd_cols, 
-                          codefinder_fn,
-                          codefinder_hierarchy_fn,
+                          cmrbdt.finder_fn,
+                          cmrbdt.finder_hierarchy_fn,
                           icd_code_preprocess_fn){
                    out <- NULL
                    for (i in 1:nrow(x)){
@@ -277,14 +277,14 @@ cmrbdt.calc <- function(ds,
                      if (!is.null(icd_code_preprocess_fn)){
                        codes <- icd_code_preprocess_fn(codes)
                      }
-                     out <- codefinder_fn(icd_codes=codes,
+                     out <- cmrbdt.finder_fn(icd_codes=codes,
                                           out=out,
                                           include_acute=rep(x[i, "include_acute"], times=length(codes)),
                                           icd_ver=rep(x[i, "icd_ver"], times=length(codes)))
                    }
                    
-                   if (!is.null(codefinder_hierarchy_fn)){
-                     out <- codefinder_hierarchy_fn(out)
+                   if (!is.null(cmrbdt.finder_hierarchy_fn)){
+                     out <- cmrbdt.finder_hierarchy_fn(out)
                    }
                    
                    return(out)

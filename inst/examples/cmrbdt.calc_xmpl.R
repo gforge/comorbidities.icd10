@@ -89,5 +89,5 @@ data2analyze$include_acute <-
               # as we are interested in pre-existing conditions
               TRUE))
 cmrbdt.calc(data2analyze,id_column="Patient_ID", 
-            codefinder_hierarchy_fn=hierarchy.elixhauser_Quan2005,
-            codefinder_fn=codefinder.regex.elixhauser_Quan2005)
+            cmrbdt.finder_hierarchy_fn=hierarchy.elixhauser_Quan2005,
+            cmrbdt.finder_fn=cmrbdt.finder.regex.elixhauser_Quan2005)

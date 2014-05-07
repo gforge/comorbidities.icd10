@@ -5,14 +5,14 @@
 #' if a metastasis code is present then the solid tumor code is obsolete.
 #' 
 #' @param out A \code{matrix}/\code{data.frame}/\code{vector} with the comorbidity
-#'  groups outputted from the \code{codefinder.*()} functions
+#'  groups outputted from the \code{cmrbdt.finder.*()} functions
 #' @return \code{out} Returns the same as the input but with the hierarchy applied
 #' @rdname hierarchy
-#' @seealso \code{\link{codefinder.numeric.ahrq_2010v3.5}}
+#' @seealso \code{\link{cmrbdt.finder.numeric.ahrq_2010v3.5}}
 #' @export
 #' @examples
 #' # AHRQ example
-#' out <- codefinder.numeric.ahrq_2010v3.5("31323")
+#' out <- cmrbdt.finder.numeric.ahrq_2010v3.5("31323")
 #' out[c("DM.COMP", "DM.UNCOMP")] <-TRUE
 #' hierarchy.ahrq_2010v3.5(out)
 #' 
@@ -34,7 +34,7 @@ hierarchy.ahrq_2010v3.5 <- function(out){
 }
 
 #' @rdname hierarchy
-#' @seealso \code{\link{codefinder.numeric.elixhauser_Elixhauser1998}}
+#' @seealso \code{\link{cmrbdt.finder.numeric.elixhauser_Elixhauser1998}}
 #' @export
 hierarchy.elixhauser_Elixhauser1998 <- function(out){
   # Just a wrapper - the hierarchy is identical
@@ -42,7 +42,7 @@ hierarchy.elixhauser_Elixhauser1998 <- function(out){
 }
 
 #' @rdname hierarchy
-#' @seealso \code{\link{codefinder.regex.elixhauser_Quan2005}}
+#' @seealso \code{\link{cmrbdt.finder.regex.elixhauser_Quan2005}}
 #' @export
 hierarchy.elixhauser_Quan2005 <- function(out){
   # Just a wrapper - the hierarchy is identical
@@ -50,12 +50,12 @@ hierarchy.elixhauser_Quan2005 <- function(out){
 }
 
 #' @rdname hierarchy
-#' @seealso \code{\link{codefinder.numeric.ahrq_2010v3.5}}
+#' @seealso \code{\link{cmrbdt.finder.numeric.ahrq_2010v3.5}}
 #' @export
 #' @examples
 #' 
 #' # Deyo example
-#' out <- codefinder.numeric.charlson_Deyo1992("31323")
+#' out <- cmrbdt.finder.numeric.charlson_Deyo1992("31323")
 #' out[grep("LIVER", names(out))] <-TRUE
 #' hierarchy.charlson_Deyo1992(out)
 hierarchy.charlson_Deyo1992 <- function(out){
@@ -81,7 +81,7 @@ hierarchy.charlson_Deyo1992 <- function(out){
 }
 
 #' @rdname hierarchy
-#' @seealso \code{\link{codefinder.regex.charlson_Quan2005}}
+#' @seealso \code{\link{cmrbdt.finder.regex.charlson_Quan2005}}
 #' @export
 hierarchy.charlson_Quan2005 <- function(out){
   # Just a wrapper - the hierarchy is identical
@@ -89,7 +89,7 @@ hierarchy.charlson_Quan2005 <- function(out){
 }
 
 #' @rdname hierarchy
-#' @seealso \code{\link{codefinder.regex.charlson_Sundarajan2004}}
+#' @seealso \code{\link{cmrbdt.finder.regex.charlson_Sundarajan2004}}
 #' @export
 hierarchy.charlson_Sundarajan2004 <- function(out){
   # Just a wrapper - the hierarchy is identical
@@ -98,12 +98,12 @@ hierarchy.charlson_Sundarajan2004 <- function(out){
 
 
 #' @rdname hierarchy
-#' @seealso \code{\link{codefinder.regex.charlson_Armitage2010}}
+#' @seealso \code{\link{cmrbdt.finder.regex.charlson_Armitage2010}}
 #' @export
 #' @examples
 #' 
 #' # Armitage example
-#' out <- codefinder.regex.charlson_Armitage2010("I252")
+#' out <- cmrbdt.finder.regex.charlson_Armitage2010("I252")
 #' out[grep("LIVER", names(out))] <-TRUE
 #' hierarchy.charlson_Armitage2010(out)
 hierarchy.charlson_Armitage2010 <- function(out){
