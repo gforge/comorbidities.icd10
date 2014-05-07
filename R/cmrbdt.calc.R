@@ -143,7 +143,7 @@ cmrbdt.calc <- function(ds,
       }
     }else{
       if (is.null(colnames(id_column))){
-        if (NCOl(id_column) == 1){
+        if (NCOL(id_column) == 1){
           org_id_names <- "ID"
         }else{
           org_id_names <- sprintf("ID_no_%d",
@@ -235,13 +235,13 @@ cmrbdt.calc <- function(ds,
   
   # Merge the different sections into one
   # in order to get the ddply to work
-  data2analyze <- cbind(id_column,
-                        icd_codes)
-  data2analyze$icd_ver <- icd_ver_column
-  data2analyze$include_acute <- include_acute_column
+  d2a <- cbind(id_column,
+               icd_codes)
+  d2a$icd_ver <- icd_ver_column
+  d2a$include_acute <- include_acute_column
   ret <- 
     list(cmrbdt =
-           ddply(data2analyze, 
+           ddply(d2a, 
                  colnames(id_column),
                  codefinder_fn = codefinder_fn,
                  codefinder_hierarchy_fn = codefinder_hierarchy_fn,
@@ -282,7 +282,7 @@ cmrbdt.calc <- function(ds,
               }))
     ret[["score"]] <- rowSums(ret[["cmrbdt.weighted"]][,-id_col_nos])
   }else{
-    ret[["ct"]] <- rowSums(ret[["cmrbdt"]][,-id_col_nos])
+    ret[["ct"]] <- as.integer(rowSums(ret[["cmrbdt"]][,-id_col_nos]))
   }
   
   return(ret)

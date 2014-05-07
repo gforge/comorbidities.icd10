@@ -1,3 +1,5 @@
+context("General test")
+
 # Completely made up datasets
 prim_data <- 
   data.frame(Patient_ID = c("A",
@@ -88,6 +90,13 @@ data2analyze$include_acute <-
                      # hence we should not include any acute episodes
                      # as we are interested in pre-existing conditions
               TRUE))
-cmrbdt.calc(data2analyze,id_column="Patient_ID", 
-            codefinder_hierarchy_fn=hierarchy.elixhauser_Quan2005,
-            codefinder_fn=codefinder.regex.elixhauser_Quan2005)
+
+test_that("Check codefinder with cmrbdt.calc", {
+  out <- cmrbdt.calc(data2analyze,id_column="Patient_ID", 
+                     icd_columns=grep("^ICD", colnames(data2analyze)),
+                     codefinder_hierarchy_fn=hierarchy.elixhauser_Quan2005,
+                     codefinder_fn=codefinder.regex.elixhauser_Quan2005)
+  expect_equal(sum(out$ct), 2)
+  expect_equivalent(tail(out$ct, 1), 0, "Missing has a match")
+  
+})

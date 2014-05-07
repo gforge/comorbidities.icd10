@@ -18,5 +18,7 @@ License: GPL-2
 LazyLoad: yes
 URL: https://github.com/gforge/comorbidities.icd10
 BugReports: https://github.com/gforge/comorbidities.icd10/issues
+Imports:
+    plyr (>= 1.8.1)
 Suggests:
     testthat (>= 0.8)
