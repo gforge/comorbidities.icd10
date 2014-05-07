@@ -47,11 +47,9 @@ some other filler character, then they must be converted to
 the format above for this function to work properly.
 }
 \examples{
-x <- matrix(0, nrow = 3, ncol = 2)
-x[1,1] <- "41000"
-x[1,2] <- "42800"
-x[2,1] <- "57220"
-x[2,2] <- "1961X"
+x <- matrix(NA, nrow = 3, ncol = 2)
+x[1,] <- c("41000", "42800")
+x[2,] <- c("57220", "1961X")
 x[3,1] <- "042XX"
 x <- as.data.frame(x)
 ahrq(x)
