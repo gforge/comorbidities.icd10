@@ -112,12 +112,31 @@ cmrbdt.calc <- function(ds,
   if (!missing(icd_columns)){
     icd_codes <- ds[,icd_columns, drop=FALSE]
   }else{
+    if ((!missing(id_column) &&
+           NROW(id_column) != NROW(ds))||
+          (!missing(icd_ver_column) &&
+             NROW(icd_ver_column) != NROW(ds)) ||
+          (!missing(include_acute_column) &&
+             NROW(include_acute_column) != NROW(ds))){
+      stop("If the ds parameter consists of only icd codes",
+           " then the other parameters id_column, icd_ver_column,",
+           " include_acute_column need to be independent vectors/matrices")
+    }
     icd_codes <- ds
   }
   icd_codes <- as.data.frame(icd_codes)
   colnames(icd_codes) <- sprintf("ICD_codes_no_%d",
                                  1:NCOL(icd_codes))
 
+  # Check the first entries if they are valid ICD-codes
+  test_codes <- as.vector(head(icd_codes, 50))
+  valid_test_codes <- is.ICD(test_codes)
+  if (!all(valid_test_codes)){
+    stop("There seems to be some issue with your test codes, ",
+         " the following test codes from your input data",
+         " did not validate the is.ICD function: ",
+         paste(test_codes[!valid_test_codes], collapse=", "))
+  }
   # Get the ID-column if any has been provided
   if (missing(id_column)){
     # Skips the ID, probably not entirely optimal for the function's 
