@@ -11,26 +11,11 @@ into the Deyo-Charlson index, the original Elixhauser index of 30
 comorbidities, and the AHRQ comorbidity index (an update to the original
 Elixhauser method).
 
-This package consists of 3 functions: deyo, elixhauser, and ahrq.
-The functions are very similar in that they each take as input a data frame
-structured such that each row contains a list of ICD-9-CM codes (e.g.
-discharge or admission diagnoses) attributed to a single patient. The
-function goes from row to row comparing the ICD-9-CM codes a patient has
-with the particular comorbidity index that function represents.  If a
-patient has a diagnosis (as indicated by ICD-9-CM code) that is one of the
-diagnoses in the paritcular index chosen, then the patient is considered to
-have this diagnosis.  Regardless of how many different ICD-9-CM codes a
-patient has corresponding to a particular comorbidity category, a
-comorbidity is only counted once.
+In this remake the main comorbidity calculator function is the cmrbdt.calc() function. You should try to use this instead of the deprecated deyo(), elixhauser(), and ahrq() functions. The function is more flexible and allows a more unified approach to calculating comorbidities. 
 
 The value returned consists of a vector and one or two data frames. The
-vector is the total comorbidity count, or in the case of the deyo()
-function, the total Charlson score.  The functions elixhauser() and ahrq()
-return one data frame.  Each row in the data frame is devoted to a
-particular patient, and each column is a diagnosis.  The data frame codes a
+vector is the total comorbidity count, or in the case of the Charlson score, the total Charlson score.  Each row in the data frame is devoted to a particular patient according to the corresponding ID-codes provided to the function. The data frame codes a
 0 if the patient does not have that diagnosis and 1 if the patient does have
-that diagnosis. The deyo() function returns a second data frame, which codes
-the point value of that particular diagnosis in the Charlson score rather
-than a 1.
+that diagnosis. 
 
 This package is a work upon Paul Gerrards original comorbidities package.
