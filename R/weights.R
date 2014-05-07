@@ -12,7 +12,7 @@
 #' weight.Charlsons.org(out)
 #' @export
 weight.Charlsons.org <- function(input.frame) {
-  output.frame <- input.frame
+  output.frame <- input.frame*1
   # Set all columns that have 2 points
   for (var in c("PLEGIA", "DM.COMP",
                 "MALIGNANCY", "RENAL"))
