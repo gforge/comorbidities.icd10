@@ -26,16 +26,16 @@ admission_data <-
                ),
              admission_date = 
                as.Date(c("1999-01-24", "1998-05-29", # A
-                       "2004-02-24", # B
-                       "1996-07-01", "1995-02-01", "1992-10-04", # C
-                       "1997-12-03", # D
-                       "1998-03-01", # Admission should not be used as it is after surgery
-                       "1995-10-24", "1995-08-20")),
+                         "2004-02-24", # B
+                         "1996-07-01", "1995-02-01", "1992-10-04", # C
+                         "1997-12-03", # D
+                         "1998-03-01", # Admission should not be used as it is after surgery
+                         "1995-10-24", "1995-08-20")),
              discharge_date = 
                as.Date(c("1999-02-01", "1998-05-25",# A
-                       "2004-02-27", # B
-                       "1996-07-08", "1995-02-04", "1992-10-14",# C
-                       "1997-12-06", "1998-03-04", "1995-11-01", "1995-08-24" # D
+                         "2004-02-27", # B
+                         "1996-07-08", "1995-02-04", "1992-10-14",# C
+                         "1997-12-06", "1998-03-04", "1995-11-01", "1995-08-24" # D
                )),
              ICD1 = 
                c("M161", "S7200", # A's codes
@@ -59,7 +59,7 @@ admission_data <-
                  NA, # B's codes
                  NA, "55090", NA, # C's codes
                  "N309", NA, "42611", "6802") # D's codes
-             )
+  )
 
 # Merge the data sets and include the one with no admissions
 complete <- merge(prim_data, admission_data, 
@@ -85,8 +85,8 @@ data2analyze$include_acute <-
        ifelse(discharge_date >= Surgery_date &
                 admission_date <= Surgery_date,
               FALSE, # Current admission is the admission of the surgery, 
-                     # hence we should not include any acute episodes
-                     # as we are interested in pre-existing conditions
+              # hence we should not include any acute episodes
+              # as we are interested in pre-existing conditions
               TRUE))
 cmrbdt.calc(data2analyze,id_column="Patient_ID", 
             codefinder_hierarchy_fn=hierarchy.elixhauser_Quan2005,

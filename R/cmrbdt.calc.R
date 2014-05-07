@@ -97,6 +97,7 @@
 #' }
 #' @importFrom plyr ddply
 #' @export
+#' @example inst/examples/cmrbdt.calc_xmpl.R
 cmrbdt.calc <- function(ds, 
                         id_column,
                         icd_columns,
