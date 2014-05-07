@@ -62,7 +62,7 @@ hierarchy.charlson_Deyo1992 <- function(out){
   if (is.null(dim(out))){
     # You can't have both uncomplicated diabetes and
     # complicated diabetes at the same time
-    if (out["DM.COMP"]) { out["DM.UNCOMP"] <- FALSE }
+    if (out["DM.COMP"]) { out["DM"] <- FALSE }
     
     # You can't have both uncomplicated diabetes and
     # complicated diabetes at the same time
@@ -73,7 +73,7 @@ hierarchy.charlson_Deyo1992 <- function(out){
     if (out["METS"]) { out["MALIGNANCY"] <- FALSE}
   }else{
     # Same as for vectors but in a matrix format
-    out[out[,"DM.COMP"]==TRUE,"DM.UNCOMP"] <- FALSE
+    out[out[,"DM.COMP"]==TRUE,"DM"] <- FALSE
     out[out[,"SEVERE.LIVER"] == TRUE, "MILD.LIVER"] <- FALSE 
     out[out[,"METS"]==TRUE,"MALIGNANCY"] <- FALSE
   }
