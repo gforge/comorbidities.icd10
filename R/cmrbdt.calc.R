@@ -137,6 +137,8 @@ cmrbdt.calc <- function(ds,
          " did not validate the is.ICD function: ",
          paste(test_codes[!valid_test_codes & !is.na(test_codes)], collapse=", "))
   }
+  
+  org_id_names <- NULL
   # Get the ID-column if any has been provided
   if (missing(id_column)){
     # Skips the ID, probably not entirely optimal for the function's 
@@ -302,6 +304,13 @@ cmrbdt.calc <- function(ds,
     ret[["score"]] <- rowSums(ret[["cmrbdt.weighted"]][,-id_col_nos])
   }else{
     ret[["ct"]] <- as.integer(rowSums(ret[["cmrbdt"]][,-id_col_nos]))
+  }
+  
+  # Remove temporary ID columns if the weren't provided from start
+  if (is.null(org_id_names)){
+    
+    ret[["cmrbdt"]] <- ret[["cmrbdt"]][,-id_col_nos]
+    ret[["cmrbdt.weighted"]] <- ret[["cmrbdt.weighted"]][,-id_col_nos]
   }
   
   return(ret)
