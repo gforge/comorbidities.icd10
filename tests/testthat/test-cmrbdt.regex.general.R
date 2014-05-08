@@ -99,4 +99,25 @@ test_that("Check cmrbdt.finder with cmrbdt.calc", {
   expect_equal(sum(out$ct), 2)
   expect_equivalent(tail(out$ct, 1), 0, "Missing has a match")
   
+
+  expect_error(cmrbdt.calc(data2analyze,
+                     id_column="Patient_ID",
+                     cmrbdt.finder_fn=cmrbdt.finder.regex.elixhauser_Quan2005,
+                     cmrbdt.finder_hierarchy_fn=hierarchy.elixhauser_Quan2005))
+  expect_error(cmrbdt.calc(data2analyze,
+                           cmrbdt.finder_fn=cmrbdt.finder.regex.elixhauser_Quan2005,
+                           cmrbdt.finder_hierarchy_fn=hierarchy.elixhauser_Quan2005))
+  
+  expect_error(cmrbdt.calc(data2analyze[,grep("^ICD", colnames(data2analyze))],
+                           cmrbdt.finder_hierarchy_fn=hierarchy.elixhauser_Quan2005))
+  
+  
+  out <- cmrbdt.calc(data2analyze[,grep("^ICD", colnames(data2analyze))], 
+                     icd_ver_column=data2analyze$icd_version,
+                     include_acute_column=data2analyze$include_acute,
+                     id_column=data2analyze$Patient_ID,
+                     cmrbdt.finder_fn=cmrbdt.finder.regex.elixhauser_Quan2005,
+                     cmrbdt.finder_hierarchy_fn=hierarchy.elixhauser_Quan2005)
+  expect_equal(sum(out$ct), 2)
+  expect_equivalent(tail(out$ct, 1), 0, "Missing has a match")
 })

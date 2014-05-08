@@ -10,11 +10,11 @@ test_that("Check v.codes translator", {
 
 
 test_that("Check ICD 5 digit handling", {
-  expect_equal(pr.ahrq.ICD9.5digit(NA), NA)
+  expect_equivalent(pr.ahrq.ICD9.5digit(NA), NA)
   
   # Input is expected to output a 5 digit output
-  expect_equal(pr.ahrq.ICD9.5digit("5412"), 54120)
+  expect_equivalent(pr.ahrq.ICD9.5digit("5412"), 54120)
   
   # Don't adjust numeric codes
-  expect_equal(pr.ahrq.ICD9.5digit(5412), 5412)
+  expect_equivalent(pr.ahrq.ICD9.5digit(5412), 5412)
 })

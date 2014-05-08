@@ -62,7 +62,7 @@ charlsons_icd9_codes_2_test[['SEVERE.LIVER']] = c('4560','4561','4562',
                                                   '5728')
 
 # Metastatic Carcinoma
-charlsons_icd9_codes_2_test[['METS']] = c('196','197','198','199')
+charlsons_icd9_codes_2_test[['METASTASIS']] = c('196','197','198','199')
 
 # AIDS/HIV
 charlsons_icd9_codes_2_test[['HIV']] = c('042','043','044')
@@ -94,7 +94,7 @@ org_charlson_weights <-
   list(
     `2`= c('PLEGIA','RENAL','DM.COMP','MALIGNANCY'),
     `3`= c('SEVERE.LIVER'),
-    `6`=c('METS','HIV'))
+    `6`=c('METASTASIS','HIV'))
 
 test_that("Check Charlson individual scores",{
   for (n in names(charlsons_icd9_codes_2_test)){
@@ -127,7 +127,7 @@ test_that("Check Charlson sum score",{
 
   t2 <- data.frame(icd1=charlsons_icd9_codes_2_test$PVD[1],
                    icd2=charlsons_icd9_codes_2_test$DEMENTIA[1],
-                   icd3=charlsons_icd9_codes_2_test$METS[1],
+                   icd3=charlsons_icd9_codes_2_test$METASTASIS[1],
                    icd4=charlsons_icd9_codes_2_test$HIV[1])
   out <- deyo(t2)
   expect_equal(out$CHARLSON.SCORE, 1+1+6+6, 
@@ -135,7 +135,7 @@ test_that("Check Charlson sum score",{
   
   t3 <- data.frame(icd1=charlsons_icd9_codes_2_test$PVD[1],
                    icd2=charlsons_icd9_codes_2_test$DEMENTIA[1],
-                   icd3=charlsons_icd9_codes_2_test$METS[1],
+                   icd3=charlsons_icd9_codes_2_test$METASTASIS[1],
                    icd4=NA)
   out <- deyo(t3)
   expect_equal(out$CHARLSON.SCORE, 1+1+6, 
@@ -143,7 +143,7 @@ test_that("Check Charlson sum score",{
 
   t4 <- data.frame(icd1=charlsons_icd9_codes_2_test$PVD[1],
                    icd2=charlsons_icd9_codes_2_test$DEMENTIA[1],
-                   icd3=charlsons_icd9_codes_2_test$METS[1],
+                   icd3=charlsons_icd9_codes_2_test$METASTASIS[1],
                    icd4=NA)
   out <- deyo(t4)
   expect_equal(out$CHARLSON.SCORE, 1+1+6, 
@@ -151,7 +151,7 @@ test_that("Check Charlson sum score",{
 
   t5 <- data.frame(icd1=charlsons_icd9_codes_2_test$PVD[1],
                    icd2=charlsons_icd9_codes_2_test$DEMENTIA[1],
-                   icd3=charlsons_icd9_codes_2_test$METS[1],
+                   icd3=charlsons_icd9_codes_2_test$METASTASIS[1],
                    icd4=NA,
                    icd5="715.96")
   out <- deyo(t5)

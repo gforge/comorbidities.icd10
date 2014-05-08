@@ -1,3 +1,6 @@
+context("Check Charlson ICD-10 codes")
+
+charlsons_icd10_codes_2_test <- list()
 # Myocardial Infarction
 charlsons_icd10_codes_2_test[['MI']] = c('I21','I22','I252')
 
@@ -72,3 +75,22 @@ charlsons_icd10_codes_2_test[['METASTASIS']] = c('C77','C78','C79','C80')
 
 # AIDS/HIV
 charlsons_icd10_codes_2_test[['HIV']] = c('B20','B21','B22','B24')
+
+
+test_that("Check Charlson matches to the regular expression Quan version",{
+  for (n in names(charlsons_icd10_codes_2_test)){
+    codes <- charlsons_icd10_codes_2_test[[n]]
+    # Check one code at the time
+    out <- t(sapply(codes,
+                    function(code)
+                      cmrbdt.finder.regex.charlson_Quan2005(icd_codes=code, 
+                                                            icd_ver=10)))
+    found_codes <- out[,n]
+    expect_true(all(found_codes), 
+                info=sprintf("The script fails to properly identify ICD-%s from '%s' the codes '%s'",
+                             10,
+                             n,
+                             paste(codes[!found_codes],
+                                   collapse="', '")))
+  }
+})
