@@ -24,6 +24,8 @@ pr.get.icd.ver <- function(codes, icd_ver = rep(FALSE, times=length(codes))){
     }
   }
   
+  if ("data.frame" %in% class(codes)) {codes <- as.matrix(codes)}
+  
   return(as.character(ifelse(icd_ver == FALSE,
                              10 - 1*(substr(codes, 1,1) %in% c(0:9, "v","V")),
                              icd_ver)))
