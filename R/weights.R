@@ -15,16 +15,34 @@ weight.Charlsons.org <- function(input.frame) {
   output.frame <- input.frame*1
   # Set all columns that have 2 points
   for (var in c("PLEGIA", "DM.COMP",
-                "MALIGNANCY", "RENAL"))
-    output.frame[,var] <- output.frame[,var] *2
+                "MALIGNANCY", "RENAL")){
+    multiplier <- 2
+    if (is.null(dim(output.frame))){
+      output.frame[var] <- output.frame[var] * multiplier
+    }else{
+      output.frame[,var] <- output.frame[,var] * multiplier
+    }
+  }
   
   # Set all columns that have 3 points
-  for (var in c("SEVERE.LIVER"))
-    output.frame[,var] <- output.frame[,var] *3
+  for (var in c("SEVERE.LIVER")){
+    multiplier <- 3
+    if (is.null(dim(output.frame))){
+      output.frame[var] <- output.frame[var] * multiplier
+    }else{
+      output.frame[,var] <- output.frame[,var] * multiplier
+    }
+  }
   
   # Set all columns that have 6 points
-  for (var in c("METS", "HIV"))
-    output.frame[,var] <- output.frame[,var] *6
+  for (var in c("METASTASIS", "HIV")){
+    multiplier <- 6
+    if (is.null(dim(output.frame))){
+      output.frame[var] <- output.frame[var] * multiplier
+    }else{
+      output.frame[,var] <- output.frame[,var] * multiplier
+    }
+  }
   
   return(output.frame)
 }
