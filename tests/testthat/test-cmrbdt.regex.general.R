@@ -129,14 +129,14 @@ test_that("Check cmrbdt.finder with cmrbdt.calc", {
 })
 
 
-test_that("Test charlsons", {
+test_that("Test overall Charlsons cmrbdt.calc", {
   out <- cmrbdt.calc(data2analyze[,grep("^ICD", colnames(data2analyze))], 
                      icd_ver_column=data2analyze$icd_version,
                      include_acute_column=data2analyze$include_acute,
                      id_column=data2analyze$Patient_ID,
                      cmrbdt.finder_fn=cmrbdt.finder.regex.charlson_Quan2005,
                      cmrbdt.finder_hierarchy_fn=hierarchy.charlson_Quan2005,
-                     cmrbdt_weight_fn=weight.Charlsons.org)
+                     cmrbdt.weight_fn=weight.Charlsons.org)
   expect_equal(sum(out$score), 4)
   expect_equivalent(tail(out$score, 1), 0, "Missing has a match")
 
@@ -146,7 +146,7 @@ test_that("Test charlsons", {
                      icd_ver_column=data2analyze$icd_version,
                      cmrbdt.finder_fn=cmrbdt.finder.regex.charlson_Quan2005,
                      cmrbdt.finder_hierarchy_fn=hierarchy.charlson_Quan2005,
-                     cmrbdt_weight_fn=weight.Charlsons.org)
+                     cmrbdt.weight_fn=weight.Charlsons.org)
 
   expect_equal(colnames(out$cmrbdt)[1], "Patient_ID")
   expect_equal(colnames(out$cmrbdt.weighted)[1], "Patient_ID")

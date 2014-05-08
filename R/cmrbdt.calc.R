@@ -57,7 +57,7 @@
 #'  co-exist in one and the same patient. You can provide here any of the \code{hierarchy.*()}
 #'  functions. E.g. if you are using Elixhausers Quan 2005 version you provide the 
 #'  function \code{\link{hierarchy.elixhauser_Quan2005}}.
-#' @param cmrbdt_weight_fn The comorbidity weight function that you want to apply 
+#' @param cmrbdt.weight_fn The comorbidity weight function that you want to apply 
 #'  to the current calculation. E.g. you can use the \code{\link{weight.Charlsons.org}}
 #'  if you want to apply the traditional Charlson comorbidity score or you can write 
 #'  your own function.
@@ -106,7 +106,7 @@ cmrbdt.calc <- function(ds,
                         icd_code_preprocess_fn,
                         cmrbdt.finder_fn,
                         cmrbdt.finder_hierarchy_fn,
-                        cmrbdt_weight_fn,
+                        cmrbdt.weight_fn,
                         country_code = 'US'){
   # Extract only what we need from the data set
   if (!missing(icd_columns)){
@@ -246,12 +246,12 @@ cmrbdt.calc <- function(ds,
     icd_code_preprocess_fn <- NULL
   }
 
-  if (!missing(cmrbdt_weight_fn) &&
-        is.character(cmrbdt_weight_fn)){
-    if (!exists(cmrbdt_weight_fn))
-      stop("Could not identify the cmrbdt_weight_fn function that you want to use,",
-           " i.e. the function '", cmrbdt_weight_fn, "' is not defined")
-    cmrbdt_weight_fn <- get(cmrbdt_weight_fn)
+  if (!missing(cmrbdt.weight_fn) &&
+        is.character(cmrbdt.weight_fn)){
+    if (!exists(cmrbdt.weight_fn))
+      stop("Could not identify the cmrbdt.weight_fn function that you want to use,",
+           " i.e. the function '", cmrbdt.weight_fn, "' is not defined")
+    cmrbdt.weight_fn <- get(cmrbdt.weight_fn)
   }
   
   # Merge the different sections into one
@@ -294,13 +294,11 @@ cmrbdt.calc <- function(ds,
   
   # Apply the weight or just simply count the number of comorbidities
   id_col_nos <- c(1:NCOL(id_column))
-  if (!missing(cmrbdt_weight_fn)){
+  if (!missing(cmrbdt.weight_fn)){
     ret[["cmrbdt.weighted"]] <- 
-      t(apply(ret[["cmrbdt"]], 1, 
-              FUN=function(x) {
-                return(c(x[id_col_nos],
-                         cmrbdt_weight_fn(x[-id_col_nos])))
-              }))
+      cbind(ret[["cmrbdt"]][,id_col_nos, drop=FALSE],
+            as.data.frame(cmrbdt.weight_fn(ret[["cmrbdt"]][,-id_col_nos, drop=FALSE])))
+            
     ret[["score"]] <- rowSums(ret[["cmrbdt.weighted"]][,-id_col_nos])
   }else{
     ret[["ct"]] <- as.integer(rowSums(ret[["cmrbdt"]][,-id_col_nos]))
@@ -308,9 +306,25 @@ cmrbdt.calc <- function(ds,
   
   # Remove temporary ID columns if the weren't provided from start
   if (is.null(org_id_names)){
-    
     ret[["cmrbdt"]] <- ret[["cmrbdt"]][,-id_col_nos]
-    ret[["cmrbdt.weighted"]] <- ret[["cmrbdt.weighted"]][,-id_col_nos]
+    if (!is.null(ret[["cmrbdt.weighted"]])){
+      ret[["cmrbdt.weighted"]] <- ret[["cmrbdt.weighted"]][,-id_col_nos]
+    }
+  }else{
+    if (!is.null(ret[["cmrbdt"]])){
+      # Revert back to original names
+      colnames(ret[["cmrbdt"]])[id_col_nos] <- org_id_names
+      if (!is.null(ret[["cmrbdt.weighted"]])){
+        colnames(ret[["cmrbdt.weighted"]])[id_col_nos] <- org_id_names
+      }
+    }else{
+      # TODO: I don't think this is evere evoked as plyr always returns
+      # a d.f.
+      names(ret[["cmrbdt"]])[id_col_nos] <- org_id_names
+      if (!is.null(ret[["cmrbdt.weighted"]])){
+        names(ret[["cmrbdt.weighted"]])[id_col_nos] <- org_id_names
+      }
+    }
   }
   
   return(ret)
