@@ -65,7 +65,7 @@ ahrq <- function(input.frame) {
 #' @return \code{matrix} Returns a matrix with the one column per 
 #'  comorbidity. No comorbidity is indicated by 0 while 1 indicates 
 #'  existing comorbidity.
-#' @seealso\code{\link{ahrq}}
+#' @seealso \code{\link{ahrq}}
 pr.ahrq.points <- function(input.frame) {
   output.frame <- NULL
   for (i in 1:NROW(input.frame)){
