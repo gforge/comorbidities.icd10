@@ -28,10 +28,10 @@ charlsons_icd9_codes_2_test[['PUD']] = c('531','532','533','534')
 charlsons_icd9_codes_2_test[['MILD.LIVER']] = c('07022','07023','07032','07033','07044','07054','0706','0709','570','571','5733','5734','5738','5739','V427')
 
 # Diabetes without complications
-charlsons_icd9_codes_2_test['DM'] = c('2500','2501','2502','2503','2508','2509')
+charlsons_icd9_codes_2_test[['DM']] = c('2500','2501','2502','2503','2508','2509')
 
 # Diabetes with complications
-charlsons_icd9_codes_2_test['DM.COMP'] = c('2504','2505','2506','2507')
+charlsons_icd9_codes_2_test[['DM.COMP']] = c('2504','2505','2506','2507')
 
 # Paraplegia and Hemiplegia
 charlsons_icd9_codes_2_test[['PLEGIA']] = c('3341','342','343','3440','3441','3442','3443','3444','3445','3446','3449')

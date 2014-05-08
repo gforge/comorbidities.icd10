@@ -42,25 +42,31 @@ admission_data <-
              ICD1 = 
                c("M161", "S7200", # A's codes
                  "S8240", # B's codes
-                 "3540", "486", "431", # C's codes
-                 "M169", 
-                 "B238", # This admission should be ignored!
-                 "5400", "4220"), # D's codes
+                 "3540", "486", "431", # C's codes - carpal tunnel, pneumonia, intracereb. hem.
+                 "M169", # D's codes - Hip code
+                 "B238", # This admission should be ignored! - HIV
+                 "5400", "4220"), # D's codes - Peritonitis + Acute MI
              ICD2 = 
-               c("I252", "I252", # A's codes
+               c("I252", "I252", # A's codes - prev. MI
                  "N390", # B's codes
-                 NA, "4011", "4011", # C's codes
-                 "N052", "C619", "7812", "5569"), # D's codes
+                 NA, "4011", "4011", # C's codes - benign hypertension
+                 "N052", # D's codes - ICD-10 glom.nephritis 
+                 "C619", # prostate tum.
+                 "7812", "5569"), # ICD-9 Gait, Ulcerative Colitis
              ICD3 = 
-               c("E890X", "E039", # A's codes
+               c("E890X", "E039", # A's codes - hypothyr.
                  NA, # B's codes
-                 NA, "30301", "30009", # C's codes
-                 "E001", NA, "5810", "01280"), # D's codes
+                 NA, "30301", "30009", # C's codes - Alcohol, anxiety
+                 "E001", # D's codes - ICD-10 - iodine def. - thyroid. 
+                 NA, 
+                 "5810", "01280"), # ICD-9 Nephrotic syndr. + infection
              ICD4 = 
-               c("J189", NA, # A's codes
+               c("J189", NA, # A's codes - pneumonia
                  NA, # B's codes
                  NA, "55090", NA, # C's codes
-                 "N309", NA, "42611", "6802") # D's codes
+                 "N309",  # D's codes
+                 NA, 
+                 "42611", "6802")
              )
 
 # Merge the data sets and include the one with no admissions
@@ -70,7 +76,7 @@ complete <- merge(prim_data, admission_data,
 # Choose those with valid observations
 # just to stress the code we will keep the MISSSING patient
 data2analyze <- subset(complete, 
-                       Surgery_date >= admission_date || 
+                       Surgery_date >= admission_date |
                          is.na(admission_date))
 
 # Deduce the ICD-version from the date variable
@@ -96,7 +102,7 @@ test_that("Check cmrbdt.finder with cmrbdt.calc", {
                      icd_columns=grep("^ICD", colnames(data2analyze)),
                      cmrbdt.finder_hierarchy_fn=hierarchy.elixhauser_Quan2005,
                      cmrbdt.finder_fn=cmrbdt.finder.regex.elixhauser_Quan2005)
-  expect_equal(sum(out$ct), 2)
+  expect_equal(sum(out$ct), 4)
   expect_equivalent(tail(out$ct, 1), 0, "Missing has a match")
   
 
@@ -118,6 +124,30 @@ test_that("Check cmrbdt.finder with cmrbdt.calc", {
                      id_column=data2analyze$Patient_ID,
                      cmrbdt.finder_fn=cmrbdt.finder.regex.elixhauser_Quan2005,
                      cmrbdt.finder_hierarchy_fn=hierarchy.elixhauser_Quan2005)
-  expect_equal(sum(out$ct), 2)
+  expect_equal(sum(out$ct), 4)
   expect_equivalent(tail(out$ct, 1), 0, "Missing has a match")
+})
+
+
+test_that("Test charlsons", {
+  out <- cmrbdt.calc(data2analyze[,grep("^ICD", colnames(data2analyze))], 
+                     icd_ver_column=data2analyze$icd_version,
+                     include_acute_column=data2analyze$include_acute,
+                     id_column=data2analyze$Patient_ID,
+                     cmrbdt.finder_fn=cmrbdt.finder.regex.charlson_Quan2005,
+                     cmrbdt.finder_hierarchy_fn=hierarchy.charlson_Quan2005,
+                     cmrbdt_weight_fn=weight.Charlsons.org)
+  expect_equal(sum(out$score), 4)
+  expect_equivalent(tail(out$score, 1), 0, "Missing has a match")
+
+  out <- cmrbdt.calc(data2analyze, 
+                     id_column="Patient_ID",
+                     icd_columns=grep("^ICD", colnames(data2analyze)),
+                     icd_ver_column=data2analyze$icd_version,
+                     cmrbdt.finder_fn=cmrbdt.finder.regex.charlson_Quan2005,
+                     cmrbdt.finder_hierarchy_fn=hierarchy.charlson_Quan2005,
+                     cmrbdt_weight_fn=weight.Charlsons.org)
+
+  expect_equal(colnames(out$cmrbdt)[1], "Patient_ID")
+  expect_equal(colnames(out$cmrbdt.weighted)[1], "Patient_ID")
 })
