@@ -70,12 +70,12 @@ hierarchy.charlson_Deyo1992 <- function(out){
 
     # If a solid tumor has generated metastasis then it belongs in that group and not
     # the pure solid tumor group
-    if (out["METS"]) { out["MALIGNANCY"] <- FALSE}
+    if (out["METASTASIS"]) { out["MALIGNANCY"] <- FALSE}
   }else{
     # Same as for vectors but in a matrix format
     out[out[,"DM.COMP"]==TRUE,"DM"] <- FALSE
     out[out[,"SEVERE.LIVER"] == TRUE, "MILD.LIVER"] <- FALSE 
-    out[out[,"METS"]==TRUE,"MALIGNANCY"] <- FALSE
+    out[out[,"METASTASIS"]==TRUE,"MALIGNANCY"] <- FALSE
   }
   return(out)
 }
@@ -110,9 +110,9 @@ hierarchy.charlson_Armitage2010 <- function(out){
   if (is.null(dim(out))){
     # If a solid tumor has generated metastasis then it belongs in that group and not
     # the pure solid tumor group
-    if (out["METS"]) { out["CANCER"] <- FALSE}
+    if (out["METASTASIS"]) { out["CANCER"] <- FALSE}
   }else{
-    out[out[,"METS"]==TRUE,"CANCER"] <- FALSE
+    out[out[,"METASTASIS"]==TRUE,"CANCER"] <- FALSE
   }
   return(out)
 }
