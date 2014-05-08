@@ -5,7 +5,7 @@
 pr.elixhauser.ICD9.5digit(codes)
 }
 \arguments{
-  \item{icd.code}{\code{string/vector} indicating the code}
+  \item{codes}{\code{string/vector} indicating the code}
 }
 \value{
 \code{integer} Returns a integer value XXXXX

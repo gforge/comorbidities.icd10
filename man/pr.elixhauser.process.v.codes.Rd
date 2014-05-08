@@ -5,8 +5,8 @@
 pr.elixhauser.process.v.codes(v.code)
 }
 \arguments{
-  \item{v.code}{A string numeric icd-code that starts with
-  a V}
+  \item{v.code}{A \code{string/vector} with icd-code(s)
+  that starts with a V}
 }
 \value{
 \code{int} Returns an int with 5 digits

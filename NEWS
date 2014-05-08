@@ -5,6 +5,7 @@ Changes for 0.4
 * Externalized hierarchy and points calculator
 * Added the main cmrbdt.calc() function
 * Added a dot preprocessor
+* Expanded the tests
 
 Changes for 0.3
 ---------------
