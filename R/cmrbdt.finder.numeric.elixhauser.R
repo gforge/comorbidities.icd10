@@ -122,11 +122,16 @@ cmrbdt.finder.numeric.elixhauser_Elixhauser1998 <-
 
 #' Convert to 5 digit ICD-code
 #' 
-#' @param icd.code \code{string/vector} indicating the code 
+#' @param codes \code{string/vector} indicating the code 
 #' @return \code{integer} Returns a integer value XXXXX
 #' @seealso \code{\link{elixhauser}}, \code{\link{cmrbdt.finder.numeric.elixhauser_Elixhauser1998}}
 pr.elixhauser.ICD9.5digit <- function(codes){ 
-  sapply(codes, FUN=function(icd.code){
+  if (!is.null(dim(codes)) &&
+        (length(dim(codes)) != 2 ||
+           !1 %in% dim(codes))) {stop("This function can only handle single strings or vectors")}
+  
+  sapply(codes, USE.NAMES=FALSE, 
+         FUN=function(icd.code){
     if (is.na(icd.code)) {
       return(NA)
     }
@@ -162,10 +167,12 @@ pr.elixhauser.ICD9.5digit <- function(codes){
 
 #' Converts icd9 codes with V at the first letter into numeric format
 #'  
-#' @param v.code A string numeric icd-code that starts with a V
+#' @param v.code A \code{string/vector} with icd-code(s) that starts with a V
 #' @return \code{int} Returns an int with 5 digits
 #' @seealso \code{\link{elixhauser}}
 pr.elixhauser.process.v.codes <- function(v.code) {
+  if (!is.null(dim(v.code))){ stop("The function cannot complex data structures,",
+                                   " only vectors or single strings are allowed")}
   if (class(v.code) == "factor") 
     v.code <- as.character(v.code)
   

@@ -33,6 +33,7 @@
 #'  other group otherwise it returns TRUE.
 #' @references http://www.hcup-us.ahrq.gov/toolssoftware/comorbidity/comorbidity.jsp
 #' @rdname cmrbdt.finder.numeric
+#' @seealso \code{\link{ahrq}}
 #' @examples
 #' cmrbdt.finder.numeric.ahrq_2010v3.5(9320)
 #' @export
@@ -193,7 +194,12 @@ cmrbdt.finder.numeric.ahrq_2010v3.5 <-
 #' @return \code{integer} Returns a integer code XXXXX 
 #' @seealso \code{\link{ahrq}}, \code{\link{cmrbdt.finder.numeric.ahrq_2010v3.5}}
 pr.ahrq.ICD9.5digit <- function(codes){
-  sapply(codes, function(icd.code){
+  if (!is.null(dim(codes)) &&
+      (length(dim(codes)) != 2 ||
+         !1 %in% dim(codes))) {stop("This function can only handle single strings or vectors")}
+  
+  sapply(codes, USE.NAMES=FALSE, 
+         FUN=function(icd.code){
     if (is.na(icd.code)) {
       return(NA)
     }
@@ -267,3 +273,5 @@ pr.ahrq.preprocess.v.codes <- function(v.code) {
   
   return (v.code)
 }
+
+ahrq

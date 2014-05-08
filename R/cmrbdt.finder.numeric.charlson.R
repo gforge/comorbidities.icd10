@@ -55,7 +55,7 @@ cmrbdt.finder.numeric.charlson_Deyo1992 <-
                      seq(from=20000L, to=20899L, by=1L)),
       SEVERE.LIVER = c(seq(from=57220L, to=57289L, by=1L),
                        seq(from=45600L, to=45621L, by=1L)), # 3 point item
-      METS = c(seq(from=19600L, to=19919L, by=1L)), # 6 point items
+      METASTASIS = c(seq(from=19600L, to=19919L, by=1L)), # 6 point items
       HIV = c(seq(from=4200L, to=4493L, by=1L)))
   
   # Get a correctly formatted output vector
@@ -82,7 +82,12 @@ cmrbdt.finder.numeric.charlson_Deyo1992 <-
 #' @return \code{float} Returns a float value XXXXX
 #' @seealso \code{\link{deyo}}, \code{\link{cmrbdt.finder.numeric.charlson_Deyo1992}}
 pr.deyo.ICD9.5digit <- function(codes){
-  sapply(codes, FUN=function(icd.code){
+  if (!is.null(dim(codes)) &&
+        (length(dim(codes)) != 2 ||
+           !1 %in% dim(codes))) {stop("This function can only handle single strings or vectors")}
+  
+  sapply(codes, USE.NAMES=FALSE, 
+         FUN=function(icd.code){
     if (is.na(icd.code)) {
       return(NA)
     }
