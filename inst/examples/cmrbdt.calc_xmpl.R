@@ -120,3 +120,67 @@ data.frame(ID = out_incl_acute$cmrbdt$Patient_ID,
            With=out_incl_acute$score, 
            Without=out_without_acute$score)
 
+###################################
+# Test an alterantive way to      #
+# store diagnosis data by having  #
+# one string separated characters #
+# such as " " or ","              #
+###################################
+admission_data_alt <- admission_data
+admission_data_alt$Main_ICD <- admission_data_alt$ICD1
+admission_data_alt$Additional_ICD <- 
+  apply(admission_data_alt[,c("ICD2", "ICD3", "ICD4")],
+               1,
+               function(x) paste(x[!is.na(x)], collapse=" "))
+
+admission_data_alt$ICD1 <- NULL
+admission_data_alt$ICD2 <- NULL
+admission_data_alt$ICD3 <- NULL
+admission_data_alt$ICD4 <- NULL
+
+# Merge the data sets and include the one with no admissions
+complete <- merge(prim_data, admission_data_alt, 
+                  by="Patient_ID", all=TRUE)
+
+# Choose those with valid observations
+# just to stress the code we will keep the MISSSING patient
+data2analyze <- subset(complete, 
+                       Surgery_date >= admission_date |
+                         is.na(admission_date))
+
+# Deduce the ICD-version from the date variable
+data2analyze$icd_version <- 
+  ifelse(data2analyze$discharge_date < "1997-01-01",
+         9,
+         ifelse(data2analyze$discharge_date >= "1998-01-01",
+                10,
+                FALSE))
+
+# Figure out if the admission is the one registered for the surgery
+data2analyze$include_acute <- 
+  with(data2analyze,
+       ifelse(discharge_date >= Surgery_date &
+                admission_date <= Surgery_date,
+              FALSE, # Current admission is the admission of the surgery, 
+              # hence we should not include any acute episodes
+              # as we are interested in pre-existing conditions
+              TRUE))
+
+out_without_acute <- 
+  cmrbdt.calc(data2analyze, 
+              include_acute_column="include_acute",
+              id_column="Patient_ID",
+              icd_columns=grep("ICD$", colnames(data2analyze)),
+              icd_ver_column=data2analyze$icd_version,
+              cmrbdt.finder_fn=cmrbdt.finder.regex.charlson_Quan2005,
+              cmrbdt.finder_hierarchy_fn=hierarchy.charlson_Quan2005,
+              cmrbdt.weight_fn=weight.Charlsons.org,
+              # Below is the magic function that splits the merged codes
+              icd_code_preprocess_fn=function(code) unlist(strsplit(code, " ")))
+
+# The MI was not included for A when acute was taken into account
+data.frame(ID = out_incl_acute$cmrbdt$Patient_ID,
+           With=out_incl_acute$score, 
+           Without=out_without_acute$score)
+
+
