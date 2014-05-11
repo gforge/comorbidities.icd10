@@ -67,6 +67,7 @@
 #'  have adapted country-specific ICD-coding there may be minor 
 #'  differences between countries. Currently only Swedish (SE) and
 #'  US codes are implemented. The function defaults to 'US'.
+#' @param ... Arguments that are passed on to the \code{\link[plyr]{ddply}} function.
 #' @seealso 
 #' \itemize{
 #'  \item{\code{\link{cmrbdt.finder.numeric.ahrq_2010v3.5}}: }{Numeric funciton for 
@@ -107,7 +108,8 @@ cmrbdt.calc <- function(ds,
                         cmrbdt.finder_fn,
                         cmrbdt.finder_hierarchy_fn,
                         cmrbdt.weight_fn,
-                        country_code = 'US'){
+                        country_code = 'US',
+                        ...){
   # Extract only what we need from the data set
   if (!missing(icd_columns)){
     icd_codes <- ds[,icd_columns, drop=FALSE]
@@ -130,6 +132,9 @@ cmrbdt.calc <- function(ds,
 
   # Check the first entries if they are valid ICD-codes
   test_codes <- as.vector(as.matrix(head(icd_codes, 50)))
+  if (!missing(icd_code_preprocess_fn))
+    test_codes <- icd_code_preprocess_fn(test_codes)
+  
   valid_test_codes <- is.ICD(test_codes)
   if (!all(valid_test_codes[!is.na(test_codes)])){
     stop("There seems to be some issue with your test codes, ",
@@ -268,6 +273,7 @@ cmrbdt.calc <- function(ds,
                  cmrbdt.finder_hierarchy_fn = cmrbdt.finder_hierarchy_fn,
                  icd_code_preprocess_fn = icd_code_preprocess_fn,
                  icd_cols = NCOL(id_column) + 1:NCOL(icd_codes),
+                 ...,
                  .fun=function(x,
                           icd_cols, 
                           cmrbdt.finder_fn,
