@@ -274,8 +274,6 @@ out_without_acute <-
 data.frame(ID = out_incl_acute$cmrbdt$Patient_ID,
            With=out_incl_acute$score, 
            Without=out_without_acute$score)
-
-
 }
 \seealso{
 \itemize{
