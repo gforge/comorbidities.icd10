@@ -3,10 +3,10 @@
 \alias{weight.Charlsons.org}
 \title{Score points for Charlson's original comorbidity weights}
 \usage{
-weight.Charlsons.org(input.frame)
+weight.Charlsons.org(ds)
 }
 \arguments{
-\item{input.frame}{This is a \code{data.frame} or \code{matrix} with
+\item{ds}{This is a \code{data.frame} or \code{matrix} with
 the comorbidity groups as returned by any of the Charlson functions}
 }
 \value{
