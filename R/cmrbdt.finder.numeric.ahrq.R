@@ -33,10 +33,11 @@
 #'  other group otherwise it returns TRUE.
 #' @references http://www.hcup-us.ahrq.gov/toolssoftware/comorbidity/comorbidity.jsp
 #' @rdname cmrbdt.finder.numeric
-#' @seealso \code{\link{ahrq}}
+#' @seealso \code{\link{cmrbdt.calc}}
 #' @examples
 #' cmrbdt.finder.numeric.ahrq_2010v3.5(9320)
 #' @export
+#' @family cmrbdtf.finder functions
 cmrbdt.finder.numeric.ahrq_2010v3.5 <- 
   function(icd_codes, 
            out,

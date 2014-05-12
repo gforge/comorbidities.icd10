@@ -21,4 +21,8 @@ between 1 and 6.
 out <- cmrbdt.finder.regex.charlson_Quan2005("I252")
 weight.Charlsons.org(out)
 }
+\seealso{
+Other weight functions: \code{\link{weight.Charlsons.Quan2012}};
+  \code{\link{weight.Elixhausers.VanWalraven2009}}
+}
 

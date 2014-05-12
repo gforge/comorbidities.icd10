@@ -72,6 +72,11 @@ Elixhauser A, Steiner C, Harris DR, Coffey RM. (1998)
 Comorbidity measures for use with administrative data.  Med Care. 36:8-27.
 }
 \seealso{
-\code{\link{ahrq}}
+\code{\link{cmrbdt.calc}}
+
+Other cmrbdtf.finder functions: \code{\link{cmrbdt.finder.regex.charlson_Armitage2010}},
+  \code{\link{cmrbdt.finder.regex.charlson_Quan2005}},
+  \code{\link{cmrbdt.finder.regex.charlson_Sundarajan2004}},
+  \code{\link{cmrbdt.finder.regex.elixhauser_Quan2005}}
 }
 

@@ -28,4 +28,8 @@ H. Quan, B. Li, C. M. Couris, K. Fushimi, P. Graham, P. Hider, J.-M.
  Index and Score for Risk Adjustment in Hospital Discharge Abstracts Using Data
  From 6 Countries,” Am. J. Epidemiol., vol. 173, no. 6, pp. 676–682, Mar. 2011.
 }
+\seealso{
+Other weight functions: \code{\link{weight.Charlsons.org}};
+  \code{\link{weight.Elixhausers.VanWalraven2009}}
+}
 

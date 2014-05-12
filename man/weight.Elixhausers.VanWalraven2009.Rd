@@ -23,8 +23,12 @@ weight.Elixhausers.VanWalraven2009(out)
 }
 \references{
 C. van Walraven, P. C. Austin, A. Jennings, H. Quan,
- and A. J. Forster, “A Modification of the Elixhauser Comorbidity
+ and A. J. Forster, "A Modification of the Elixhauser Comorbidity
  Measures Into a Point System for Hospital Death Using Administrative
- Data,” Medical Care, vol. 47, no. 6, pp. 626–633, Jun. 2009.
+ Data" Medical Care, vol. 47, no. 6, pp. 626-633, Jun. 2009.
+}
+\seealso{
+Other weight functions: \code{\link{weight.Charlsons.Quan2012}};
+  \code{\link{weight.Charlsons.org}}
 }
 

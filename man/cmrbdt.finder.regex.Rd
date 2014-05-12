@@ -91,4 +91,11 @@ L. D. Saunders, C. A. Beck, T. E. Feasby, and W. A. Ghali, "Coding algorithms fo
 defining comorbidities in ICD-9-CM and ICD-10 administrative data" Med Care,
 vol. 43, no. 11, pp. 1130-1139, Nov. 2005. - Elixhauser section
 }
+\seealso{
+\code{\link{cmrbdt.calc}}
+
+Other cmrbdtf.finder functions: \code{\link{cmrbdt.finder.numeric.ahrq_2010v3.5}},
+  \code{\link{cmrbdt.finder.numeric.charlson_Deyo1992}},
+  \code{\link{cmrbdt.finder.numeric.elixhauser_Elixhauser1998}}
+}
 

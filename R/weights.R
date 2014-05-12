@@ -11,6 +11,7 @@
 #' out <- cmrbdt.finder.regex.charlson_Quan2005("I252")
 #' weight.Charlsons.org(out)
 #' @export
+#' @family weight functions
 weight.Charlsons.org <- function(ds) {
   ds <- ds*1
   # Set all columns that have 2 points
@@ -66,6 +67,7 @@ weight.Charlsons.org <- function(ds) {
 #' out <- cmrbdt.finder.regex.charlson_Quan2005("I252")
 #' weight.Charlsons.Quan2012(out)
 #' @export
+#' @family weight functions
 weight.Charlsons.Quan2012 <- function(ds){
   ds <- ds*1
   # Set all columns that have 0 points
@@ -123,13 +125,14 @@ weight.Charlsons.Quan2012 <- function(ds){
 #'  the comorbidity groups as returned by the Elixhauser function
 #' @return Weighted comorbidities
 #' @references C. van Walraven, P. C. Austin, A. Jennings, H. Quan, 
-#'  and A. J. Forster, “A Modification of the Elixhauser Comorbidity 
+#'  and A. J. Forster, "A Modification of the Elixhauser Comorbidity 
 #'  Measures Into a Point System for Hospital Death Using Administrative
-#'  Data,” Medical Care, vol. 47, no. 6, pp. 626–633, Jun. 2009.
+#'  Data" Medical Care, vol. 47, no. 6, pp. 626-633, Jun. 2009.
 #' @examples
 #' out <- cmrbdt.finder.regex.elixhauser_Quan2005("C69")
 #' weight.Elixhausers.VanWalraven2009(out)
 #' @export
+#' @family weight functions
 weight.Elixhausers.VanWalraven2009 <- function(ds){
   ds <- ds*1
   weights <- list(
@@ -180,9 +183,13 @@ weight.Elixhausers.VanWalraven2009 <- function(ds){
   for (sn in names(weights)){
     weight <- as.double(sn)
     for (var_name in weights[[sn]]){
-      ds[,var_name] <- ds[,var_name]*weight
+      if (is.null(dim(ds))){
+        ds[var_name] <- ds[var_name]*weight
+      }else{
+        ds[,var_name] <- ds[,var_name]*weight
+      }
     }
   }
   
-  return(ret)
+  return(ds)
 }

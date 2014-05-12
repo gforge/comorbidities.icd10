@@ -38,6 +38,8 @@
 #' vol. 43, no. 11, pp. 1130-1139, Nov. 2005. - Elixhauser section
 #' @rdname cmrbdt.finder.regex
 #' @export
+#' @seealso \code{\link{cmrbdt.calc}}
+#' @family cmrbdtf.finder functions 
 cmrbdt.finder.regex.elixhauser_Quan2005 <- function(icd_codes, 
                               out,
                               country_code,
