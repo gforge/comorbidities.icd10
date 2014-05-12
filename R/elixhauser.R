@@ -43,6 +43,7 @@
 #' x <- as.data.frame(x)
 #' elixhauser(x)
 elixhauser <- function(input.frame) {
+  warning("This function is deprecated - use cmrbdt.calc instead")
   if(is.vector(input.frame)) input.frame <- data.frame(codes=input.frame)
   ret <- pr.elixhauser.points.30(input.frame)
   elixhauser.data <- list(COMORBIDITY.CT = rowSums(ret), 

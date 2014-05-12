@@ -47,6 +47,7 @@
 #' x <- as.data.frame(x)
 #' ahrq(x)
 ahrq <- function(input.frame) {
+  warning("This function is deprecated - use cmrbdt.calc instead")
   warning("The current function has not yet been properly tested, please validate output.")
   if(is.vector(input.frame)) input.frame <- data.frame(codes=input.frame)
 	ret <- pr.ahrq.points(input.frame)

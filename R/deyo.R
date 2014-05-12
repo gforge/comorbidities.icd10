@@ -47,6 +47,7 @@
 #' x <- as.data.frame(x)
 #' deyo(x)
 deyo <- function(input.frame) {
+  warning("This function is deprecated - use cmrbdt.calc instead")
   if(is.vector(input.frame)) input.frame <- data.frame(codes=input.frame)
   ret <- pr.deyo.comorbidities(input.frame)
   scores <- weight.Charlsons.org(ret)
