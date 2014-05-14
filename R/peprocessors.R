@@ -81,9 +81,10 @@ preproc.Swedich.ICD9 <- function(icd, icd_ver){
                 substr(icd, 1, 4),
                 icd)
   
-  # Return the icd_version info as this may be used
+    # Return the icd_version info as this may be used
   # for other purposes and save time
   attr(icd, "icd_ver") <- icd_ver
+  
   return(icd)
 }
 
@@ -105,10 +106,12 @@ preproc.Swedich.ICD9 <- function(icd, icd_ver){
 #' @export
 #' @family preprocessor functions
 preproc.strip.dot <- function(icd, icd_ver){
-  if (is.data.frame(codes)) {codes <- as.matrix(codes)}
+  if (is.data.frame(icd)) {icd <- as.matrix(icd)}
   
-  icd <- gsub(".", "", codes, fixed=TRUE)
-  attr(icd, "icd_ver") <- icd_ver
+  icd <- gsub(".", "", icd, fixed=TRUE)
+  if (!missing(icd_ver)){
+    attr(icd, "icd_ver") <- icd_ver
+  }
   return(icd)
 }
 
@@ -140,11 +143,14 @@ preproc.code.splitter <- function(icd, icd_ver,
                                   trim = TRUE){
   if (trim){ icd <- str_trim(icd) }
   code_list <- strsplit(icd, split_str)
-  # Convert the icd_versions to match to the split strings
-  times <- sapply(code_list, length)
-  icd_ver <- rep(icd_ver, times=times)
-  
   icd <- unlist(code_list)
-  attr(icd, "icd_ver") <- icd_ver
+  
+  if (!missing(icd_ver)){
+    # Convert the icd_versions to match to the split strings
+    times <- sapply(code_list, length)
+    icd_ver <- rep(icd_ver, times=times)
+    attr(icd, "icd_ver") <- icd_ver
+  }
+  
   return(icd)
 }

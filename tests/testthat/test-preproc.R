@@ -37,23 +37,23 @@ test_that("code_splitter", {
 
 
 test_that("Check Swedish ICD-9 translator",{
-  expect_equal(preproc.Swedich.ICD9("456A"), "4560")
-  expect_equal(preproc.Swedich.ICD9("456X"), "4569")
+  expect_equivalent(preproc.Swedich.ICD9("456A"), "4560")
+  expect_equivalent(preproc.Swedich.ICD9("456X"), "4569")
   expect_error(preproc.Swedich.ICD9("3133"),
                info="If no letter at the fourth position there is an error")
   expect_error(preproc.Swedich.ICD9("313M"),
                info="M is not a valid letter at the fourth position and should give an error")
   
-  expect_equal(preproc.Swedich.ICD9(c("456A", "873B")),
-               c("4560", "8731"))
+  expect_equivalent(preproc.Swedich.ICD9(c("456A", "873B")),
+                    c("4560", "8731"))
   
   
-  expect_equal(preproc.Swedich.ICD9(c("456a", "873b")),
-               c("4560", "8731"))
+  expect_equivalent(preproc.Swedich.ICD9(c("456a", "873b")),
+                    c("4560", "8731"))
   
-  expect_equal(preproc.Swedich.ICD9(icd=c("456a", "873b", "M161"),
-                                    icd_ver=c(9,9,10)),
-               c("4560", "8731", "M161"))
+  expect_equivalent(preproc.Swedich.ICD9(icd=c("456a", "873b", "M161"),
+                                         icd_ver=c(9,9,10)),
+                    c("4560", "8731", "M161"))
   
   expect_error(preproc.Swedich.ICD9(icd=c("456a", "873b", "M161"),
                                     icd_ver=c(9,9,9)),
@@ -62,14 +62,14 @@ test_that("Check Swedish ICD-9 translator",{
   expect_error(preproc.Swedich.ICD9(icd=c("456a", "873b", "M161"),
                                     icd_ver=c(9,9)), 
                info="The funciton should complain if there is a mismatch between ICD-codes and the true value")
-
-  expect_equal(preproc.Swedich.ICD9(icd=c("456a", "873b", "M161"),
-                                    icd_ver=c(9,9,FALSE)),
-               c("4560", "8731", "M161"))
-
-  expect_equal(preproc.Swedich.ICD9(icd=c("456a", "873b", "M161"),
-                                    icd_ver=FALSE),
-               c("4560", "8731", "M161"))
+  
+  expect_equivalent(preproc.Swedich.ICD9(icd=c("456a", "873b", "M161"),
+                                         icd_ver=c(9,9,FALSE)),
+                    c("4560", "8731", "M161"))
+  
+  expect_equivalent(preproc.Swedich.ICD9(icd=c("456a", "873b", "M161"),
+                                         icd_ver=FALSE),
+                    c("4560", "8731", "M161"))
 })
 
 test_that("Advanced Swedish pre-processor test",{
@@ -90,7 +90,7 @@ test_that("Advanced Swedish pre-processor test",{
       icd <- preproc.code.splitter(icd, icd_ver)
       preproc.Swedich.ICD9(icd, attr(icd, "icd_ver"))
     }
-
+  
   # The most important part is that this passes
   expect_true(is.list(cmrbdt.calc(swe_test_df, 
                                   id_column="ID", icd_columns=c("MainICD", "CoICD"), 
