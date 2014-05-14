@@ -141,7 +141,8 @@ preproc.code.splitter <- function(icd, icd_ver,
   if (trim){ icd <- str_trim(icd) }
   code_list <- strsplit(icd, split_str)
   # Convert the icd_versions to match to the split strings
-  icd_ver <- rep(icd_ver, times=sapply(code_list, length))
+  times <- sapply(code_list, length)
+  icd_ver <- rep(icd_ver, times=times)
   
   icd <- unlist(code_list)
   attr(icd, "icd_ver") <- icd_ver

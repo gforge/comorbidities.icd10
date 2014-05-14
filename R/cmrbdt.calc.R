@@ -157,7 +157,7 @@ cmrbdt.calc <- function(ds,
   test_codes <- as.vector(t(as.matrix(head(icd_codes, 50), byrow=TRUE)))
   if (!missing(icd_code_preprocess_fn))
     test_codes <- icd_code_preprocess_fn(icd=test_codes, 
-                                         icd_ver=rep(icd_ver_column, 
+                                         icd_ver=rep(head(icd_ver_column, 50), 
                                                      each=NCOL(icd_codes)))
   
   valid_test_codes <- is.ICD(test_codes)
