@@ -111,3 +111,39 @@ preproc.strip.dot <- function(icd, icd_ver){
   attr(icd, "icd_ver") <- icd_ver
   return(icd)
 }
+
+#' Code splitter
+#' 
+#' As the number of codes per admission frequently may differs between
+#' visits and patients it can be efficient to store them in a string
+#' that is separated by a " " character os something similar. In case 
+#' you want something other than a space you need to encapsulate the
+#' function.
+#' 
+#' @param icd The ICD-codes to be stripped
+#' @param icd_ver Currently not used - this parameter is only for compatibility
+#'  reasons as other preprocessing functions may require the knowledge of actual
+#'  icd version.
+#' @param split_str The string that is the splitter
+#' @param trim If the string has trailing spaces these should usualy be removed
+#' 
+#' @return \code{vector} A vector with only one code per entry. The attr(,"icd_ver")
+#'  now contains the corresponding icd_version.
+#' @examples
+#' preproc.code.splitter(icd=c("M161", "M161 ", "M161 J445"),
+#'                   icd_ver=c(10, 10, 10))
+#' @export
+#' @family preprocessor functions
+#' @importFrom stringr str_trim 
+preproc.code.splitter <- function(icd, icd_ver, 
+                                  split_str = " ",
+                                  trim = TRUE){
+  if (trim){ icd <- str_trim(icd) }
+  code_list <- strsplit(icd, split_str)
+  # Convert the icd_versions to match to the split strings
+  icd_ver <- rep(icd_ver, times=sapply(code_list, length))
+  
+  icd <- unlist(code_list)
+  attr(icd, "icd_ver") <- icd_ver
+  return(icd)
+}

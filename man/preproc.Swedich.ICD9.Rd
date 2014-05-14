@@ -25,6 +25,7 @@ preproc.Swedich.ICD9(c("418X", "401A"))
 }
 \seealso{
 Other preprocessor functions:
+\code{\link{preproc.code.splitter}};
 \code{\link{preproc.strip.dot}}
 }
 

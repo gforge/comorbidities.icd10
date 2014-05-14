@@ -27,6 +27,7 @@ preproc.strip.dot(matrix(c("M16.1", "M162", NA, "M16.9"), ncol=2, nrow=2))
 }
 \seealso{
 Other preprocessor functions:
-\code{\link{preproc.Swedich.ICD9}}
+\code{\link{preproc.Swedich.ICD9}};
+\code{\link{preproc.code.splitter}}
 }
 
