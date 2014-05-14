@@ -154,10 +154,11 @@ cmrbdt.calc <- function(ds,
   icd_ver_column <- as.matrix(icd_ver_column, ncol=1)
 
   # Check the first entries if they are valid ICD-codes
-  test_codes <- as.vector(as.matrix(head(icd_codes, 50)))
+  test_codes <- as.vector(t(as.matrix(head(icd_codes, 50), byrow=TRUE)))
   if (!missing(icd_code_preprocess_fn))
     test_codes <- icd_code_preprocess_fn(icd=test_codes, 
-                                         icd_ver=rep(icd_ver_column, each=NCOL(icd_codes)))
+                                         icd_ver=rep(icd_ver_column, 
+                                                     each=NCOL(icd_codes)))
   
   valid_test_codes <- is.ICD(test_codes)
   if (!all(valid_test_codes[!is.na(test_codes)])){

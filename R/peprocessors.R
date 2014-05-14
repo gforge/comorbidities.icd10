@@ -38,6 +38,7 @@ preproc.Swedich.ICD9 <- function(icd, icd_ver){
   }
   
   if (all(icd_ver != 9)){
+    attr(icd, "icd_ver") <- icd_ver
     return(icd)
   }
   
@@ -73,7 +74,16 @@ preproc.Swedich.ICD9 <- function(icd, icd_ver){
              
              return(code)
            })
+
+  # Shorten to max. 4 characters as no more are needed
+  icd <- ifelse(nchar(icd) > 4 & 
+                  icd_ver ==  9,
+                substr(icd, 1, 4),
+                icd)
   
+  # Return the icd_version info as this may be used
+  # for other purposes and save time
+  attr(icd, "icd_ver") <- icd_ver
   return(icd)
 }
 
@@ -96,5 +106,8 @@ preproc.Swedich.ICD9 <- function(icd, icd_ver){
 #' @family preprocessor functions
 preproc.strip.dot <- function(icd, icd_ver){
   if (is.data.frame(codes)) {codes <- as.matrix(codes)}
-  return(gsub(".", "", codes, fixed=TRUE))
+  
+  icd <- gsub(".", "", codes, fixed=TRUE)
+  attr(icd, "icd_ver") <- icd_ver
+  return(icd)
 }
