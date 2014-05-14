@@ -1,4 +1,7 @@
-#' Check if icd code is valid
+#' Check if icd code is valid after pre-processing
+#' 
+#' The codes need to be preprocessed and the . removed. If the . is
+#' left then the cmrbdt.finder will have issues.
 #' 
 #' @param codes The ICD codes of interest that have the needed format
 #'  for the functions to work. That is without any ., etc.
@@ -17,5 +20,12 @@ is.ICD <- function(codes, preprocess_fn){
     }
   }
   
-  return(grepl("^([A-Za-z][0-9]{2}[^\\.]*([0-9]+|[0-9]+[0-9ABX])|[EV0-9][0-9]+)$", codes))
+  # No identification codes rely on more than 4 letters and 
+  # there are plenty of local variations in the last letters
+  # therefore it is better to remove this
+  codes <- ifelse(nchar(codes) > 4, 
+                  substr(codes, 1, 4),
+                  codes)
+  return(grepl(paste0("^([A-Za-z][0-9]{2,4}[0-9AJKBX]{0,1}",
+                      "|[EVev0-9][0-9]{1,3})$"), codes))
 }
