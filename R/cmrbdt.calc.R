@@ -48,7 +48,10 @@
 #'  code is separated by a ' '. When this is the case the pre-processing
 #'  allows a split prior to calling the \code{cmrbdt.finder_fn}, e.g. splitting
 #'  'M161 E110' could need a function as \code{function(code){unlist(strsplit(code, " "))}}
-#'  - \emph{note} the unlist, your function should return a vector and not a list.
+#'  - \emph{note} the unlist, your function should return a vector and not a list. You
+#'  can find the package pre-processing functions within the preproc.* function group,
+#'  e.g. \code{\link{preproc.strip.dot}} or the more advanced 
+#'  \code{\link{preproc.Swedich.ICD9}}
 #' @param cmrbdt.finder_fn This is one of the cmrbdt.finder functions that you want
 #'  to apply. The cmrbdt.finder is at the heart of the algorithm and does the 
 #'  actual comorbidity identidication. See below for a list of available functions.
@@ -130,10 +133,31 @@ cmrbdt.calc <- function(ds,
   colnames(icd_codes) <- sprintf("ICD_codes_no_%d",
                                  1:NCOL(icd_codes))
 
+  if (missing(icd_ver_column)){
+    # Set auto-detect on all
+    icd_ver_column <- rep(FALSE, times=NROW(ds))
+  }else if (length(icd_ver_column) == 1){
+    if (icd_ver_column %in% colnames(ds) ||
+          icd_ver_column %in% 1:NCOL(ds)){
+      icd_ver_column <- ds[,icd_ver_column, drop=FALSE]
+    }else{
+      stop("You have provided an ICD version column identifyer (", icd_ver_column, ")",
+           " that is neither a column name in the ds provided dataset",
+           " or a numerical representation of that column")
+    }
+  }else if (length(icd_ver_column) != NROW(ds)){
+    stop("You have provided ICD-versions for the ds dataset",
+         " unfortunately the length don't match. You have provided",
+         " '", length(icd_ver_column), "' icd version indicators",
+         " while the ds dataset has '", NROW(ds), "' rows.")
+  }
+  icd_ver_column <- as.matrix(icd_ver_column, ncol=1)
+
   # Check the first entries if they are valid ICD-codes
   test_codes <- as.vector(as.matrix(head(icd_codes, 50)))
   if (!missing(icd_code_preprocess_fn))
-    test_codes <- icd_code_preprocess_fn(test_codes)
+    test_codes <- icd_code_preprocess_fn(icd=test_codes, 
+                                         icd_ver=rep(icd_ver_column, each=NCOL(icd_codes)))
   
   valid_test_codes <- is.ICD(test_codes)
   if (!all(valid_test_codes[!is.na(test_codes)])){
@@ -184,26 +208,6 @@ cmrbdt.calc <- function(ds,
   colnames(id_column) <- sprintf("ID_no_%d",
                                  1:NCOL(id_column))
 
-  if (missing(icd_ver_column)){
-    # Set auto-detect on all
-    icd_ver_column <- rep(FALSE, times=NROW(ds))
-  }else if (length(icd_ver_column) == 1){
-    if (icd_ver_column %in% colnames(ds) ||
-          icd_ver_column %in% 1:NCOL(ds)){
-      icd_ver_column <- ds[,icd_ver_column, drop=FALSE]
-    }else{
-      stop("You have provided an ICD version column identifyer (", icd_ver_column, ")",
-           " that is neither a column name in the ds provided dataset",
-           " or a numerical representation of that column")
-    }
-  }else if (length(icd_ver_column) != NROW(ds)){
-    stop("You have provided ICD-versions for the ds dataset",
-         " unfortunately the length don't match. You have provided",
-         " '", length(icd_ver_column), "' icd version indicators",
-         " while the ds dataset has '", NROW(ds), "' rows.")
-  }
-  icd_ver_column <- as.matrix(icd_ver_column, ncol=1)
-  
   if (missing(include_acute_column)){
     include_acute_column <- rep(TRUE, times=NROW(ds))
   }else if (length(include_acute_column) == 1){
@@ -283,7 +287,7 @@ cmrbdt.calc <- function(ds,
                    for (i in 1:nrow(x)){
                      codes <- x[i, icd_cols]
                      if (!is.null(icd_code_preprocess_fn)){
-                       codes <- icd_code_preprocess_fn(codes)
+                       codes <- icd_code_preprocess_fn(codes, x[i, "icd_ver"])
                      }
                      out <- cmrbdt.finder_fn(icd_codes=codes,
                                           out=out,
