@@ -15,7 +15,6 @@
 #' out <- cmrbdt.finder.numeric.ahrq_2010v3.5("31323")
 #' out[c("DM.COMP", "DM.UNCOMP")] <-TRUE
 #' hierarchy.ahrq_2010v3.5(out)
-#' 
 hierarchy.ahrq_2010v3.5 <- function(out){
   if (is.null(dim(out))){
     # You can't have both uncomplicated diabetes and

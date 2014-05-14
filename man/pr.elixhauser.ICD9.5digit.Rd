@@ -6,7 +6,7 @@
 pr.elixhauser.ICD9.5digit(codes)
 }
 \arguments{
-\item{codes}{\code{string/vector} indicating the code}
+  \item{codes}{\code{string/vector} indicating the code}
 }
 \value{
 \code{integer} Returns a integer value XXXXX
@@ -15,6 +15,8 @@ pr.elixhauser.ICD9.5digit(codes)
 Convert to 5 digit ICD-code
 }
 \seealso{
-\code{\link{elixhauser}}, \code{\link{cmrbdt.finder.numeric.elixhauser_Elixhauser1998}}
+\code{\link{elixhauser}},
+\code{\link{cmrbdt.finder.numeric.elixhauser_Elixhauser1998}}
 }
+\keyword{internal}
 

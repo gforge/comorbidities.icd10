@@ -24,6 +24,10 @@
 #' character, then they must be converted to the format above for this function
 #' to work properly.
 #' 
+#' @section Warning:
+#' This function is deprecated. We recommend you switch to the more general
+#' \code{\link{cmrbdt.calc}} function instead.
+#' 
 #' @param input.frame This is a data frame with 5 character ICD-9-CM codes
 #' without decimal points. This can also be provided as a vector or matrix.
 #' @return A list of one vector and one data frames \item{COMORBIDITY.CT}{A
@@ -36,7 +40,6 @@
 #' Available at:
 #' http://www.hcup-us.ahrq.gov/toolssoftware/comorbidity/comformat2011.txt Last
 #' accessed: 10/2/11
-#' @keywords package
 #' @export
 #' @examples
 #' 
@@ -46,6 +49,7 @@
 #' x[3,1] <- "042XX"
 #' x <- as.data.frame(x)
 #' ahrq(x)
+#' @keywords internal
 ahrq <- function(input.frame) {
   warning("This function is deprecated - use cmrbdt.calc instead")
   warning("The current function has not yet been properly tested, please validate output.")
@@ -67,6 +71,7 @@ ahrq <- function(input.frame) {
 #'  comorbidity. No comorbidity is indicated by 0 while 1 indicates 
 #'  existing comorbidity.
 #' @seealso \code{\link{ahrq}}
+#' @keywords internal
 pr.ahrq.points <- function(input.frame) {
   output.frame <- NULL
   for (i in 1:NROW(input.frame)){

@@ -14,6 +14,7 @@
 #'  checked otherwise only those that are FALSE are checked.
 #' @return \code{boolean} Returns TRUE if the code is deemed to be and ICD-10 code
 #'  otherwise it returns FALSE.
+#' @keywords internal
 pr.get.icd.ver <- function(codes, icd_ver = rep(FALSE, times=length(codes))){
   if (length(icd_ver) != length(codes)){
     if (length(icd_ver) == 1){
@@ -38,6 +39,7 @@ pr.get.icd.ver <- function(codes, icd_ver = rep(FALSE, times=length(codes))){
 #' @param out A vector or NULL
 #' @param score The score list with element names
 #' @return \code{vector} A named vector
+#' @keywords internal
 pr.get.out.vector <- function(out, score){
   # Create a new output vector if it is
   # missing or has length 0, i.e. out == NULL
@@ -91,6 +93,7 @@ pr.get.out.vector <- function(out, score){
 #'  \code{\link{cmrbdt.finder.regex.charlson_Quan2005}},
 #'  \code{\link{cmrbdt.finder.regex.charlson_Armitage2010}},
 #'  \code{\link{cmrbdt.finder.regex.charlson_Sundarajan2004}}
+#' @keywords internal
 pr.regex.code.match <- 
   function(icd_codes, icd_ver, out, cmrbdt.finder.regex.comorbidity, 
            include_acute = rep(TRUE, length(icd_codes)), 

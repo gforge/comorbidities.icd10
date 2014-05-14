@@ -6,6 +6,8 @@ Changes for 0.4
 * Added the main cmrbdt.calc() function
 * Added a dot preprocessor
 * Expanded the tests
+* Improved manual - hidden some of the private functions and added families
+* Added deprecated warnings for deyo, ahrq, and elixhauser functions
 
 Changes for 0.3
 ---------------

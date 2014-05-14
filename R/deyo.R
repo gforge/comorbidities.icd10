@@ -25,6 +25,10 @@
 #' character, then they must be converted to the format above for this function
 #' to work properly.
 #' 
+#' @section Warning:
+#' This function is deprecated. We recommend you switch to the more general
+#' \code{\link{cmrbdt.calc}} function instead.
+#'
 #' @param input.frame This is a data frame with 5 character ICD-9-CM codes
 #' without decimal points.
 #' @return A list of one vector and 2 data frames \item{CHARLSON.SCORE}{A
@@ -36,7 +40,6 @@
 #' @references Deyo RA, Cherkin DC, Ciol MA. (1992) Adapting a clinical
 #' comorbidity index for use with ICD-9-CM administrative databases. J Clin
 #' Epidemiol. 45(6):613-9.
-#' @keywords package
 #' @export
 #' @examples
 #' 
@@ -46,6 +49,7 @@
 #' x[3,1] <- "042XX"
 #' x <- as.data.frame(x)
 #' deyo(x)
+#' @keywords internal
 deyo <- function(input.frame) {
   warning("This function is deprecated - use cmrbdt.calc instead")
   if(is.vector(input.frame)) input.frame <- data.frame(codes=input.frame)
@@ -70,6 +74,7 @@ deyo <- function(input.frame) {
 #'  comorbidity. No comorbidity is indicated by 0 while 1 indicates 
 #'  existing comorbidity.
 #' @seealso \code{\link{deyo}}
+#' @keywords internal
 pr.deyo.comorbidities <- function(input.frame) {
   output.frame <- NULL
   for (i in 1:NROW(input.frame)){

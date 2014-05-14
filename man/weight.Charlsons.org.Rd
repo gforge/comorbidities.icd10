@@ -6,8 +6,9 @@
 weight.Charlsons.org(ds)
 }
 \arguments{
-\item{ds}{This is a \code{data.frame} or \code{matrix} with
-the comorbidity groups as returned by any of the Charlson functions}
+  \item{ds}{This is a \code{data.frame} or \code{matrix}
+  with the comorbidity groups as returned by any of the
+  Charlson functions}
 }
 \value{
 Weighted comorbidities
@@ -22,7 +23,8 @@ out <- cmrbdt.finder.regex.charlson_Quan2005("I252")
 weight.Charlsons.org(out)
 }
 \seealso{
-Other weight functions: \code{\link{weight.Charlsons.Quan2012}};
-  \code{\link{weight.Elixhausers.VanWalraven2009}}
+Other weight functions:
+\code{\link{weight.Charlsons.Quan2012}};
+\code{\link{weight.Elixhausers.VanWalraven2009}}
 }
 

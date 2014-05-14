@@ -194,6 +194,7 @@ cmrbdt.finder.numeric.ahrq_2010v3.5 <-
 #' @param codes A \code{string/vector} numeric code
 #' @return \code{integer} Returns a integer code XXXXX 
 #' @seealso \code{\link{ahrq}}, \code{\link{cmrbdt.finder.numeric.ahrq_2010v3.5}}
+#' @keywords internal
 pr.ahrq.ICD9.5digit <- function(codes){
   if (!is.null(dim(codes)) &&
       (length(dim(codes)) != 2 ||
@@ -240,6 +241,7 @@ pr.ahrq.ICD9.5digit <- function(codes){
 #' @param v.code A string numeric icd-code that starts with a V
 #' @return \code{int} Returns an int with 5 digits
 #' @seealso \code{\link{ahrq}}
+#' @keywords internal
 pr.ahrq.preprocess.v.codes <- function(v.code) {
   if (any(nchar(nchar(v.code) < 5))){
     for (i in which(nchar(v.code) < 5)){
@@ -274,5 +276,3 @@ pr.ahrq.preprocess.v.codes <- function(v.code) {
   
   return (v.code)
 }
-
-ahrq

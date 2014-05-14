@@ -24,16 +24,20 @@ hierarchy.charlson_Sundarajan2004(out)
 hierarchy.charlson_Armitage2010(out)
 }
 \arguments{
-\item{out}{A \code{matrix}/\code{data.frame}/\code{vector} with the comorbidity
-groups outputted from the \code{cmrbdt.finder.*()} functions}
+  \item{out}{A
+  \code{matrix}/\code{data.frame}/\code{vector} with the
+  comorbidity groups outputted from the
+  \code{cmrbdt.finder.*()} functions}
 }
 \value{
-\code{out} Returns the same as the input but with the hierarchy applied
+\code{out} Returns the same as the input but with the
+hierarchy applied
 }
 \description{
 The hierarchy functions generally remove less complicated
-diseases when more complicated diseases are present. For instance
-if a metastasis code is present then the solid tumor code is obsolete.
+diseases when more complicated diseases are present. For
+instance if a metastasis code is present then the solid
+tumor code is obsolete.
 }
 \examples{
 # AHRQ example

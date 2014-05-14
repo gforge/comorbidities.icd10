@@ -23,3 +23,4 @@ Imports:
 Suggests:
     testthat (>= 0.8)
 Encoding: UTF-8
+Roxygen: list(wrap= TRUE)

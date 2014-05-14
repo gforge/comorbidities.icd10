@@ -81,6 +81,7 @@ cmrbdt.finder.numeric.charlson_Deyo1992 <-
 #' @param codes \code{string/vector} indicating the code 
 #' @return \code{float} Returns a float value XXXXX
 #' @seealso \code{\link{deyo}}, \code{\link{cmrbdt.finder.numeric.charlson_Deyo1992}}
+#' @keywords internal
 pr.deyo.ICD9.5digit <- function(codes){
   if (!is.null(dim(codes)) &&
         (length(dim(codes)) != 2 ||

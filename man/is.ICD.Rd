@@ -6,11 +6,12 @@
 is.ICD(codes, preprocess_fn)
 }
 \arguments{
-\item{codes}{The ICD codes of interest that have the needed format
-for the functions to work. That is without any ., etc.}
+  \item{codes}{The ICD codes of interest that have the
+  needed format for the functions to work. That is without
+  any ., etc.}
 
-\item{preprocess_fn}{Any pre-processing function that is needed to
-prepare the codes.}
+  \item{preprocess_fn}{Any pre-processing function that is
+  needed to prepare the codes.}
 }
 \value{
 \code{vector} Returns a vector with all the codes

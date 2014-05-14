@@ -125,6 +125,7 @@ cmrbdt.finder.numeric.elixhauser_Elixhauser1998 <-
 #' @param codes \code{string/vector} indicating the code 
 #' @return \code{integer} Returns a integer value XXXXX
 #' @seealso \code{\link{elixhauser}}, \code{\link{cmrbdt.finder.numeric.elixhauser_Elixhauser1998}}
+#' @keywords internal
 pr.elixhauser.ICD9.5digit <- function(codes){ 
   if (!is.null(dim(codes)) &&
         (length(dim(codes)) != 2 ||
@@ -170,6 +171,7 @@ pr.elixhauser.ICD9.5digit <- function(codes){
 #' @param v.code A \code{string/vector} with icd-code(s) that starts with a V
 #' @return \code{int} Returns an int with 5 digits
 #' @seealso \code{\link{elixhauser}}
+#' @keywords internal
 pr.elixhauser.process.v.codes <- function(v.code) {
   if (!is.null(dim(v.code))){ stop("The function cannot complex data structures,",
                                    " only vectors or single strings are allowed")}

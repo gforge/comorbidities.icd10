@@ -176,7 +176,7 @@ out_without_acute <-
               cmrbdt.finder_hierarchy_fn=hierarchy.charlson_Quan2005,
               cmrbdt.weight_fn=weight.Charlsons.org,
               # Below is the magic function that splits the merged codes
-              icd_code_preprocess_fn=function(code) unlist(strsplit(code, " ")))
+              icd_code_preprocess_fn=function(icd, icd_ver) unlist(strsplit(icd, " ")))
 
 # The MI was not included for A when acute was taken into account
 data.frame(ID = out_incl_acute$cmrbdt$Patient_ID,

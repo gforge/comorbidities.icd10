@@ -6,30 +6,34 @@
 weight.Charlsons.Quan2012(ds)
 }
 \arguments{
-\item{ds}{This is a \code{data.frame} or \code{matrix} with
-the comorbidity groups as returned by any of the Charlson functions}
+  \item{ds}{This is a \code{data.frame} or \code{matrix}
+  with the comorbidity groups as returned by any of the
+  Charlson functions}
 }
 \value{
 Weighted comorbidities
 }
 \description{
 The following function adds the weights of the Charlson
-according to an update in 2011 by Quan et al where the maximum
-score is 24 and the weights are between 0-6, i.e. a few comorbidities
-are no longer considered of importance (MI, PVD, etc.)
+according to an update in 2011 by Quan et al where the
+maximum score is 24 and the weights are between 0-6, i.e. a
+few comorbidities are no longer considered of importance
+(MI, PVD, etc.)
 }
 \examples{
 out <- cmrbdt.finder.regex.charlson_Quan2005("I252")
 weight.Charlsons.Quan2012(out)
 }
 \references{
-H. Quan, B. Li, C. M. Couris, K. Fushimi, P. Graham, P. Hider, J.-M.
- Januel, and V. Sundararajan, “Updating and Validating the Charlson Comorbidity
- Index and Score for Risk Adjustment in Hospital Discharge Abstracts Using Data
- From 6 Countries,” Am. J. Epidemiol., vol. 173, no. 6, pp. 676–682, Mar. 2011.
+H. Quan, B. Li, C. M. Couris, K. Fushimi, P. Graham, P.
+Hider, J.-M.  Januel, and V. Sundararajan, “Updating and
+Validating the Charlson Comorbidity Index and Score for
+Risk Adjustment in Hospital Discharge Abstracts Using Data
+From 6 Countries,” Am. J. Epidemiol., vol. 173, no. 6,
+pp. 676–682, Mar. 2011.
 }
 \seealso{
 Other weight functions: \code{\link{weight.Charlsons.org}};
-  \code{\link{weight.Elixhausers.VanWalraven2009}}
+\code{\link{weight.Elixhausers.VanWalraven2009}}
 }
 

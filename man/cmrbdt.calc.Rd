@@ -8,86 +8,106 @@ cmrbdt.calc(ds, id_column, icd_columns, icd_ver_column, include_acute_column,
   cmrbdt.weight_fn, country_code = "US", ...)
 }
 \arguments{
-\item{ds}{The data.frame/matrix/vector that is to be analyzed for
-matching icd-codes.}
+  \item{ds}{The data.frame/matrix/vector that is to be
+  analyzed for matching icd-codes.}
 
-\item{id_column}{The id of the \code{ds} parameter. If included in the
-ds then provide only column names, otherwise this should be in the format
-of a vector/matrix/data.frame matching the size of the \code{ds} input. You
-can have multiple columns as ID-parameters.}
+  \item{id_column}{The id of the \code{ds} parameter. If
+  included in the ds then provide only column names,
+  otherwise this should be in the format of a
+  vector/matrix/data.frame matching the size of the
+  \code{ds} input. You can have multiple columns as
+  ID-parameters.}
 
-\item{icd_columns}{If the \code{ds} contains more than just the ICD-code columns
-then you need to specify the ICD-columns, either by name or numbers.}
+  \item{icd_columns}{If the \code{ds} contains more than
+  just the ICD-code columns then you need to specify the
+  ICD-columns, either by name or numbers.}
 
-\item{icd_ver_column}{The ICD-version number if you don't want auto-detect. This can
-either be a single number if they are all of the same ICD-version or you can have a
-column in the \code{ds} that signals the version, alternatively this can be a vector
-of the same length as the \code{ds}.
-As auto-detect may fail try to specify this if you can. For those that you are
-uncertain you can simple set the value to \code{FALSE} and the software will attempt
-to autodetect those specific instances.}
+  \item{icd_ver_column}{The ICD-version number if you don't
+  want auto-detect. This can either be a single number if
+  they are all of the same ICD-version or you can have a
+  column in the \code{ds} that signals the version,
+  alternatively this can be a vector of the same length as
+  the \code{ds}. As auto-detect may fail try to specify
+  this if you can. For those that you are uncertain you can
+  simple set the value to \code{FALSE} and the software
+  will attempt to autodetect those specific instances.}
 
-\item{include_acute_column}{Certain codes may indicate a non-chronic
-disease such as heart infarction, stroke or similar. Under some
-circumstances these should be ignored, e.g. when studying predictors
-for hip arthroplasty re-operations codes during the admission
-for the surgery should not include myocardial infarction as this
-is most likely a postoperative condition not available for scoring
-prior to the surgery.}
+  \item{include_acute_column}{Certain codes may indicate a
+  non-chronic disease such as heart infarction, stroke or
+  similar. Under some circumstances these should be
+  ignored, e.g. when studying predictors for hip
+  arthroplasty re-operations codes during the admission for
+  the surgery should not include myocardial infarction as
+  this is most likely a postoperative condition not
+  available for scoring prior to the surgery.}
 
-\item{icd_code_preprocess_fn}{Sometimes the codes need to be
-pre-processed prior to feeding them into the algorithm. For instance
-the ICD-columns may be crammed into one single column where each
-code is separated by a ' '. When this is the case the pre-processing
-allows a split prior to calling the \code{cmrbdt.finder_fn}, e.g. splitting
-'M161 E110' could need a function as \code{function(code){unlist(strsplit(code, " "))}}
-- \emph{note} the unlist, your function should return a vector and not a list.}
+  \item{icd_code_preprocess_fn}{Sometimes the codes need to
+  be pre-processed prior to feeding them into the
+  algorithm. For instance the ICD-columns may be crammed
+  into one single column where each code is separated by a
+  ' '. When this is the case the pre-processing allows a
+  split prior to calling the \code{cmrbdt.finder_fn}, e.g.
+  splitting 'M161 E110' could need a function as
+  \code{function(code){unlist(strsplit(code, " "))}} -
+  \emph{note} the unlist, your function should return a
+  vector and not a list. You can find the package
+  pre-processing functions within the preproc.* function
+  group, e.g. \code{\link{preproc.strip.dot}} or the more
+  advanced \code{\link{preproc.Swedich.ICD9}}}
 
-\item{cmrbdt.finder_fn}{This is one of the cmrbdt.finder functions that you want
-to apply. The cmrbdt.finder is at the heart of the algorithm and does the
-actual comorbidity identidication. See below for a list of available functions.}
+  \item{cmrbdt.finder_fn}{This is one of the cmrbdt.finder
+  functions that you want to apply. The cmrbdt.finder is at
+  the heart of the algorithm and does the actual
+  comorbidity identidication. See below for a list of
+  available functions.}
 
-\item{cmrbdt.finder_hierarchy_fn}{This functions applies any hierarchy needed in order
-to retain logic, e.g. complicated diabetes and uncomplicated diabetes should not
-co-exist in one and the same patient. You can provide here any of the \code{hierarchy.*()}
-functions. E.g. if you are using Elixhausers Quan 2005 version you provide the
-function \code{\link{hierarchy.elixhauser_Quan2005}}.}
+  \item{cmrbdt.finder_hierarchy_fn}{This functions applies
+  any hierarchy needed in order to retain logic, e.g.
+  complicated diabetes and uncomplicated diabetes should
+  not co-exist in one and the same patient. You can provide
+  here any of the \code{hierarchy.*()} functions. E.g. if
+  you are using Elixhausers Quan 2005 version you provide
+  the function
+  \code{\link{hierarchy.elixhauser_Quan2005}}.}
 
-\item{cmrbdt.weight_fn}{The comorbidity weight function that you want to apply
-to the current calculation. E.g. you can use the \code{\link{weight.Charlsons.org}}
-if you want to apply the traditional Charlson comorbidity score or you can write
-your own function.}
+  \item{cmrbdt.weight_fn}{The comorbidity weight function
+  that you want to apply to the current calculation. E.g.
+  you can use the \code{\link{weight.Charlsons.org}} if you
+  want to apply the traditional Charlson comorbidity score
+  or you can write your own function.}
 
-\item{country_code}{The two-letter \code{ISO 3166-1 alpha-2}
-code indicating the country of interest (the same as the top-level
-internet domain name of that country). As certain countries
-have adapted country-specific ICD-coding there may be minor
-differences between countries. Currently only Swedish (SE) and
-US codes are implemented. The function defaults to 'US'.}
+  \item{country_code}{The two-letter \code{ISO 3166-1
+  alpha-2} code indicating the country of interest (the
+  same as the top-level internet domain name of that
+  country). As certain countries have adapted
+  country-specific ICD-coding there may be minor
+  differences between countries. Currently only Swedish
+  (SE) and US codes are implemented. The function defaults
+  to 'US'.}
 
-\item{...}{Arguments that are passed on to the \code{\link[plyr]{ddply}} function.}
+  \item{...}{Arguments that are passed on to the
+  \code{\link[plyr]{ddply}} function.}
 }
 \description{
-This function is the main comorbidity calculator.
-You should try to use this function whenever you
-want to get a full comorbidity count. By providing
-the individual functions you can easily switch code identifier,
-weights, and code pre-processing.
+This function is the main comorbidity calculator. You
+should try to use this function whenever you want to get a
+full comorbidity count. By providing the individual
+functions you can easily switch code identifier, weights,
+and code pre-processing.
 }
 \details{
-The function returns a list with:
-\itemize{
- \item{score/ct} If you have provided a weight function you
-  will have a score item, otherwise it is just a simple count
-  of how many comorbidity groups that have been identified. The
-  name of the item is either \code{"score"} or \code{"ct"} in order
-  to avoid mistakes.
- \item{cmrbdt} This is a matrix with comorbidity TRUE/FALSE for
-  each group of the comorbidity by \code{id} as returned by \code{\link[plyr]{ddply}}.
- \item{cmrbdt.weighted} If you have provided a comorbidity weighting
-  function then this will also be included in the returned list. This
-  matrix is also by \code{id} as returned by \code{\link[plyr]{ddply}}.
-}
+The function returns a list with: \itemize{ \item{score/ct}
+If you have provided a weight function you will have a
+score item, otherwise it is just a simple count of how many
+comorbidity groups that have been identified. The name of
+the item is either \code{"score"} or \code{"ct"} in order
+to avoid mistakes.  \item{cmrbdt} This is a matrix with
+comorbidity TRUE/FALSE for each group of the comorbidity by
+\code{id} as returned by \code{\link[plyr]{ddply}}.
+\item{cmrbdt.weighted} If you have provided a comorbidity
+weighting function then this will also be included in the
+returned list. This matrix is also by \code{id} as returned
+by \code{\link[plyr]{ddply}}. }
 }
 \examples{
 # Completely made up datasets
@@ -268,7 +288,7 @@ out_without_acute <-
               cmrbdt.finder_hierarchy_fn=hierarchy.charlson_Quan2005,
               cmrbdt.weight_fn=weight.Charlsons.org,
               # Below is the magic function that splits the merged codes
-              icd_code_preprocess_fn=function(code) unlist(strsplit(code, " ")))
+              icd_code_preprocess_fn=function(icd, icd_ver) unlist(strsplit(icd, " ")))
 
 # The MI was not included for A when acute was taken into account
 data.frame(ID = out_incl_acute$cmrbdt$Patient_ID,
@@ -277,31 +297,39 @@ data.frame(ID = out_incl_acute$cmrbdt$Patient_ID,
 }
 \seealso{
 \itemize{
- \item{\code{\link{cmrbdt.finder.numeric.ahrq_2010v3.5}}: }{Numeric funciton for
-  identifying AHRQ codes, \emph{note} that this is not the latest version! Works only
-  with ICD-9 codes.}
- \item{\code{\link{cmrbdt.finder.numeric.elixhauser_Elixhauser1998}}: }{Numeric function
-  for identifying the original Elixhauser codes from 1998, \emph{note} that newer versions
-  code versions are available. Works only with ICD-9 codes.}
- \item{\code{\link{cmrbdt.finder.numeric.charlson_Deyo1992}}: }{Numeric function for
-  identifying Deyo's original translation of the Elixhauser comorbidity groups. Works only
-  with ICD-9 codes.}
- \item{\code{\link{cmrbdt.finder.regex.charlson_Sundarajan2004}}: }{A function based
-  on regular expressions for identifying Sundarajan's codeset for Charlsons index, \emph{note}
-  that the Quan article that they wrote one year later is an update to the current code
-  set.}
- \item{\code{\link{cmrbdt.finder.regex.charlson_Quan2005}}: }{A function based
-  on regular expressions for identifying Quan's codeset for Charlsons index. This
-  is currently (written 2014-05-07) the most up-to-date version of the Charlson code set unless
-  the Royal College of Surgeons attempt at changing the Charlson counts.}
- \item{\code{\link{cmrbdt.finder.regex.charlson_Armitage2010}}: }{A function based
-  on regular expressions for identifying an adaptation and simplification of the
-  Charlsons index. \emph{Note} that this is no longer the Charlsons but an adaptation with
-  only 14 comorbidity groups.}
- \item{\code{\link{cmrbdt.finder.regex.elixhauser_Quan2005}}: }{A function based
-  on regular expressions for identifying Quan's codeset for Charlsons index. This
-  is currently (written 2014-05-07) the most up-to-date version of the Elixhauser code set unless
-  the AHRQ is included although the AHRQ has never been updated to ICD-10.}
-}
+\item{\code{\link{cmrbdt.finder.numeric.ahrq_2010v3.5}}:
+}{Numeric funciton for identifying AHRQ codes, \emph{note}
+that this is not the latest version! Works only with ICD-9
+codes.}
+\item{\code{\link{cmrbdt.finder.numeric.elixhauser_Elixhauser1998}}:
+}{Numeric function for identifying the original Elixhauser
+codes from 1998, \emph{note} that newer versions code
+versions are available. Works only with ICD-9 codes.}
+\item{\code{\link{cmrbdt.finder.numeric.charlson_Deyo1992}}:
+}{Numeric function for identifying Deyo's original
+translation of the Elixhauser comorbidity groups. Works
+only with ICD-9 codes.}
+\item{\code{\link{cmrbdt.finder.regex.charlson_Sundarajan2004}}:
+}{A function based on regular expressions for identifying
+Sundarajan's codeset for Charlsons index, \emph{note} that
+the Quan article that they wrote one year later is an
+update to the current code set.}
+\item{\code{\link{cmrbdt.finder.regex.charlson_Quan2005}}:
+}{A function based on regular expressions for identifying
+Quan's codeset for Charlsons index. This is currently
+(written 2014-05-07) the most up-to-date version of the
+Charlson code set unless the Royal College of Surgeons
+attempt at changing the Charlson counts.}
+\item{\code{\link{cmrbdt.finder.regex.charlson_Armitage2010}}:
+}{A function based on regular expressions for identifying
+an adaptation and simplification of the Charlsons index.
+\emph{Note} that this is no longer the Charlsons but an
+adaptation with only 14 comorbidity groups.}
+\item{\code{\link{cmrbdt.finder.regex.elixhauser_Quan2005}}:
+}{A function based on regular expressions for identifying
+Quan's codeset for Charlsons index. This is currently
+(written 2014-05-07) the most up-to-date version of the
+Elixhauser code set unless the AHRQ is included although
+the AHRQ has never been updated to ICD-10.} }
 }
 

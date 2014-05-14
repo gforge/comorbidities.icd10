@@ -3,21 +3,30 @@
 \alias{preproc.strip.dot}
 \title{Dot stripper}
 \usage{
-preproc.strip.dot(codes)
+preproc.strip.dot(icd, icd_ver)
 }
 \arguments{
-\item{codes}{The ICD-codes to be stripped}
+  \item{icd}{The ICD-codes to be stripped}
+
+  \item{icd_ver}{Currently not used - this parameter is
+  only for compatibility reasons as other preprocessing
+  functions may require the knowledge of actual icd
+  version.}
 }
 \value{
 \code{vector/matrix} Codes that are stripped from any .
 }
 \description{
-ICD-codes have frequently \code{.} in them,
-e.g. \code{M16.1}. These need to be stripped
-for the code to work.
+ICD-codes have frequently \code{.} in them, e.g.
+\code{M16.1}. These need to be stripped for the code to
+work.
 }
 \examples{
 preproc.strip.dot(c("M16.1", "M161"))
 preproc.strip.dot(matrix(c("M16.1", "M162", NA, "M16.9"), ncol=2, nrow=2))
+}
+\seealso{
+Other preprocessor functions:
+\code{\link{preproc.Swedich.ICD9}}
 }
 

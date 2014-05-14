@@ -23,6 +23,10 @@
 #' character, then they must be converted to the format above for this function
 #' to work properly.
 #' 
+#' @section Warning:
+#' This function is deprecated. We recommend you switch to the more general
+#' \code{\link{cmrbdt.calc}} function instead.
+#'
 #' @param input.frame This is a data frame with 5 character ICD-9-CM codes
 #' without decimal points
 #' @return A list of one vector and one data frames \item{COMORBIDITY.CT}{A
@@ -32,7 +36,6 @@
 #' @author Paul Gerrard, Max Gordon
 #' @references Elixhauser A, Steiner C, Harris DR, Coffey RM. (1998)
 #' Comorbidity measures for use with administrative data.  Med Care. 36:8-27.
-#' @keywords package
 #' @export
 #' @examples
 #' 
@@ -42,6 +45,7 @@
 #' x[3,1] <- "042XX"
 #' x <- as.data.frame(x)
 #' elixhauser(x)
+#' @keywords internal
 elixhauser <- function(input.frame) {
   warning("This function is deprecated - use cmrbdt.calc instead")
   if(is.vector(input.frame)) input.frame <- data.frame(codes=input.frame)
@@ -62,6 +66,7 @@ elixhauser <- function(input.frame) {
 #'  comorbidity. No comorbidity is indicated by 0 while 1 indicates 
 #'  existing comorbidity.
 #' @seealso \code{\link{elixhauser}}
+#' @keywords internal
 pr.elixhauser.points.30 <- function(input.frame) {
   output.frame <- NULL
   for (i in 1:NROW(input.frame)){

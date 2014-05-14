@@ -6,29 +6,33 @@
 weight.Elixhausers.VanWalraven2009(ds)
 }
 \arguments{
-\item{ds}{This is a \code{data.frame} or \code{matrix} with
-the comorbidity groups as returned by the Elixhauser function}
+  \item{ds}{This is a \code{data.frame} or \code{matrix}
+  with the comorbidity groups as returned by the Elixhauser
+  function}
 }
 \value{
 Weighted comorbidities
 }
 \description{
-The following function adds the weights of the Elixhausers index
-according to an article by van Walraven et al. Note that a few disease categories
-have a negative weight, i.e. are protective according to their article.
+The following function adds the weights of the Elixhausers
+index according to an article by van Walraven et al. Note
+that a few disease categories have a negative weight, i.e.
+are protective according to their article.
 }
 \examples{
 out <- cmrbdt.finder.regex.elixhauser_Quan2005("C69")
 weight.Elixhausers.VanWalraven2009(out)
 }
 \references{
-C. van Walraven, P. C. Austin, A. Jennings, H. Quan,
- and A. J. Forster, "A Modification of the Elixhauser Comorbidity
- Measures Into a Point System for Hospital Death Using Administrative
- Data" Medical Care, vol. 47, no. 6, pp. 626-633, Jun. 2009.
+C. van Walraven, P. C. Austin, A. Jennings, H. Quan, and A.
+J. Forster, "A Modification of the Elixhauser Comorbidity
+Measures Into a Point System for Hospital Death Using
+Administrative Data" Medical Care, vol. 47, no. 6, pp.
+626-633, Jun. 2009.
 }
 \seealso{
-Other weight functions: \code{\link{weight.Charlsons.Quan2012}};
-  \code{\link{weight.Charlsons.org}}
+Other weight functions:
+\code{\link{weight.Charlsons.Quan2012}};
+\code{\link{weight.Charlsons.org}}
 }
 
