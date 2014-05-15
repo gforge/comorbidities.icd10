@@ -8,7 +8,7 @@ ahrq.list[["VALVE"]] <- c("09320","09324","3940 ","3971 ","3979 ","4240 ","42499
 
 
 # Pulmonary circulation disorder 
-ahrq.list[["PULM.CIRC"]] <- c("41511","41519","4160 ","4169 ","4179 ")
+ahrq.list[["PULM.CIRC"]] <- c("41511","41519","4160 ","4169 ","4179 ", "41513")
 
 
 # Peripheral vascular disorder 
@@ -83,7 +83,7 @@ ahrq.list[["RHEUM"]] <- c("7010 ","7100 ","7109 ","7140 ","7149 ","7200 ","7209 
 
 
 # Coagulation deficiency - note:  this comorbidity should be dropped when used with the AHRQ Patient Safety Indicators 
-ahrq.list[["COAG"]] <- c("2860 ","2869 ","2871 ","2873 ","2875 ","64930","64934","28984")
+ahrq.list[["COAG"]] <- c("2860 ","2869 ","2871 ","2873 ","2875 ","64930","64934","28984", "28652")
 
 
 # Obesity      
@@ -127,7 +127,7 @@ test_that("Check AHRQ matches codes from the SAS-script",{
     # Check one code at the time
     out <- t(sapply(codes,
                     function(code)
-                      cmrbdt.finder.numeric.ahrq_2010v3.5(icd_codes=code)))
+                      cmrbdt.finder.numeric.ahrq(icd_codes=code)))
     found_codes <- out[,n]
     expect_true(all(found_codes), 
                 info=sprintf("The script fails to properly identify from '%s' the codes '%s'",

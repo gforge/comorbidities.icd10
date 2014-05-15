@@ -72,7 +72,7 @@ elixhausers_codes_2_check[['PVD']] = list(
              'K559', 'Z958', 'Z959'))
 
 # Hypertension, uncomplicated
-elixhausers_codes_2_check[['HTN']] = list(
+elixhausers_codes_2_check[['HTN.UNCOMP']] = list(
   icd9_basic = c('4011', '4019'),
   
   icd9 = c('4013'),

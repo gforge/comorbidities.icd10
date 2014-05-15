@@ -8,25 +8,30 @@
 #'  groups outputted from the \code{cmrbdt.finder.*()} functions
 #' @return \code{out} Returns the same as the input but with the hierarchy applied
 #' @rdname hierarchy
-#' @seealso \code{\link{cmrbdt.finder.numeric.ahrq_2010v3.5}}
+#' @seealso \code{\link{cmrbdt.finder.numeric.ahrq}}
 #' @export
 #' @examples
 #' # AHRQ example
-#' out <- cmrbdt.finder.numeric.ahrq_2010v3.5("31323")
+#' out <- cmrbdt.finder.numeric.ahrq("31323")
 #' out[c("DM.COMP", "DM.UNCOMP")] <-TRUE
-#' hierarchy.ahrq_2010v3.5(out)
-hierarchy.ahrq_2010v3.5 <- function(out){
+#' hierarchy.ahrq(out)
+hierarchy.ahrq <- function(out){
   if (is.null(dim(out))){
     # You can't have both uncomplicated diabetes and
     # complicated diabetes at the same time
     if (out["DM.COMP"]) { out["DM.UNCOMP"] <- FALSE }
     
+    # You can't have both uncomplicated hypertension and
+    # complicated hypertension at the same time
+    if (out["HTN.COMP"]) { out["HTN.UNCOMP"] <- FALSE }
+
     # If a solid tumor has generated metastasis then it belongs in that group and not
     # the pure solid tumor group
     if (out["METS"]) { out["SOLID.TUMOR"] <- FALSE}
   }else{
     # Same as for vectors but in a matrix format
     out[out[,"DM.COMP"]==TRUE,"DM.UNCOMP"] <- FALSE
+    out[out[,"HTN.COMP"]==TRUE,"HTN.UNCOMP"] <- FALSE
     out[out[,"METS"]==TRUE,"SOLID.TUMOR"] <- FALSE
   }
   return(out)
@@ -37,7 +42,7 @@ hierarchy.ahrq_2010v3.5 <- function(out){
 #' @export
 hierarchy.elixhauser_Elixhauser1998 <- function(out){
   # Just a wrapper - the hierarchy is identical
-  return(hierarchy.ahrq_2010v3.5(out))
+  return(hierarchy.ahrq(out))
 }
 
 #' @rdname hierarchy
@@ -45,11 +50,11 @@ hierarchy.elixhauser_Elixhauser1998 <- function(out){
 #' @export
 hierarchy.elixhauser_Quan2005 <- function(out){
   # Just a wrapper - the hierarchy is identical
-  return(hierarchy.ahrq_2010v3.5(out))
+  return(hierarchy.ahrq(out))
 }
 
 #' @rdname hierarchy
-#' @seealso \code{\link{cmrbdt.finder.numeric.ahrq_2010v3.5}}
+#' @seealso \code{\link{cmrbdt.finder.numeric.charlson_Deyo1992}}
 #' @export
 #' @examples
 #' 

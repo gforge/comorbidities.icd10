@@ -4,6 +4,7 @@ Changes for 0.5
 ---------------
 * Added tests
 * Bugs in AHRQ-matches fixed and hypertension is now properly split into uncomplicated and complicated
+* Added AHRQ v3.6 and 3.7 version and ability to quickly update to newer updates
 
 Changes for 0.4
 ---------------

@@ -35,7 +35,7 @@ cmrbdt.finder.numeric.elixhauser_Elixhauser1998 <-
                  44120L,44140L,44170L,44190L,
                  seq(from=44310L, to=44399L, by=1L),
                  44710L,55710L,55790L),
-         HTN = c(40110L,40190L),
+         HTN.UNCOMP = c(40110L,40190L),
          HTN.COMP = c(40210L,40290L, # Separated hypertension into complicated and un-complicated
                       40410L,40490L,
                       40511L,40519L,

@@ -105,7 +105,7 @@ in ICD-9-CM and ICD-10 administrative data" Med Care, vol.
 \code{\link{cmrbdt.calc}}
 
 Other cmrbdtf.finder functions:
-\code{\link{cmrbdt.finder.numeric.ahrq_2010v3.5}},
+\code{\link{cmrbdt.finder.numeric.ahrq}},
 \code{\link{cmrbdt.finder.numeric.charlson_Deyo1992}},
 \code{\link{cmrbdt.finder.numeric.elixhauser_Elixhauser1998}}
 }

@@ -73,9 +73,8 @@
 #' @param ... Arguments that are passed on to the \code{\link[plyr]{ddply}} function.
 #' @seealso 
 #' \itemize{
-#'  \item{\code{\link{cmrbdt.finder.numeric.ahrq_2010v3.5}}: }{Numeric funciton for 
-#'   identifying AHRQ codes, \emph{note} that this is not the latest version! Works only 
-#'   with ICD-9 codes.}
+#'  \item{\code{\link{cmrbdt.finder.numeric.ahrq}}: }{Numeric funciton for 
+#'   identifying AHRQ codes. Works only with ICD-9 codes.}
 #'  \item{\code{\link{cmrbdt.finder.numeric.elixhauser_Elixhauser1998}}: }{Numeric function
 #'   for identifying the original Elixhauser codes from 1998, \emph{note} that newer versions
 #'   code versions are available. Works only with ICD-9 codes.}

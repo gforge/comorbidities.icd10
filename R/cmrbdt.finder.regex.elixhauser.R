@@ -109,7 +109,7 @@ cmrbdt.finder.regex.elixhauser_Quan2005 <- function(icd_codes,
                   '^557[19]', '^V434'))
   
   # Hypertension, uncomplicated
-  elixhausers[['HTN']] <- 
+  elixhausers[['HTN.UNCOMP']] <- 
     list(icd10 = c('^I10'),
          # No country code difference
          icd9 = c('^401'))

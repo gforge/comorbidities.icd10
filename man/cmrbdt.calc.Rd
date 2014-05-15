@@ -296,11 +296,9 @@ data.frame(ID = out_incl_acute$cmrbdt$Patient_ID,
            Without=out_without_acute$score)
 }
 \seealso{
-\itemize{
-\item{\code{\link{cmrbdt.finder.numeric.ahrq_2010v3.5}}:
-}{Numeric funciton for identifying AHRQ codes, \emph{note}
-that this is not the latest version! Works only with ICD-9
-codes.}
+\itemize{ \item{\code{\link{cmrbdt.finder.numeric.ahrq}}:
+}{Numeric funciton for identifying AHRQ codes. Works only
+with ICD-9 codes.}
 \item{\code{\link{cmrbdt.finder.numeric.elixhauser_Elixhauser1998}}:
 }{Numeric function for identifying the original Elixhauser
 codes from 1998, \emph{note} that newer versions code

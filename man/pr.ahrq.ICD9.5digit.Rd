@@ -16,7 +16,7 @@ Converts an icd9 code to numeric format
 }
 \seealso{
 \code{\link{ahrq}},
-\code{\link{cmrbdt.finder.numeric.ahrq_2010v3.5}}
+\code{\link{cmrbdt.finder.numeric.ahrq}}
 }
 \keyword{internal}
 
