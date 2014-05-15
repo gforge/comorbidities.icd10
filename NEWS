@@ -1,5 +1,10 @@
 NEWS for the Gmisc package
 
+Changes for 0.5
+---------------
+* Added tests
+* Bugs in AHRQ-matches fixed and hypertension is now properly split into uncomplicated and complicated
+
 Changes for 0.4
 ---------------
 * Externalized hierarchy and points calculator

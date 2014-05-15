@@ -64,27 +64,34 @@ cmrbdt.finder.numeric.ahrq_2010v3.5 <-
                 39790L,
                 seq(from=42400L, to=42499L, by=1L),
                 seq(from=74630L, to=74669L, by=1L)),
-      PULM.CIRC = c(seq(from =41511L, to=41519L, by=1L),
+      PULM.CIRC = c(seq(from=41511L, to=41519L, by=1L),
                     seq(from=41600L, to=41699L, by=1L), 41790L),
       PVD = c(seq(from=44000L, to=44099L, by=1L),
               seq(from=44000L, to=44199L, by=1L),
-              seq(from =44200L, to=44299L, by=1L),
-              seq(from =44310L, to=44399L, by=1L),
-              44421L,44122L,44710L,44900L,55710L,55790L),
-      HTN = c(40110L,40190L,
-              seq(from =64200L, to=64204L, by=1L),
-              40100L,43720L,
-              seq(from =64220L, to=64224L, by=1L),
-              40200L,40210L,40290L,40509L,40519L,40599L, 
-              40201L,40211L,40291L, 40300L,40310L,40390L,
-              40501L,40511L,40591L,
-              seq(from=64210L, to=64214L, by=1L),
-              40301L,40311L,40391L,40400L,40410L,40490L,
-              40401L,40411L,40491L, 40402L,40412L,40492L, 
-              40403L,40413L,40493L, 
-              seq(from =64270L, to=64274L, by=1L),
-              seq(from =64290L, to=64294L, by=1L)),
-      PARALYSIS = c(seq(from =34200L, to=34499L, by=1L),
+              seq(from=44200L, to=44299L, by=1L),
+              seq(from=44310L, to=44399L, by=1L),
+              44421L, 44422L, 
+              44710L, 44900L,
+              55710L,55790L),
+      HTN.UNCOMP = c(40110L,40190L,
+                     seq(from=64200L, to=64204L, by=1L),
+                     seq(from=64270L, to=64274L, by=1L),
+                     seq(from=64290L, to=64294L, by=1L)),
+      HTN.COMP = c(40100L,43720L, # Reg. comp
+                   seq(from=64220L, to=64224L, by=1L), # Pregnant
+                   40200L,40210L,40290L,40509L,40519L,40599L, # No heart failure
+                   40201L,40211L,40291L, # With heart failure
+                   40300L,40310L,40390L, # No renal
+                   40501L,40511L,40591L,# No renal
+                   seq(from=64210L, to=64214L, by=1L),# No renal
+                   40301L,40311L,40391L, # With renal failure
+                   40400L,40410L,40490L, # No heart or renal
+                   40401L,40411L,40491L, # With heart failure
+                   40402L,40412L,40492L, # With renal failure
+                   40403L,40413L,40493L, # With heart and renal failure
+                   seq(from=64270L, to=64274L, by=1L), # Pregnant other
+                   seq(from=64290L, to=64294L, by=1L)),# Pregnant other
+      PARALYSIS = c(seq(from=34200L, to=34499L, by=1L),
                     seq(from=43820L, to=43853L, by=1L),
                     78072L),
       NEURO.OTHER = c(seq(from=33000L, to=33199L, by=1L),
@@ -94,16 +101,15 @@ cmrbdt.finder.numeric.ahrq_2010v3.5 <-
                       33800L,34000L,
                       seq(from=34110L, to=34199L, by=1L),
                       seq(from=34500L, to=34511L, by=1L),
-                      seq(from =34520L, to=34539L, by=1L),
+                      seq(from=34520L, to=34539L, by=1L),
                       seq(from=34540L, to=34591L, by=1L),
                       34700L,34701L,34710L,34711L,
-                      seq(from =64940L, to=64944L, by=1L),
-                      78670L,
-                      seq(from =78670L, to=78673L, by=1L),
+                      seq(from=64940L, to=64944L, by=1L),
+                      seq(from=76870L, to=76873L, by=1L),
                       78030L,78031L,78032L,78039L,78097L,78430L),
       CHRONIC.PULM = c(seq(from=49000L, to=49289L, by=1L),
                        seq(from=49300L, to=49392L, by=1L),
-                       seq(from =49400L, to=49419L, by=1L),
+                       seq(from=49400L, to=49419L, by=1L),
                        seq(from=49500L, to=50599L, by=1L),
                        50640L),
       DM.UNCOMP = c(seq(from=25000L,to=25033L,by=1L),
@@ -114,7 +120,7 @@ cmrbdt.finder.numeric.ahrq_2010v3.5 <-
                   seq(from=24940L, to=24991L, by=1L)),
       HYPOTHYROID = c(seq(from=24300L, to=24429L, by=1L),
                       24480L,24490L),
-      RENAL = c(58530L,58540L,58550L,58560L,58590L, 40301L,40311L,
+      RENAL = c(58530L,58540L,58550L,58560L,58600L,58590L, 40301L,40311L,
                 40391L,40402L,40412L,40492L, 40403L,40413L,40493L),
       LIVER = c(7022L,7023L,7032L,7033L,7044L,7054L,45600L,45610L,45620L,
                 45621L,57100L,57120L,57130L,
@@ -181,7 +187,7 @@ cmrbdt.finder.numeric.ahrq_2010v3.5 <-
   # Do the actual test loop
   for (k in names(ahrq.list)) {
     if (any(icd_codes %in% ahrq.list[[k]])) {
-      out[k] <- 1
+      out[k] <- TRUE
       next;
     }
   }
@@ -268,9 +274,10 @@ pr.ahrq.preprocess.v.codes <- function(v.code) {
              #Liver Diseae
              if (icd9.2.5 == 4270) {return(07022L)}
              #Obsesity
-             if ((icd9.2.5 >= 8530) & (icd9.2.5 <= 8539)) {return(02780L)}
-             if ((icd9.2.5 >= 8541) & (icd9.2.5 <= 8545)) {return(02780L)}    		
-             if (icd9.2.5 == 8554) {return(02780L)}
+             if ((icd9.2.5 >= 8530) & (icd9.2.5 <= 8539)) {return(027800L)}
+             if ((icd9.2.5 >= 8540) & (icd9.2.5 <= 8545)) {return(027800L)}
+             if (icd9.2.5 == 8554) {return(027800L)}
+             
              return(code)
            })
   
