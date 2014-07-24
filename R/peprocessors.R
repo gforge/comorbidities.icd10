@@ -58,14 +58,12 @@ preproc.Swedich.ICD9 <- function(icd, icd_ver){
                              X = "9")
              if(nchar(code) > 3){
                letter = toupper(substr(code, 4, 4))
-               if (!letter %in% names(translator))
-                 stop("Error - the Swedish ICD-9 string seems invalid: ", code,
-                      " as it does not contain a valid letter at",
-                      " the fourth position (", letter, ")")
-               if (nchar(code) > 5){
-                 return(paste0(substr(code, 1, 3), 
-                               translator[letter],
-                               substring(code, 5)))
+               if (letter %in% names(translator)){
+                 if (nchar(code) > 5){
+                   return(paste0(substr(code, 1, 3), 
+                                 translator[letter],
+                                 substring(code, 5)))
+                 }                 
                }
                
                return(paste0(substr(code, 1, 3), 
