@@ -1,5 +1,9 @@
 NEWS for the Gmisc package
 
+Changes for 0.6
+---------------
+* Ruijingfang Jiang noted that the HIV-code differs for Sweden
+
 Changes for 0.5
 ---------------
 * Added tests

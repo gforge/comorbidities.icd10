@@ -80,7 +80,9 @@ cmrbdt.finder.regex.charlson_Quan2005 <- function(icd_codes,
   
   charlsons_v2[['HIV']] <- 
     list(icd10 = c('^B2[0124]'),
-         icd9 = c( '^04[234]'))
+         icd9 = switch(country_code,
+                       US = c('^04[234]'),
+                       SE = c('279K')))
   
   acute_icd_codes <- list(icd10= '^(I2[123]|J46|N17[12]|N19)',
                           # Used the translator from the Swedish National Board of Healthe and Welfare (Socialstyrelsen)
@@ -187,9 +189,11 @@ cmrbdt.finder.regex.charlson_Sundarajan2004 <-
          icd10 = c('^K7(04|2[19]|6[67])'))
   
   charlsons_v1[['HIV']] <- 
-    list(icd9 = c('^04[234]'),
+    list(icd9 = switch(country_code,
+                       US = c('^04[234]'),
+                       SE = c('279K')),
          icd10 = c('^B2[01234]'))
-
+  
   acute_icd_codes <- list(icd10= '^(I2[123]|J46|N17[12]|N19)',
                           # Used the translator from the Swedish National Board of Healthe and Welfare (Socialstyrelsen)
                           icd9 = '^(410|42(30|95|96|98)|4939|58[34][67]|5908|586|7919|5939)')

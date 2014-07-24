@@ -199,8 +199,9 @@ cmrbdt.finder.regex.elixhauser_Quan2005 <- function(icd_codes,
   # AIDS/HIV
   elixhausers[['HIV']] <- 
     list(icd10 = c('^B2[0124]'),
-         # No country code difference
-         icd9 = c('^04[234]'))
+         icd9 = switch(country_code,
+                       US = c('^04[234]'),
+                       SE = c('279K')))
   
   # Lymphoma
   elixhausers[['LYMPHOMA']] <- 
