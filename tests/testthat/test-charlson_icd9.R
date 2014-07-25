@@ -57,11 +57,11 @@ test_that("Check Charlson matches to the regular expression Quan version",{
     # Check one code at the time
     out <- t(sapply(codes,
                     function(code)
-                      cmrbdt.finder.regex.charlson_Quan2005(icd_codes=code, 
-                                                            country_code=country_code,
+                      cmrbdt.finder.regex.charlson_Quan2005(icd_codes=code,
+                                                            country_code="US",
                                                             icd_ver=9)))
     found_codes <- out[,n]
-    expect_true(all(found_codes), 
+    expect_true(all(found_codes),
                 info=sprintf("The script fails to properly identify ICD-%s from '%s' the codes '%s'",
                              9,
                              n,
