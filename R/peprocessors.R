@@ -46,10 +46,10 @@ preproc.Swedich.ICD9 <- function(icd, icd_ver){
     sapply(icd[icd_ver ==  9],
            USE.NAMES=FALSE,
            FUN=function(code){
-             if (!grepl("^([0-9V]{1,3}$|[0-9]{3,3}[A-Z])", code, ignore.case = TRUE))
+             if (!grepl("^([0-9V]{1,3}$|[0-9V]{3,3}[A-Z])", code, ignore.case = TRUE))
                stop("The code '", code , "' is suppose to be",
                     " of Swedish ICD-9 format but it does not",
-                    " fit the regular expression '^([0-9V]{1,3}$|[0-9]{3,3}[A-Z])'",
+                    " fit the regular expression '^([0-9V]{1,3}$|[0-9V]{3,3}[A-Z])'",
                     " indicating that it does not start with a number",
                     " and or that there is no letter at the fourth position")
 
