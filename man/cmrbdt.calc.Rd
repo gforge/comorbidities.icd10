@@ -48,12 +48,12 @@ cmrbdt.calc(ds, id_column, icd_columns, icd_ver_column, include_acute_column,
   ' '. When this is the case the pre-processing allows a
   split prior to calling the \code{cmrbdt.finder_fn}, e.g.
   splitting 'M161 E110' could need a function as
-  \code{function(code){unlist(strsplit(code, " "))}} -
-  \emph{note} the unlist, your function should return a
-  vector and not a list. You can find the package
-  pre-processing functions within the preproc.* function
-  group, e.g. \code{\link{preproc.strip.dot}} or the more
-  advanced \code{\link{preproc.Swedich.ICD9}}}
+  \code{function(code){unlist(strsplit(code, " "),
+  use.name=FALSE)}} - \emph{note} the unlist, your function
+  should return a vector and not a list. You can find the
+  package pre-processing functions within the preproc.*
+  function group, e.g. \code{\link{preproc.strip.dot}} or
+  the more advanced \code{\link{preproc.Swedich.ICD9}}}
 
   \item{cmrbdt.finder_fn}{This is one of the cmrbdt.finder
   functions that you want to apply. The cmrbdt.finder is at
@@ -288,7 +288,8 @@ out_without_acute <-
               cmrbdt.finder_hierarchy_fn=hierarchy.charlson_Quan2005,
               cmrbdt.weight_fn=weight.Charlsons.org,
               # Below is the magic function that splits the merged codes
-              icd_code_preprocess_fn=function(icd, icd_ver) unlist(strsplit(icd, " ")))
+              icd_code_preprocess_fn=function(icd, icd_ver) 
+                unlist(strsplit(icd, " "), use.names = FALSE))
 
 # The MI was not included for A when acute was taken into account
 data.frame(ID = out_incl_acute$cmrbdt$Patient_ID,
