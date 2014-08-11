@@ -5,15 +5,18 @@
 #' disease causes such as biking and automobile accidents. It is therefore better
 #' to sort any of these codes into the ICD-9 in case they actually belong there.
 #' 
-#' Note that E-code for the "SUPPLEMENTARY CLASSIFICATION OF EXTERNAL CAUSES 
-#' OF INJURY AND POISONING (E800-E999)" are not included in the code check.
+#' @section Important note:
+#' The E-code for the "SUPPLEMENTARY CLASSIFICATION OF EXTERNAL CAUSES 
+#' OF INJURY AND POISONING (E800-E999)" are not included in the icd-9 as they
+#' are part of the metabolic spectra for ICD-10. Likewise the V-codes are defaulted
+#' to ICD-9.
 #' 
 #' @param codes A vector with ICD-codes
 #' @param icd_ver A vector with icd versions, has to have the length of
 #'  1 or the same length as \code{code} argument. If FALSE then all are 
 #'  checked otherwise only those that are FALSE are checked.
-#' @return \code{boolean} Returns TRUE if the code is deemed to be and ICD-10 code
-#'  otherwise it returns FALSE.
+#' @return \code{vector} Returns a vector of the same length as the codes
+#'  whith a number corresponding to to the ICD-version.
 #' @keywords internal
 pr.get.icd.ver <- function(codes, icd_ver = rep(FALSE, times=length(codes))){
   if (length(icd_ver) != length(codes)){
@@ -28,7 +31,8 @@ pr.get.icd.ver <- function(codes, icd_ver = rep(FALSE, times=length(codes))){
   if ("data.frame" %in% class(codes)) {codes <- as.matrix(codes)}
   
   return(as.character(ifelse(icd_ver == FALSE,
-                             10 - 1*(substr(codes, 1,1) %in% c(0:9, "v","V")),
+                             # Note that the E800-999 exist in both systems see above
+                             10 - 1*(tolower(substr(codes, 1,1)) %in% c(0:9, "v")),
                              icd_ver)))
 }
 
