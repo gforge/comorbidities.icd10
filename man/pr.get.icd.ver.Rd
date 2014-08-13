@@ -14,8 +14,8 @@ pr.get.icd.ver(codes, icd_ver = rep(FALSE, times = length(codes)))
   those that are FALSE are checked.}
 }
 \value{
-\code{boolean} Returns TRUE if the code is deemed to be and
-ICD-10 code otherwise it returns FALSE.
+\code{vector} Returns a vector of the same length as the
+codes whith a number corresponding to to the ICD-version.
 }
 \description{
 Identifies if first letter is a number or V and then
@@ -25,10 +25,12 @@ biking and automobile accidents. It is therefore better to
 sort any of these codes into the ICD-9 in case they
 actually belong there.
 }
-\details{
-Note that E-code for the "SUPPLEMENTARY CLASSIFICATION OF
-EXTERNAL CAUSES OF INJURY AND POISONING (E800-E999)" are
-not included in the code check.
+\section{Important note}{
+  The E-code for the "SUPPLEMENTARY CLASSIFICATION OF
+  EXTERNAL CAUSES OF INJURY AND POISONING (E800-E999)" are
+  not included in the icd-9 as they are part of the
+  metabolic spectra for ICD-10. Likewise the V-codes are
+  defaulted to ICD-9.
 }
 \keyword{internal}
 

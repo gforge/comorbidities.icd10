@@ -47,7 +47,8 @@
 #'  the ICD-columns may be crammed into one single column where each
 #'  code is separated by a ' '. When this is the case the pre-processing
 #'  allows a split prior to calling the \code{cmrbdt.finder_fn}, e.g. splitting
-#'  'M161 E110' could need a function as \code{function(code){unlist(strsplit(code, " "))}}
+#'  'M161 E110' could need a function as 
+#'  \code{function(code){unlist(strsplit(code, " "), use.name=FALSE)}}
 #'  - \emph{note} the unlist, your function should return a vector and not a list. You
 #'  can find the package pre-processing functions within the preproc.* function group,
 #'  e.g. \code{\link{preproc.strip.dot}} or the more advanced
