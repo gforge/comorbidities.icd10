@@ -156,18 +156,22 @@ cmrbdt.calc <- function(ds,
   icd_ver_column <- as.matrix(icd_ver_column, ncol=1)
 
   # Check the first entries if they are valid ICD-codes
-  test_codes <- as.vector(t(as.matrix(head(icd_codes, 50), byrow=TRUE)))
+  test_codes <- as.vector(t(as.matrix(head(icd_codes, 100), byrow=TRUE)))
   if (!missing(icd_code_preprocess_fn))
     test_codes <- icd_code_preprocess_fn(icd=test_codes,
                                          icd_ver=rep(head(icd_ver_column, 50),
                                                      each=NCOL(icd_codes)))
 
-  valid_test_codes <- is.ICD(test_codes[nchar(str_trim(test_codes)) > 0])
-  if (!all(valid_test_codes[!is.na(test_codes)])){
+  # Remove empty and missing codes
+  test_codes <- 
+    test_codes[nchar(str_trim(test_codes)) > 0 &
+                 !is.na(test_codes)]
+  valid_test_codes <- is.ICD(test_codes)
+  if (!all(valid_test_codes)){
     stop("There seems to be some issue with your test codes, ",
          " the following test codes from your input data",
          " did not validate the is.ICD function: '",
-         paste(test_codes[!valid_test_codes & !is.na(test_codes)],
+         paste(head(test_codes[!valid_test_codes], 10),
                collapse="', '"),
          "'")
   }
