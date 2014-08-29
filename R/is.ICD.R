@@ -10,15 +10,21 @@
 #' @return \code{vector} Returns a vector with all the codes
 #' @examples
 #' is.ICD(c("M161", "M16.1", "1998-01-01", "4521"))
+#' 
+#' @importFrom stringr str_trim
 #' @export
 is.ICD <- function(codes, preprocess_fn){
   if (!missing(preprocess_fn)){
     if (is.character(preprocess_fn)){
       if (!exists(preprocess_fn))
-        stop("The pre-processing function '", preprocess_fn, "'' does not seem to exist")
+        stop("The pre-processing function '", preprocess_fn, "' does not seem to exist")
       preprocess_fn <- get(preprocess_fn)
     }
+    
+    codes <- preprocess_fn(codes)
   }
+  
+  codes <- str_trim(codes)
   
   # No identification codes rely on more than 4 letters and 
   # there are plenty of local variations in the last letters
