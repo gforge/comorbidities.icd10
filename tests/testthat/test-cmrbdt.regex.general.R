@@ -120,7 +120,7 @@ test_that("Check cmrbdt.finder with cmrbdt.calc", {
   
   out <- cmrbdt.calc(data2analyze[,grep("^ICD", colnames(data2analyze))], 
                      icd_ver_column=data2analyze$icd_version,
-                     include_acute_column=data2analyze$include_acute,
+                     incl_acute_codes=data2analyze$include_acute,
                      id_column=data2analyze$Patient_ID,
                      cmrbdt.finder_fn=cmrbdt.finder.regex.elixhauser_Quan2005,
                      cmrbdt.finder_hierarchy_fn=hierarchy.elixhauser_Quan2005)
@@ -132,7 +132,7 @@ test_that("Check cmrbdt.finder with cmrbdt.calc", {
 test_that("Test overall Charlsons cmrbdt.calc", {
   out <- cmrbdt.calc(data2analyze[,grep("^ICD", colnames(data2analyze))], 
                      icd_ver_column=data2analyze$icd_version,
-                     include_acute_column=data2analyze$include_acute,
+                     incl_acute_codes=data2analyze$include_acute,
                      id_column=data2analyze$Patient_ID,
                      cmrbdt.finder_fn=cmrbdt.finder.regex.charlson_Quan2005,
                      cmrbdt.finder_hierarchy_fn=hierarchy.charlson_Quan2005,

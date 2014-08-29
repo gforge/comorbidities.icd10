@@ -107,7 +107,7 @@ out_incl_acute <-
 
 out_without_acute <- 
   cmrbdt.calc(data2analyze, 
-              include_acute_column="include_acute",
+              incl_acute_codes="include_acute",
               id_column="Patient_ID",
               icd_columns=grep("^ICD", colnames(data2analyze)),
               icd_ver_column=data2analyze$icd_version,
@@ -168,7 +168,7 @@ data2analyze$include_acute <-
 
 out_without_acute <- 
   cmrbdt.calc(data2analyze, 
-              include_acute_column="include_acute",
+              incl_acute_codes="include_acute",
               id_column="Patient_ID",
               icd_columns=grep("ICD$", colnames(data2analyze)),
               icd_ver_column=data2analyze$icd_version,

@@ -3,11 +3,15 @@ NEWS for the Gmisc package
 Changes for 0.6
 ---------------
 * Ruijingfang Jiang noted that the HIV-code differs for Sweden
+* Fixed is.ICD when ICD-codes are empty
+* Renamed argument for cmrbdt.calc from "include_acute_column"" to a more
+  logical "incl_acute_codes" argument
 
 Changes for 0.5
 ---------------
 * Added tests
-* Bugs in AHRQ-matches fixed and hypertension is now properly split into uncomplicated and complicated
+* Bugs in AHRQ-matches fixed and hypertension is now properly split into 
+  uncomplicated and complicated
 * Added AHRQ v3.6 and 3.7 version and ability to quickly update to newer updates
 
 Changes for 0.4

@@ -20,28 +20,29 @@
 #'   matrix is also by \code{id} as returned by \code{\link[plyr]{ddply}}.
 #' }
 #'
-#' @param ds The data.frame/matrix/vector that is to be analyzed for
+#' @param ds The \code{data.frame}/\code{matrix}/\code{vector} that is to be analyzed for
 #'  matching icd-codes.
 #' @param id_column The id of the \code{ds} parameter. If included in the
 #'  ds then provide only column names, otherwise this should be in the format
-#'  of a vector/matrix/data.frame matching the size of the \code{ds} input. You
-#'  can have multiple columns as ID-parameters.
+#'  of a \code{data.frame}/\code{matrix}/\code{vector} matching the size 
+#'  of the \code{ds} input. You can have multiple columns as ID-parameters.
 #' @param icd_columns If the \code{ds} contains more than just the ICD-code columns
 #'  then you need to specify the ICD-columns, either by name or numbers.
 #' @param icd_ver_column The ICD-version number if you don't want auto-detect. This can
-#'  either be a single number if they are all of the same ICD-version or you can have a
-#'  column in the \code{ds} that signals the version, alternatively this can be a vector
+#'  either be a single \code{integer} if they are all of the same ICD-version or you can have a
+#'  column in the \code{ds} that signals the version, alternatively this can be a \code{vector}
 #'  of the same length as the \code{ds}.
 #'  As auto-detect may fail try to specify this if you can. For those that you are
 #'  uncertain you can simple set the value to \code{FALSE} and the software will attempt
 #'  to autodetect those specific instances.
-#' @param include_acute_column Certain codes may indicate a non-chronic
+#' @param incl_acute_codes Certain codes may indicate a non-chronic
 #'  disease such as heart infarction, stroke or similar. Under some
 #'  circumstances these should be ignored, e.g. when studying predictors
 #'  for hip arthroplasty re-operations codes during the admission
 #'  for the surgery should not include myocardial infarction as this
 #'  is most likely a postoperative condition not available for scoring
-#'  prior to the surgery.
+#'  prior to the surgery. Set to \code{TRUE} if you want to include
+#'  acute codes.
 #' @param icd_code_preprocess_fn Sometimes the codes need to be
 #'  pre-processed prior to feeding them into the algorithm. For instance
 #'  the ICD-columns may be crammed into one single column where each
@@ -59,7 +60,7 @@
 #' @param cmrbdt.finder_hierarchy_fn This functions applies any hierarchy needed in order
 #'  to retain logic, e.g. complicated diabetes and uncomplicated diabetes should not
 #'  co-exist in one and the same patient. You can provide here any of the \code{hierarchy.*()}
-#'  functions. E.g. if you are using Elixhausers Quan 2005 version you provide the
+#'  functions. E.g. if you are using \emph{Elixhausers Quan 2005} version you provide the
 #'  function \code{\link{hierarchy.elixhauser_Quan2005}}.
 #' @param cmrbdt.weight_fn The comorbidity weight function that you want to apply
 #'  to the current calculation. E.g. you can use the \code{\link{weight.Charlsons.org}}
@@ -70,7 +71,7 @@
 #'  internet domain name of that country). As certain countries
 #'  have adapted country-specific ICD-coding there may be minor
 #'  differences between countries. Currently only Swedish (SE) and
-#'  US codes are implemented. The function defaults to 'US'.
+#'  US codes are implemented. The function defaults to \code{'US'}.
 #' @param ... Arguments that are passed on to the \code{\link[plyr]{ddply}} function.
 #' @seealso
 #' \itemize{
@@ -100,13 +101,14 @@
 #'   the AHRQ is included although the AHRQ has never been updated to ICD-10.}
 #' }
 #' @importFrom plyr ddply
+#' @importFrom stringr str_trim
 #' @export
 #' @example inst/examples/cmrbdt.calc_xmpl.R
 cmrbdt.calc <- function(ds,
                         id_column,
                         icd_columns,
                         icd_ver_column,
-                        include_acute_column,
+                        incl_acute_codes,
                         icd_code_preprocess_fn,
                         cmrbdt.finder_fn,
                         cmrbdt.finder_hierarchy_fn,
@@ -121,11 +123,11 @@ cmrbdt.calc <- function(ds,
            NROW(id_column) != NROW(ds))||
           (!missing(icd_ver_column) &&
              NROW(icd_ver_column) != NROW(ds)) ||
-          (!missing(include_acute_column) &&
-             NROW(include_acute_column) != NROW(ds))){
+          (!missing(incl_acute_codes) &&
+             NROW(incl_acute_codes) != NROW(ds))){
       stop("If the ds parameter consists of only icd codes",
            " then the other parameters id_column, icd_ver_column,",
-           " include_acute_column need to be independent vectors/matrices")
+           " incl_acute_codes need to be independent vectors/matrices")
     }
     icd_codes <- ds
   }
@@ -160,12 +162,14 @@ cmrbdt.calc <- function(ds,
                                          icd_ver=rep(head(icd_ver_column, 50),
                                                      each=NCOL(icd_codes)))
 
-  valid_test_codes <- is.ICD(test_codes)
+  valid_test_codes <- is.ICD(test_codes[nchar(str_trim(test_codes)) > 0])
   if (!all(valid_test_codes[!is.na(test_codes)])){
     stop("There seems to be some issue with your test codes, ",
          " the following test codes from your input data",
-         " did not validate the is.ICD function: ",
-         paste(test_codes[!valid_test_codes & !is.na(test_codes)], collapse=", "))
+         " did not validate the is.ICD function: '",
+         paste(test_codes[!valid_test_codes & !is.na(test_codes)],
+               collapse="', '"),
+         "'")
   }
 
   org_id_names <- NULL
@@ -209,24 +213,24 @@ cmrbdt.calc <- function(ds,
   colnames(id_column) <- sprintf("ID_no_%d",
                                  1:NCOL(id_column))
 
-  if (missing(include_acute_column)){
-    include_acute_column <- rep(TRUE, times=NROW(ds))
-  }else if (length(include_acute_column) == 1){
-    if (include_acute_column %in% colnames(ds) ||
-          include_acute_column %in% 1:NCOL(ds)){
-      include_acute_column <- ds[,include_acute_column, drop=FALSE]
+  if (missing(incl_acute_codes)){
+    incl_acute_codes <- rep(TRUE, times=NROW(ds))
+  }else if (length(incl_acute_codes) == 1){
+    if (incl_acute_codes %in% colnames(ds) ||
+          incl_acute_codes %in% 1:NCOL(ds)){
+      incl_acute_codes <- ds[,incl_acute_codes, drop=FALSE]
     }else{
-      stop("You have provided an ICD acute column identifyer (", include_acute_column, ")",
+      stop("You have provided an ICD acute column identifyer (", incl_acute_codes, ")",
            " that is neither a column name in the ds provided dataset",
            " or a numerical representation of that column")
     }
-  }else if (length(include_acute_column) != NROW(ds)){
+  }else if (length(incl_acute_codes) != NROW(ds)){
     stop("You have provided ICD-acute column for the ds dataset",
          " unfortunately the length don't match. You have provided",
-         " '", length(include_acute_column), "' icd acute indicators",
+         " '", length(incl_acute_codes), "' icd acute indicators",
          " while the ds dataset has '", NROW(ds), "' rows.")
   }
-  include_acute_column <- as.matrix(include_acute_column, ncol=1)
+  incl_acute_codes <- as.matrix(incl_acute_codes, ncol=1)
 
   # Get the cmrbdt.finder function
   if (is.character(cmrbdt.finder_fn)){
@@ -269,7 +273,7 @@ cmrbdt.calc <- function(ds,
   d2a <- cbind(id_column,
                icd_codes)
   d2a$icd_ver <- icd_ver_column
-  d2a$include_acute <- include_acute_column
+  d2a$include_acute <- incl_acute_codes
   ret <-
     list(cmrbdt =
            ddply(d2a,
