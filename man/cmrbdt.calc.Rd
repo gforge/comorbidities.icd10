@@ -3,43 +3,46 @@
 \alias{cmrbdt.calc}
 \title{The main comorbidity calculator function}
 \usage{
-cmrbdt.calc(ds, id_column, icd_columns, icd_ver_column, include_acute_column,
+cmrbdt.calc(ds, id_column, icd_columns, icd_ver_column, incl_acute_codes,
   icd_code_preprocess_fn, cmrbdt.finder_fn, cmrbdt.finder_hierarchy_fn,
   cmrbdt.weight_fn, country_code = "US", ...)
 }
 \arguments{
-  \item{ds}{The data.frame/matrix/vector that is to be
-  analyzed for matching icd-codes.}
+  \item{ds}{The
+  \code{data.frame}/\code{matrix}/\code{vector} that is to
+  be analyzed for matching icd-codes.}
 
   \item{id_column}{The id of the \code{ds} parameter. If
   included in the ds then provide only column names,
   otherwise this should be in the format of a
-  vector/matrix/data.frame matching the size of the
-  \code{ds} input. You can have multiple columns as
-  ID-parameters.}
+  \code{data.frame}/\code{matrix}/\code{vector} matching
+  the size of the \code{ds} input. You can have multiple
+  columns as ID-parameters.}
 
   \item{icd_columns}{If the \code{ds} contains more than
   just the ICD-code columns then you need to specify the
   ICD-columns, either by name or numbers.}
 
   \item{icd_ver_column}{The ICD-version number if you don't
-  want auto-detect. This can either be a single number if
-  they are all of the same ICD-version or you can have a
-  column in the \code{ds} that signals the version,
-  alternatively this can be a vector of the same length as
-  the \code{ds}. As auto-detect may fail try to specify
-  this if you can. For those that you are uncertain you can
-  simple set the value to \code{FALSE} and the software
-  will attempt to autodetect those specific instances.}
+  want auto-detect. This can either be a single
+  \code{integer} if they are all of the same ICD-version or
+  you can have a column in the \code{ds} that signals the
+  version, alternatively this can be a \code{vector} of the
+  same length as the \code{ds}. As auto-detect may fail try
+  to specify this if you can. For those that you are
+  uncertain you can simple set the value to \code{FALSE}
+  and the software will attempt to autodetect those
+  specific instances.}
 
-  \item{include_acute_column}{Certain codes may indicate a
+  \item{incl_acute_codes}{Certain codes may indicate a
   non-chronic disease such as heart infarction, stroke or
   similar. Under some circumstances these should be
   ignored, e.g. when studying predictors for hip
   arthroplasty re-operations codes during the admission for
   the surgery should not include myocardial infarction as
   this is most likely a postoperative condition not
-  available for scoring prior to the surgery.}
+  available for scoring prior to the surgery. Set to
+  \code{TRUE} if you want to include acute codes.}
 
   \item{icd_code_preprocess_fn}{Sometimes the codes need to
   be pre-processed prior to feeding them into the
@@ -66,8 +69,8 @@ cmrbdt.calc(ds, id_column, icd_columns, icd_ver_column, include_acute_column,
   complicated diabetes and uncomplicated diabetes should
   not co-exist in one and the same patient. You can provide
   here any of the \code{hierarchy.*()} functions. E.g. if
-  you are using Elixhausers Quan 2005 version you provide
-  the function
+  you are using \emph{Elixhausers Quan 2005} version you
+  provide the function
   \code{\link{hierarchy.elixhauser_Quan2005}}.}
 
   \item{cmrbdt.weight_fn}{The comorbidity weight function
@@ -83,7 +86,7 @@ cmrbdt.calc(ds, id_column, icd_columns, icd_ver_column, include_acute_column,
   country-specific ICD-coding there may be minor
   differences between countries. Currently only Swedish
   (SE) and US codes are implemented. The function defaults
-  to 'US'.}
+  to \code{'US'}.}
 
   \item{...}{Arguments that are passed on to the
   \code{\link[plyr]{ddply}} function.}
@@ -219,7 +222,7 @@ out_incl_acute <-
 
 out_without_acute <- 
   cmrbdt.calc(data2analyze, 
-              include_acute_column="include_acute",
+              incl_acute_codes="include_acute",
               id_column="Patient_ID",
               icd_columns=grep("^ICD", colnames(data2analyze)),
               icd_ver_column=data2analyze$icd_version,
@@ -280,7 +283,7 @@ data2analyze$include_acute <-
 
 out_without_acute <- 
   cmrbdt.calc(data2analyze, 
-              include_acute_column="include_acute",
+              incl_acute_codes="include_acute",
               id_column="Patient_ID",
               icd_columns=grep("ICD$", colnames(data2analyze)),
               icd_ver_column=data2analyze$icd_version,
