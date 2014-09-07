@@ -162,7 +162,9 @@ cmrbdt.calc <- function(ds,
                                          icd_ver=rep(head(icd_ver_column, 50),
                                                      each=NCOL(icd_codes)))
 
-  valid_test_codes <- is.ICD(test_codes[nchar(str_trim(test_codes)) > 0])
+  # Remove all "" codes
+  test_codes <- test_codes[nchar(str_trim(test_codes)) > 0]
+  valid_test_codes <- is.ICD(test_codes)
   if (!all(valid_test_codes[!is.na(test_codes)])){
     stop("There seems to be some issue with your test codes, ",
          " the following test codes from your input data",
