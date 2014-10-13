@@ -24,7 +24,7 @@ weight.Charlsons.org(out)
 }
 \seealso{
 Other weight functions:
-\code{\link{weight.Charlsons.Quan2012}};
+\code{\link{weight.Charlsons.Quan2011}};
 \code{\link{weight.Elixhausers.VanWalraven2009}}
 }
 

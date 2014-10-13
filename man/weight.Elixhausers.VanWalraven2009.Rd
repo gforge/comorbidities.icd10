@@ -32,7 +32,7 @@ Administrative Data" Medical Care, vol. 47, no. 6, pp.
 }
 \seealso{
 Other weight functions:
-\code{\link{weight.Charlsons.Quan2012}};
+\code{\link{weight.Charlsons.Quan2011}};
 \code{\link{weight.Charlsons.org}}
 }
 
