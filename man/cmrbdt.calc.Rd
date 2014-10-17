@@ -24,15 +24,13 @@ cmrbdt.calc(ds, id_column, icd_columns, icd_ver_column, incl_acute_codes,
   ICD-columns, either by name or numbers.}
 
   \item{icd_ver_column}{The ICD-version number if you don't
-  want auto-detect. This can either be a single
-  \code{integer} if they are all of the same ICD-version or
-  you can have a column in the \code{ds} that signals the
-  version, alternatively this can be a \code{vector} of the
-  same length as the \code{ds}. As auto-detect may fail try
-  to specify this if you can. For those that you are
-  uncertain you can simple set the value to \code{FALSE}
-  and the software will attempt to autodetect those
-  specific instances.}
+  want auto-detect. It should be a column in the \code{ds}
+  that signals the version, alternatively a \code{vector}
+  of the same length as the \code{ds}. As auto-detect may
+  fail try to specify this if you can. For those that you
+  are uncertain you can simple set the value to
+  \code{FALSE} and the software will attempt to autodetect
+  those specific instances.}
 
   \item{incl_acute_codes}{Certain codes may indicate a
   non-chronic disease such as heart infarction, stroke or

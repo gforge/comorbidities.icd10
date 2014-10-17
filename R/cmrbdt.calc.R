@@ -24,13 +24,12 @@
 #'  matching icd-codes.
 #' @param id_column The id of the \code{ds} parameter. If included in the
 #'  ds then provide only column names, otherwise this should be in the format
-#'  of a \code{data.frame}/\code{matrix}/\code{vector} matching the size 
+#'  of a \code{data.frame}/\code{matrix}/\code{vector} matching the size
 #'  of the \code{ds} input. You can have multiple columns as ID-parameters.
 #' @param icd_columns If the \code{ds} contains more than just the ICD-code columns
 #'  then you need to specify the ICD-columns, either by name or numbers.
-#' @param icd_ver_column The ICD-version number if you don't want auto-detect. This can
-#'  either be a single \code{integer} if they are all of the same ICD-version or you can have a
-#'  column in the \code{ds} that signals the version, alternatively this can be a \code{vector}
+#' @param icd_ver_column The ICD-version number if you don't want auto-detect. It should be a
+#'  column in the \code{ds} that signals the version, alternatively a \code{vector}
 #'  of the same length as the \code{ds}.
 #'  As auto-detect may fail try to specify this if you can. For those that you are
 #'  uncertain you can simple set the value to \code{FALSE} and the software will attempt
@@ -48,7 +47,7 @@
 #'  the ICD-columns may be crammed into one single column where each
 #'  code is separated by a ' '. When this is the case the pre-processing
 #'  allows a split prior to calling the \code{cmrbdt.finder_fn}, e.g. splitting
-#'  'M161 E110' could need a function as 
+#'  'M161 E110' could need a function as
 #'  \code{function(code){unlist(strsplit(code, " "), use.name=FALSE)}}
 #'  - \emph{note} the unlist, your function should return a vector and not a list. You
 #'  can find the package pre-processing functions within the preproc.* function group,
@@ -142,6 +141,17 @@ cmrbdt.calc <- function(ds,
     if (icd_ver_column %in% colnames(ds) ||
           icd_ver_column %in% 1:NCOL(ds)){
       icd_ver_column <- ds[,icd_ver_column, drop=FALSE]
+
+      if(!is.numeric(icd_ver_column[!is.na(icd_ver_column)]) &&
+           !all(is.na(icd_ver_column)))
+        stop("The ICD codes for the column '", icd_columns ,"'",
+             " should be numeric. This does not seem to be the case,",
+             " class = '", class(icd_ver_column), "'",
+             " excerpt from the column:",
+             " '",
+             paste(head(icd_ver_column[!is.na(icd_ver_column)], 10),
+                   collapse="', '"),
+             "', ...")
     }else{
       stop("You have provided an ICD version column identifyer (", icd_ver_column, ")",
            " that is neither a column name in the ds provided dataset",
