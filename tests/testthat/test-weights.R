@@ -38,4 +38,8 @@ test_that("Check calculations",{
   expect_equivalent(sum(weight.Charlsons.org(all_possible)),
                     1*(length(all)-4-1-2)+4*2+1*3+2*6 -
                       2*1-2) # Remove points from diabetes, mild.liver and malignancy
+
+  expect_equivalent(sum(weight.Charlsons.Quan2011(all_possible)),
+                    24) # See Quan's article
+  
 })
