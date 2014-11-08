@@ -19,6 +19,9 @@ test_that("Check calculations",{
   expect_equivalent(sum(weight.Charlsons.org(out)), 1,
                     "Simple test for MI")
 
+  expect_equivalent(sum(weight.Charlsons.Quan2011(out)), 0,
+                    "Simple test for MI")
+
   # Clear all values
   empty <- sapply(out, function(x) FALSE)
 

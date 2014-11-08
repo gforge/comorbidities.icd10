@@ -71,7 +71,7 @@ weight.Charlsons.org <- function(ds) {
 weight.Charlsons.Quan2011 <- function(ds){
   ds <- ds*1
   # Set all columns that have 0 points
-  for (var in c("MI", "PVD", "CEVD", "PUD", "DM", "RENAL")){
+  for (var in c("MI", "PVD", "CVD", "PUD", "DM", "RENAL")){
     multiplier <- 0
     if (is.null(dim(ds))){
       ds[var] <- ds[var] * multiplier
@@ -84,7 +84,7 @@ weight.Charlsons.Quan2011 <- function(ds){
   #c("COPD", "RHEUM", "DM.COMP")
 
   # Set those with 2 points
-  for (var in c("CANCER", "MILD.LIVER", "CHF", "DEMENTIA", "PLEGIA")){
+  for (var in c("MALIGNANCY", "MILD.LIVER", "CHF", "DEMENTIA", "PLEGIA")){
     multiplier <- 2
     if (is.null(dim(ds))){
       ds[var] <- ds[var] * multiplier
