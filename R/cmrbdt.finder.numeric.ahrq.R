@@ -1,13 +1,13 @@
 #' Finds the matching codes for the different comorbidity groups
-#' 
+#'
 #' The functions loop through all the comorbidity groups in search
-#' for a matching group to the provided \code{icd_codes}. 
-#' 
+#' for a matching group to the provided \code{icd_codes}.
+#'
 #' The \code{_regex} indicates that these functions use regular expressions
 #' for identification of codes of interest. The match is case-insensitive.
-#' The function can also identify acute conditions and ignore those if specified. 
-#' 
-#' @param icd_codes The icd code of interest, either a number or a string
+#' The function can also identify acute conditions and ignore those if specified.
+#'
+#' @param icd_codes The icd code of interest, either a number or a string vector
 #' @param out If the function has been run previously there
 #'  may already be matches for a particular group, if the
 #'  out parameter is supplied with a vector equal to the
@@ -18,8 +18,8 @@
 #' @param country_code The two-letter \code{ISO 3166-1 alpha-2}
 #'  code indicating the country of interest (the same as the top-level
 #'  internet domain name of that country). As certain countries
-#'  have adapted country-specific ICD-coding there may be minor 
-#'  differences between countries. Currently only 
+#'  have adapted country-specific ICD-coding there may be minor
+#'  differences between countries. Currently only
 #'  US codes are implemented for the numeric algorithms.
 #' @param include_acute Certain codes may indicate a non-chronic
 #'  disease such as heart infarction, stroke or similar. Under some
@@ -39,8 +39,8 @@
 #' cmrbdt.finder.numeric.ahrq(9320)
 #' @export
 #' @family cmrbdtf.finder functions
-cmrbdt.finder.numeric.ahrq <- 
-  function(icd_codes, 
+cmrbdt.finder.numeric.ahrq <-
+  function(icd_codes,
            out,
            country_code,
            include_acute = rep(TRUE, length(icd_codes)),
@@ -49,20 +49,20 @@ cmrbdt.finder.numeric.ahrq <-
   if (any(icd_ver != 9)) { stop("Only ICD-9 version is supported for the AHRQ v3.5")}
   if (!missing(country_code) && country_code != "US") { stop("Only US country code is currently supported")}
   if (!missing(include_acute) && any(include_acute == FALSE)) { stop("Excluding acute codes from episodes for the AHRQ is not yet implemented")}
-  
+
   # Pre-process the comorbidity codes to match the searched codes
   icd_codes <- pr.ahrq.ICD9.5digit(icd_codes)
-  
+
   #create lists of comorbidities
-  ahrq.list <- 
+  ahrq.list <-
     pr.ahrq.list(ver)
-  
+
   # Get a correctly formatted output vector
   out <- pr.get.out.vector(out, ahrq.list)
- 
+
   # Don't check if all codes are missing
   if (all(is.na(icd_codes))) {return(out)}
-  
+
   # Do the actual test loop
   for (k in names(ahrq.list)) {
     if (any(icd_codes %in% ahrq.list[[k]])) {
@@ -70,27 +70,27 @@ cmrbdt.finder.numeric.ahrq <-
       next;
     }
   }
-  
+
   return(out)
 }
 
 #' Converts an icd9 code to numeric format
-#'  
+#'
 #' @param codes A \code{string/vector} numeric code
-#' @return \code{integer} Returns a integer code XXXXX 
+#' @return \code{integer} Returns a integer code XXXXX
 #' @seealso \code{\link{ahrq}}, \code{\link{cmrbdt.finder.numeric.ahrq}}
 #' @keywords internal
 pr.ahrq.ICD9.5digit <- function(codes){
   if (!is.null(dim(codes)) &&
       (length(dim(codes)) != 2 ||
          !1 %in% dim(codes))) {stop("This function can only handle single strings or vectors")}
-  
-  sapply(codes, USE.NAMES=FALSE, 
+
+  sapply(codes, USE.NAMES=FALSE,
          FUN=function(icd.code){
     if (is.na(icd.code)) {
       return(NA)
     }
-    
+
     if (is.numeric(icd.code)){
       if (icd.code != floor(icd.code))
         stop("The software wants icd.codes provided in numeric format without",
@@ -99,14 +99,14 @@ pr.ahrq.ICD9.5digit <- function(codes){
              " 58510 and not 585.1 or anything similar. You have provided the code: ", icd.code)
       return(icd.code)
     }
-    
+
     if (class(icd.code) == "factor")
       icd.code <- as.character(icd.code)
-    
+
     if (nchar(icd.code) < 5)
       icd.code <- paste0(icd.code, paste0(rep("0", length.out=5-nchar(icd.code)),
                                           collapse=""))
-    
+
     icd.code = toupper(icd.code)
     icd9.1 <- substr(icd.code, 1, 1)
     icd9.3 <- substr(icd.code, 1, 3)
@@ -116,13 +116,13 @@ pr.ahrq.ICD9.5digit <- function(codes){
     if (icd9.5 == "X") {icd9.5 <- 0}
     icd9.result <- paste(icd9.3, icd9.4, icd9.5, sep = "")
     if (icd9.1 == "V") {icd9.result <- pr.ahrq.preprocess.v.codes(icd9.result)}
-    
+
     return(as.integer(icd9.result))
   })
 }
 
 #' Converts icd9 codes with V at the first letter into numeric format
-#'  
+#'
 #' @param v.code A string numeric icd-code that starts with a V
 #' @return \code{int} Returns an int with 5 digits
 #' @seealso \code{\link{ahrq}}
@@ -131,55 +131,55 @@ pr.ahrq.preprocess.v.codes <- function(v.code) {
   if (any(nchar(nchar(v.code) < 5))){
     for (i in which(nchar(v.code) < 5)){
       v.code[i] <- paste0(v.code[i], paste(rep(0, times=5-nchar(v.code[i]))))
-      
+
     }
   }
-  v.code <- 
+  v.code <-
     sapply(v.code, USE.NAMES=FALSE,
            FUN=function(code){
              icd9.2.5 <- as.numeric(substr(code, 2, 5))
              #Valvular disease
-             if (icd9.2.5 == 4220) {return(09320L)} 
+             if (icd9.2.5 == 4220) {return(09320L)}
              if (icd9.2.5 == 4330) {return(09320L)}
              #PVD
-             if (icd9.2.5 == 4340) {return(44000L)} 
+             if (icd9.2.5 == 4340) {return(44000L)}
              #Renal Failure
-             if (icd9.2.5 == 4200) {return(58530L)} 
-             if (icd9.2.5 == 4510) {return(58530L)} 
-             if ((icd9.2.5 >= 5600) & (icd9.2.5 <= 5632)) {return(58530L)}  
-             if (icd9.2.5 == 5680) {return(58530L)} 
-             if (icd9.2.5 == 4511) {return(58530L)}  
-             if (icd9.2.5 == 4512) {return(58530L)}  
+             if (icd9.2.5 == 4200) {return(58530L)}
+             if (icd9.2.5 == 4510) {return(58530L)}
+             if ((icd9.2.5 >= 5600) & (icd9.2.5 <= 5632)) {return(58530L)}
+             if (icd9.2.5 == 5680) {return(58530L)}
+             if (icd9.2.5 == 4511) {return(58530L)}
+             if (icd9.2.5 == 4512) {return(58530L)}
              #Liver Diseae
              if (icd9.2.5 == 4270) {return(07022L)}
              #Obsesity
              if ((icd9.2.5 >= 8530) & (icd9.2.5 <= 8539)) {return(027800L)}
              if ((icd9.2.5 >= 8540) & (icd9.2.5 <= 8545)) {return(998540L)}
              if (icd9.2.5 == 8554) {return(027800L)}
-             
+
              return(code)
            })
-  
+
   return (v.code)
 }
 
 #' Gets the core AHRQ list
-#' 
+#'
 #' The function gets the list, uses the 3.5 version and updates
 #' according to the codes specified in the different versions
 #' as presented in "Changes to the Comorbidity Software" on the
 #' \url{http://www.hcup-us.ahrq.gov/toolssoftware/comorbidity/comorbidity.jsp}
 #' webpage.
-#' 
+#'
 #' @param version The version number of interest
 #' @return \code{list} A full AHRQ-list with all the numbers of interest
 #' @keywords internal
 pr.ahrq.list <- function(version){
   base3.5 <- list(
     CHF = c(39891L,
-            seq(from=42800L, to=42899L, by=1L), 
-            40201L,40211L,40291L, 
-            40401L,40411L,40491L, 
+            seq(from=42800L, to=42899L, by=1L),
+            40201L,40211L,40291L,
+            40401L,40411L,40491L,
             40403L,40413L,40493L),
     VALVE = c(seq(from=9320L, to=9324L, by=1L),
               seq(from=39400L, to=39719L, by=1L),
@@ -192,7 +192,7 @@ pr.ahrq.list <- function(version){
             seq(from=44000L, to=44199L, by=1L),
             seq(from=44200L, to=44299L, by=1L),
             seq(from=44310L, to=44399L, by=1L),
-            44421L, 44422L, 
+            44421L, 44422L,
             44710L, 44900L,
             55710L,55790L),
     HTN.UNCOMP = c(40110L,40190L,
@@ -298,31 +298,31 @@ pr.ahrq.list <- function(version){
               seq(from=64830L,to=64834L, by=1L)),
     PSYCHOSES = c(seq(from=29500L,to=29899L, by=1L),
                   29910L,29911L),
-    DEPRESSION = c(30040L,30112L,30900L,30910L,31100L))  
+    DEPRESSION = c(30040L,30112L,30900L,30910L,31100L))
 
   # Floating point matches may cause issues
   if (is.numeric(version))
     version <- sprintf("%.1f", version)
-  
+
   if (version == "3.5")
     return(base3.5)
-  
+
   if (version %in% c("3.6", "3.7")){
     base3.5$NEURO.OTHER <- c(base3.5$NEURO.OTHER, 78033L)
     base3.5$OBESITY <- c(base3.5$OBESITY, 998540L) # See the V-code conversion
     if (version == "3.6")
       return(base3.5)
   }
-  
+
   if (version %in% c("3.7")){
     # The update document is faulty: 41513 %in% base3.5$PULM.CIRC
     base3.5$LIVER <- c(base3.5$LIVER, seq(from=57350L, to=57359L, by=1L)) # Hepatopulmonary syndrome Liver disease
-    
+
     # The update doc. is faulty c(28652L, 28653L, 28659L) %in% base3.5$COAG # Acquired hemophilia + Antiphospholipid antibody with hemorrhagic disorder Coagulation deficiency
 
     if (version == "3.7")
       return(base3.5)
   }
-  
+
   stop("You have requested a AHRQ version, ", version ,", that has not yet been implemented!")
 }

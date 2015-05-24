@@ -147,10 +147,16 @@ preproc.code.splitter <- function(icd, icd_ver,
                                   split_str = " ",
                                   trim = TRUE){
   if (trim){ icd <- str_trim(icd) }
-  code_list <- strsplit(icd, split_str)
-  icd <- unlist(code_list, use.names = FALSE)
+  # Remove empty icd-codes
+  empty <- which(icd != "")
+  if (length(empty) > 0)
+    icd <- icd[-empty]
 
-  if (!missing(icd_ver)){
+  code_list <- strsplit(icd, " ")
+  icd <- unlist(code_list, use.names = FALSE)
+  if (!missing(icd_ver)) {
+    if (length(empty) > 0)
+      icd_ver <- icd_ver[-empty]
     # Convert the icd_versions to match to the split strings
     times <- sapply(code_list, length)
     icd_ver <- rep(icd_ver, times=times)
