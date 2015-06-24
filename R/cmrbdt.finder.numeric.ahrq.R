@@ -42,7 +42,7 @@
 cmrbdt.finder.numeric.ahrq <-
   function(icd_codes,
            out,
-           country_code,
+           country_code = 'US',
            include_acute = rep(TRUE, length(icd_codes)),
            icd_ver = 9,
            ver = "3.7"){
