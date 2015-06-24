@@ -7,7 +7,7 @@
 cmrbdt.finder.numeric.elixhauser_Elixhauser1998 <- 
   function(icd_codes, 
            out,
-           country_code,
+           country_code = 'US',
            include_acute = rep(TRUE, length(icd_codes)),
            icd_ver = 9){
   if (any(icd_ver != 9)) { stop("Only ICD-9 version is supported for the Deyo 1992")}
