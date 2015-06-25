@@ -33,6 +33,16 @@ test_that("code_splitter", {
                                                  trim=FALSE,
                                                  icd_ver=c(10, 10, 10))),
                     4)
+  expect_equivalent(preproc.code.splitter(icd=c("M161", "J445, M161 ", "  M161  ", "    "),
+                                          split_str=", ",
+                                          icd_ver=c(10, 10, 10)),
+                    c("M161", "J445", "M161", "M161"))
+  
+  expect_equivalent(length(preproc.code.splitter(icd=c("M161", "J445, M161 ", "  M161  ", ""),
+                                                 split_str=", ",
+                                                 trim=FALSE,
+                                                 icd_ver=c(10, 10, 10))),
+                    4)
 })
 
 
