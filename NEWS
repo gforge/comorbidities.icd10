@@ -1,4 +1,8 @@
-NEWS for the Gmisc package
+NEWS for the comorbidities.icd10 package
+
+Changes for 0.6.1
+-----------------
+* Fixed preprocessor bug
 
 Changes for 0.6
 ---------------
@@ -10,7 +14,7 @@ Changes for 0.6
 Changes for 0.5
 ---------------
 * Added tests
-* Bugs in AHRQ-matches fixed and hypertension is now properly split into 
+* Bugs in AHRQ-matches fixed and hypertension is now properly split into
   uncomplicated and complicated
 * Added AHRQ v3.6 and 3.7 version and ability to quickly update to newer updates
 
@@ -26,7 +30,7 @@ Changes for 0.4
 Changes for 0.3
 ---------------
 * Started implementing regular expression alternatives for elixhauser and charlson scores
-* Refactored use in order to optimize the use of vectors with icdCodes for a single individual. 
+* Refactored use in order to optimize the use of vectors with icdCodes for a single individual.
 * The original NA handling from the comorbidities package is now changed so that the missing codes are simply skipped - should have significant performance improvements
 * Renamed the functions to lower-case in for package consistency
 * Externalized numeric and regular expression functions as these may be of interest to users and renamed them to codefinder.*
