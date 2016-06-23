@@ -169,7 +169,7 @@ cmrbdt.calc <- function(ds,
   test_codes <- as.vector(t(as.matrix(head(icd_codes, 100), byrow=TRUE)))
   if (!missing(icd_code_preprocess_fn))
     test_codes <- icd_code_preprocess_fn(icd=test_codes,
-                                         icd_ver=rep(head(icd_ver_column, 50),
+                                         icd_ver=rep(head(icd_ver_column, length(test_codes)),
                                                      each=NCOL(icd_codes)))
 
   # Remove empty and missing codes
