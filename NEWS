@@ -2,6 +2,10 @@ NEWS for the comorbidities.icd10 package
 
 Changes for 0.6.1
 -----------------
+* Fixed bug caused by wrong number of test codes in preprocessor
+
+Changes for 0.6.1
+-----------------
 * Fixed preprocessor bug
 
 Changes for 0.6

@@ -1,8 +1,8 @@
 Package: comorbidities.icd10
 Type: Package
 Title: Calculates Comorbidity Indices Based on ICD-9/10
-Version: 0.6.1
-Date: 2015-07-12
+Version: 0.6.2
+Date: 2016-06-23
 Author: Max Gordon
 Maintainer: Max Gordon <max@gforge.se>
 Description: Methods to categorize ICD-9-CM and ICD-10 codes into sensible
